@@ -1,0 +1,6 @@
+Software Tools Used:
+- Gannt: 
+- Pert: 
+- Use Cases:
+- Project Management: 
+- Mock-ups UI Desing: Figma (https://www.figma.com/file/CdesSpQOzo4R8pfkqnITcm/Casheri-Mockups?type=design&mode=design&t=20fdPj79CBJpXGkw-0)
