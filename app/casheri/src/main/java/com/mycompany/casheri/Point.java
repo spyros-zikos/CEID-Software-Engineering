@@ -1,10 +1,9 @@
 
 package com.mycompany.casheri;
 
-import org.jxmapviewer.viewer.DefaultWaypoint;//maybe useless
 import org.jxmapviewer.viewer.GeoPosition;
 
-public class Point extends DefaultWaypoint {
+public class Point {
     
     private String name;
     private GeoPosition coord;
