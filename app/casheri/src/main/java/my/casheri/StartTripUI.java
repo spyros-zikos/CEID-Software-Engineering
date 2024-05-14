@@ -12,9 +12,15 @@ import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
+import org.jxmapviewer.viewer.DefaultWaypoint;
+import org.jxmapviewer.viewer.Waypoint;
+import org.jxmapviewer.viewer.WaypointPainter;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+import javax.swing.ImageIcon;
 
 import com.mycompany.casheri.Database;
 import com.mycompany.casheri.Point;
@@ -24,16 +30,17 @@ public class StartTripUI extends javax.swing.JFrame {
 
     public StartTripUI() {
         initComponents();
+        ArrayList<Point> points = getPoints();
         initMap();
-        getPoints();
+        addPins(points);
     }
 
-    private ArrayList<Point> getPoints(){//ArrayList<Point>
+    private ArrayList<Point> getPoints(){
         
-        ArrayList<Point> tableList = new ArrayList<>();
+        ArrayList<Point> points = new ArrayList<>();
         Connection con = (new Database()).con();
         //here the driver is manually configured->driver_id=1
-        String query = "select * from trip where date_time >= NOW()and driver_id = 1 order by date_time desc";
+        String query = "select * from trip where date_time >= NOW()and driver_id = 1 order by date_time asc";
         Statement st;
         ResultSet rs;
         
@@ -48,13 +55,15 @@ public class StartTripUI extends javax.swing.JFrame {
                 point_start = new Point("start", new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));
                 point_end = new Point("end", new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
 
-                tableList.add(point_start);
-                tableList.add(point_end);                
+                points.add(point_start);
+                points.add(point_end);   
+                
+                break;
             }
         }catch(Exception ex){
             ex.printStackTrace();
         }
-        return tableList;
+        return points;
     }
     
     private void initMap() {
@@ -68,6 +77,24 @@ public class StartTripUI extends javax.swing.JFrame {
         jXMapViewer1.addMouseListener(mm);
         jXMapViewer1.addMouseMotionListener(mm);
         jXMapViewer1.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer1));
+    }
+    
+    private void addPins(ArrayList<Point> points) {
+        Set<Waypoint> waypoints = new HashSet<>();
+
+        // Add coordinates for pins
+        for (Point point : points) {
+            GeoPosition position = point.getCoord(); 
+            // Create waypoints for pins
+            Waypoint waypoint = new DefaultWaypoint(position);
+            // Add waypoints to the list
+            waypoints.add(waypoint);
+        }
+        
+        // Create a WaypointPainter to paint the waypoints on the map
+        WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
+        waypointPainter.setWaypoints(waypoints);
+        jXMapViewer1.setOverlayPainter(waypointPainter);
     }
     
     @SuppressWarnings("unchecked")
