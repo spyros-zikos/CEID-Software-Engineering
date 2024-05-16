@@ -29,9 +29,9 @@ public class MenuUI extends javax.swing.JFrame {
             }
         });
 
-        jPasswordField1.setText("password");
+        jPasswordField1.setText("");
 
-        jTextField1.setText("username");
+        jTextField1.setText("");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -64,34 +64,34 @@ public class MenuUI extends javax.swing.JFrame {
         String username = jTextField1.getText();
         String password = new String(jPasswordField1.getPassword());
 
-        try {
-            // Connect to the database
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/yourDatabase", "root", "root");
-
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/casheri", "root", "root")) {
             // Prepare the SQL statement for user verification
             String sql = "SELECT * FROM user WHERE username=? AND password=?";
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, username);
-            pst.setString(2, password);
-            ResultSet rs = pst.executeQuery();
+            try (PreparedStatement pst = con.prepareStatement(sql)) {
+                pst.setString(1, username);
+                pst.setString(2, password);
+                try (ResultSet rs = pst.executeQuery()) {
+                    if (rs.next()) {
+                        int userId = rs.getInt("id");
+                        String fullName = rs.getString("full_name");
 
-            if (rs.next()) {
-                int userId = rs.getInt("id");
-
-                // Check if the user is a driver
-                sql = "SELECT * FROM driver WHERE user_id=?";
-                pst = con.prepareStatement(sql);
-                pst.setInt(1, userId);
-                ResultSet rsDriver = pst.executeQuery();
-
-                if (rsDriver.next()) {
-                    new StartTripUI().setVisible(true);
-                } else {
-                    new PassengerUI().setVisible(true);
+                        // Check if the user is a driver
+                        sql = "SELECT * FROM driver WHERE user_id=?";
+                        try (PreparedStatement pstDriver = con.prepareStatement(sql)) {
+                            pstDriver.setInt(1, userId);
+                            try (ResultSet rsDriver = pstDriver.executeQuery()) {
+                                if (rsDriver.next()) {
+                                    new StartTripUI().setVisible(true);
+                                } else {
+                                    new PassengerUI(fullName).setVisible(true);
+                                }
+                            }
+                        }
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Invalid username or password.");
+                    }
                 }
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Invalid username or password.");
             }
         } catch (Exception e) {
             e.printStackTrace();
