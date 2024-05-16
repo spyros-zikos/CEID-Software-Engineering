@@ -7,7 +7,6 @@ package my.casheri;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import javax.swing.event.MouseInputListener;
 import org.jxmapviewer.OSMTileFactoryInfo;
-import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.GeoPosition;
@@ -20,11 +19,22 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
-import javax.swing.ImageIcon;
 
 import com.mycompany.casheri.Database;
 import com.mycompany.casheri.Point;
+import com.mycompany.casheri.RoutePainter;
+//import com.mycompany.casheri.PointRender;
 import com.mycompany.casheri.Trip;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.util.Arrays;
+import java.util.List;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.VirtualEarthTileFactoryInfo;
+import org.jxmapviewer.painter.CompoundPainter;
+import org.jxmapviewer.painter.Painter;
+import org.jxmapviewer.viewer.DefaultWaypointRenderer;
 
 public class StartTripUI extends javax.swing.JFrame {
 
@@ -67,34 +77,50 @@ public class StartTripUI extends javax.swing.JFrame {
     }
     
     private void initMap() {
-        TileFactoryInfo info = new OSMTileFactoryInfo();
-        DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+        TileFactoryInfo info = new OSMTileFactoryInfo(); 
+//        TileFactoryInfo info = new VirtualEarthTileFactoryInfo(VirtualEarthTileFactoryInfo.MAP);
+        DefaultTileFactory tileFactory = new DefaultTileFactory(info); 
+        
         jXMapViewer1.setTileFactory(tileFactory);
         GeoPosition geo = new GeoPosition(38.2483182,21.7532223);
         jXMapViewer1.setAddressLocation(geo);
-        jXMapViewer1.setZoom(12);
+        jXMapViewer1.setZoom(8);
         MouseInputListener mm = new PanMouseInputListener(jXMapViewer1);
         jXMapViewer1.addMouseListener(mm);
         jXMapViewer1.addMouseMotionListener(mm);
         jXMapViewer1.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer1));
     }
     
-    private void addPins(ArrayList<Point> points) {
+private void addPins(ArrayList<Point> points) {
         Set<Waypoint> waypoints = new HashSet<>();
-
-        // Add coordinates for pins
+        List<GeoPosition> track = new ArrayList<>();
         for (Point point : points) {
             GeoPosition position = point.getCoord(); 
-            // Create waypoints for pins
             Waypoint waypoint = new DefaultWaypoint(position);
-            // Add waypoints to the list
             waypoints.add(waypoint);
+            
+            track.add(position);
         }
-        
-        // Create a WaypointPainter to paint the waypoints on the map
+        RoutePainter routePainter = new RoutePainter(track);
+
         WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
         waypointPainter.setWaypoints(waypoints);
+        waypointPainter.setRenderer(new DefaultWaypointRenderer() {
+            @Override
+            public void paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp) {
+                Point2D point = map.getTileFactory().geoToPixel(wp.getPosition(), map.getZoom());
+                g.setColor(Color.YELLOW);
+                g.fillOval((int) point.getX() - 5, (int) point.getY() - 5, 10, 10);
+            }
+        });
+        List<Painter<JXMapViewer>> painters = new ArrayList<Painter<JXMapViewer>>();
+        painters.add(routePainter);
+        painters.add(waypointPainter);   
+        CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
+
         jXMapViewer1.setOverlayPainter(waypointPainter);
+        jXMapViewer1.setRoutingData(painter);
+
     }
     
     @SuppressWarnings("unchecked")
@@ -110,11 +136,11 @@ public class StartTripUI extends javax.swing.JFrame {
         jXMapViewer1.setLayout(jXMapViewer1Layout);
         jXMapViewer1Layout.setHorizontalGroup(
             jXMapViewer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 455, Short.MAX_VALUE)
+            .addGap(0, 274, Short.MAX_VALUE)
         );
         jXMapViewer1Layout.setVerticalGroup(
             jXMapViewer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 249, Short.MAX_VALUE)
+            .addGap(0, 391, Short.MAX_VALUE)
         );
 
         jButton1.setText("Start Trip");
@@ -124,22 +150,23 @@ public class StartTripUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(248, 248, 248))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(53, 53, 53)
-                .addComponent(jXMapViewer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(106, 106, 106))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jXMapViewer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(99, 99, 99)
+                        .addComponent(jButton1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(88, 88, 88)
+                .addContainerGap(43, Short.MAX_VALUE)
                 .addComponent(jXMapViewer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addGap(16, 16, 16))
         );
 
         pack();
