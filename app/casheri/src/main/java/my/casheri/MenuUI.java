@@ -6,9 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
-public class LoginUI extends javax.swing.JFrame {
+public class MenuUI extends javax.swing.JFrame {
 
-    public LoginUI() {
+    public MenuUI() {
         initComponents();
     }
 
@@ -81,7 +81,7 @@ public class LoginUI extends javax.swing.JFrame {
                             pstDriver.setInt(1, userId);
                             try (ResultSet rsDriver = pstDriver.executeQuery()) {
                                 if (rsDriver.next()) {
-                                    new DriverUI().setVisible(true);
+                                    new StartTripUI().setVisible(true);
                                 } else {
                                     new PassengerUI(fullName).setVisible(true);
                                 }
@@ -102,7 +102,7 @@ public class LoginUI extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new LoginUI().setVisible(true);
+                new MenuUI().setVisible(true);
             }
         });
     }
