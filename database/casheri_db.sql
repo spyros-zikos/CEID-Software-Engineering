@@ -6,8 +6,8 @@ CREATE TABLE `User`(
     `full_name` VARCHAR(255) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
     `phone` BIGINT NOT NULL,
-    `latitude` DOUBLE(8, 2) NOT NULL,
-    `longitude` DOUBLE(8, 2) NOT NULL
+    `latitude` DECIMAL(18,9) NOT NULL,
+    `longitude` DECIMAL(18,9) NOT NULL
 );
 ALTER TABLE
     `User` ADD UNIQUE `user_username_unique`(`username`);
@@ -27,10 +27,10 @@ CREATE TABLE `Trip`(
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `driver_id` INT UNSIGNED NOT NULL,
     `date_time` DATETIME NOT NULL,
-    `start_latitude` DOUBLE(8, 2) NOT NULL,
-    `start_longitude` DOUBLE(8, 2) NOT NULL,
-    `end_latitude` DOUBLE(8, 2) NOT NULL,
-    `end_longitude` DOUBLE(8, 2) NOT NULL,
+    `start_latitude` DECIMAL(18,9) NOT NULL,
+    `start_longitude` DECIMAL(18,9) NOT NULL,
+    `end_latitude` DECIMAL(18,9) NOT NULL,
+    `end_longitude` DECIMAL(18,9) NOT NULL,
     `cost` FLOAT NOT NULL
 );
 CREATE TABLE `Passenger`(
@@ -50,10 +50,10 @@ CREATE TABLE `Ride`(
     `trip_id` INT UNSIGNED NOT NULL,
     `passenger_id` INT UNSIGNED NOT NULL,
     `date_time` DATETIME NOT NULL,
-    `start_latitude` DOUBLE(8, 2) NOT NULL,
-    `start_longitude` DOUBLE(8, 2) NOT NULL,
-    `end_latitude` DOUBLE(8, 2) NOT NULL,
-    `end_longitude` DOUBLE(8, 2) NOT NULL,
+    `start_latitude` DECIMAL(18,9) NOT NULL,
+    `start_longitude` DECIMAL(18,9) NOT NULL,
+    `end_latitude` DECIMAL(18,9) NOT NULL,
+    `end_longitude` DECIMAL(18,9) NOT NULL,
     `cost` DOUBLE(8, 2) NOT NULL
 );
 ALTER TABLE
