@@ -119,7 +119,7 @@ private void addPins(ArrayList<Point> points) {
         CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
 
         jXMapViewer1.setOverlayPainter(waypointPainter);
-        jXMapViewer1.setRoutingData(painter);
+//        jXMapViewer1.setRoutingData(painter);
 
     }
     
