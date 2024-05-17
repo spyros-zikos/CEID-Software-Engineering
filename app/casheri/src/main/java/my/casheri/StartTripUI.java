@@ -19,6 +19,7 @@ import com.mycompany.casheri.Point;
 import com.mycompany.casheri.RoutePainter;
 import com.mycompany.casheri.RoutingData;
 import com.mycompany.casheri.RoutingService;
+import com.mycompany.casheri.Map;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
@@ -67,14 +68,14 @@ public class StartTripUI extends javax.swing.JFrame {
     private void initMap() {
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
-        jXMapViewer1.setTileFactory(tileFactory);
+        map1.setTileFactory(tileFactory);
         GeoPosition geo = new GeoPosition(38.2483182, 21.7532223);
-        jXMapViewer1.setAddressLocation(geo);
-        jXMapViewer1.setZoom(8);
-        MouseInputListener mm = new PanMouseInputListener(jXMapViewer1);
-        jXMapViewer1.addMouseListener(mm);
-        jXMapViewer1.addMouseMotionListener(mm);
-        jXMapViewer1.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer1));
+        map1.setAddressLocation(geo);
+        map1.setZoom(8);
+        MouseInputListener mm = new PanMouseInputListener(map1);
+        map1.addMouseListener(mm);
+        map1.addMouseMotionListener(mm);
+        map1.addMouseWheelListener(new ZoomMouseWheelListenerCenter(map1));
     }
     
     private void addPins(ArrayList<Point> points) {
@@ -107,9 +108,9 @@ public class StartTripUI extends javax.swing.JFrame {
         painters.add(waypointPainter);   
         CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
 
-        jXMapViewer1.setOverlayPainter(waypointPainter);
-//        jXMapViewer1.setRoutingData(painter);
-        jXMapViewer1.setOverlayPainter(painter);
+        map1.setOverlayPainter(waypointPainter);
+//        map1.setRoutingData(painter);
+        map1.setOverlayPainter(painter);
     
     //  Routing Data
         if (waypoints.size() == 2) {
@@ -128,7 +129,7 @@ public class StartTripUI extends javax.swing.JFrame {
             } else {
                 routingData.clear();
             }
-            jXMapViewer.setRoutingData(routingData);
+            map1.setRoutingData(routingData);
         }
     }
 
@@ -141,17 +142,35 @@ public class StartTripUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        map1 = new com.mycompany.casheri.Map();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        javax.swing.GroupLayout map1Layout = new javax.swing.GroupLayout(map1);
+        map1.setLayout(map1Layout);
+        map1Layout.setHorizontalGroup(
+            map1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 322, Short.MAX_VALUE)
+        );
+        map1Layout.setVerticalGroup(
+            map1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 270, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(map1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(map1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 30, Short.MAX_VALUE))
         );
 
         pack();
@@ -193,5 +212,6 @@ public class StartTripUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.mycompany.casheri.Map map1;
     // End of variables declaration//GEN-END:variables
 }
