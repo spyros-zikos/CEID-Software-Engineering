@@ -97,9 +97,11 @@ public class StartTripUI extends javax.swing.JFrame {
         
         List<Painter<JXMapViewer>> painters = new ArrayList<>();
         painters.add(routePainter);
-        painters.add(waypointPainter);
-        CompoundPainter<JXMapViewer> painter = new CompoundPainter<>(painters);
+        painters.add(waypointPainter);   
+        CompoundPainter<JXMapViewer> painter = new CompoundPainter<JXMapViewer>(painters);
 
+        jXMapViewer1.setOverlayPainter(waypointPainter);
+//        jXMapViewer1.setRoutingData(painter);
         jXMapViewer1.setOverlayPainter(painter);
     }
 
