@@ -6,6 +6,7 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.ResponsePath;
 import com.graphhopper.config.CHProfile;
 import com.graphhopper.config.Profile;
+import com.graphhopper.util.GHUtility;
 import com.graphhopper.util.Instruction;
 import com.graphhopper.util.InstructionList;
 import com.graphhopper.util.PointList;
@@ -30,20 +31,22 @@ public class RoutingService {
     }
 
     private GraphHopper createGraphHopperInstance(String ghLoc) {
-        GraphHopper graHopper = new GraphHopper();
-        graHopper.setOSMFile(ghLoc);
+        GraphHopper grhopper = new GraphHopper();
+        grhopper.setOSMFile(ghLoc);
         // specify where to store graphhopper files
-        graHopper.setGraphHopperLocation("target/routing-graph-cache");
+        grhopper.setGraphHopperLocation("target/routing-graph-cache");
 
+        // add all encoded values that are used in the custom model, these are also available as path details or for client-side custom models
+        grhopper.setEncodedValuesString("car_access, car_average_speed");
         // see docs/core/profiles.md to learn more about profiles
-        graHopper.setProfiles(new Profile("car").setVehicle("car").setWeighting("fastest").setTurnCosts(false));
+        grhopper.setProfiles(new Profile("car").setCustomModel(GHUtility.loadCustomModelFromJar("car.json")));
 
         // this enables speed mode for the profile we called car
-        graHopper.getCHPreparationHandler().setCHProfiles(new CHProfile("car"));
+        grhopper.getCHPreparationHandler().setCHProfiles(new CHProfile("car"));
 
         // now this can take minutes if it imports or a few seconds for loading of course this is dependent on the area you import
-        graHopper.importOrLoad();
-        return graHopper;
+        grhopper.importOrLoad();
+        return grhopper;
     }
 
     public List<RoutingData> routing(double fromLat, double fromLon, double toLat, double toLon) {
