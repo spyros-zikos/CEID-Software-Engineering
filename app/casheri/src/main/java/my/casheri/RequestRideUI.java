@@ -209,4 +209,8 @@ private void initMap() {
     private org.jxmapviewer.JXMapViewer jXMapViewer6;
     private org.jxmapviewer.JXMapViewer jXMapViewer7;
     // End of variables declaration//GEN-END:variables
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main
