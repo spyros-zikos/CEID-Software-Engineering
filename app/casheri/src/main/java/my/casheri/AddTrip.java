@@ -5,6 +5,7 @@
 package my.casheri;
 
 import java.sql.*;
+import com.mycompany.casheri.Database;
 
 /**
  *
@@ -22,7 +23,7 @@ public class AddTrip extends javax.swing.JFrame {
     }
     
     public void getSthFromDB() {
-        Connection con = (new GetConnection()).getConnection();
+        Connection con = (new Database()).con();
         String query = "select * from driver ";
         Statement st;
         ResultSet rs;
