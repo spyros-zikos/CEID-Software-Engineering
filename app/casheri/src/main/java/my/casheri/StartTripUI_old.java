@@ -106,7 +106,7 @@ public class StartTripUI_old extends javax.swing.JFrame {
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         jXMapViewer1 = new org.jxmapviewer.JXMapViewer();
         jButton1 = new javax.swing.JButton();
@@ -151,7 +151,7 @@ public class StartTripUI_old extends javax.swing.JFrame {
         );
 
         pack();
-    } // </editor-fold>
+    } // </editor-fold>//GEN-END:initComponents
 
     public static void main(String args[]) {
         try {
