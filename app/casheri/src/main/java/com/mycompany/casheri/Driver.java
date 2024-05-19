@@ -4,6 +4,8 @@
  */
 package com.mycompany.casheri;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Kallinikos
@@ -13,6 +15,7 @@ public class Driver extends User {
     private String carId;
     private String carColor;
     private String carPhoto;
+    private ArrayList<Post> posts;
 
     // Constructor
     public Driver(int id, String name, String password, Coordinates location, String userPhoto,
@@ -55,6 +58,14 @@ public class Driver extends User {
 
     public void setCarPhoto(String carPhoto) {
         this.carPhoto = carPhoto;
+    }
+    
+    public ArrayList<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(ArrayList<Post> posts) {
+        this.posts = posts;
     }
 
     // Override toString() method to provide a string representation of the Driver object
