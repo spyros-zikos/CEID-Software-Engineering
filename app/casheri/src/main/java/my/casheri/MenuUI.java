@@ -81,7 +81,7 @@ public class MenuUI extends javax.swing.JFrame {
                             pstDriver.setInt(1, userId);
                             try (ResultSet rsDriver = pstDriver.executeQuery()) {
                                 if (rsDriver.next()) {
-                                    new StartTripUI_old().setVisible(true);
+                                    new casheriUI().setVisible(true);
                                 } else {
                                     new PassengerUI(fullName).setVisible(true);
                                 }

@@ -34,7 +34,9 @@ public class RoutingService {
     }
 
     private RoutingService() {//double start_lat, double start_long, double end_lat, double end_long     
-        String ghLoc = "C:\\Users\\kalli\\Desktop\\github\\Software-Engineering-Project\\app\\casheri\\jar_files\\graphhopper_lib\\greece-latest.osm.pbf";
+//        String ghLoc = "C:\\Users\\kalli\\Desktop\\github\\Software-Engineering-Project\\app\\casheri\\jar_files\\graphhopper_lib\\greece-latest.osm.pbf";
+        String ghLoc = "osm_files\\greece-latest.osm.pbf";
+
         hopper = createGraphHopperInstance(ghLoc);
 //        customizableRouting(ghLoc, start_lat, start_long, end_lat, end_long);
     }
@@ -91,43 +93,4 @@ public class RoutingService {
         }
         return list;
     }
-    
-//    public static void customizableRouting(String ghLoc, double start_lat, double start_long, double end_lat, double end_long) {
-//        GraphHopper hopper = new GraphHopper();
-//        hopper.setOSMFile(ghLoc);
-//        hopper.setGraphHopperLocation("target/routing-custom-graph-cache");
-//        hopper.setEncodedValuesString("car_access, car_average_speed");
-//        hopper.setProfiles(new Profile("car_custom").setCustomModel(GHUtility.loadCustomModelFromJar("car.json")));
-//
-//        // The hybrid mode uses the "landmark algorithm" and is up to 15x faster than the flexible mode (Dijkstra).
-//        // Still it is slower than the speed mode ("contraction hierarchies algorithm") ...
-//        hopper.getLMPreparationHandler().setLMProfiles(new LMProfile("car_custom"));
-//        hopper.importOrLoad();
-//
-//        // ... but for the hybrid mode we can customize the route calculation even at request time:
-//        // 1. a request with default preferences
-//        GHRequest req = new GHRequest().setProfile("car_custom").
-//                addPoint(new GHPoint(start_lat, start_long)).addPoint(new GHPoint(end_lat, end_long));
-//
-//        GHResponse res = hopper.route(req);
-//        if (res.hasErrors())
-//            throw new RuntimeException(res.getErrors().toString());
-//
-//        assert Math.round(res.getBest().getTime() / 1000d) == 94;
-//
-//        // 2. now avoid the secondary road and reduce the maximum speed, see docs/core/custom-models.md for an in-depth explanation
-//        // and also the blog posts https://www.graphhopper.com/?s=customizable+routing
-//        CustomModel model = new CustomModel();
-//        model.addToPriority(If("road_class == SECONDARY", MULTIPLY, "0.5"));
-//
-//        // unconditional limit to 20km/h
-//        model.addToSpeed(If("true", LIMIT, "30"));
-//
-//        req.setCustomModel(model);
-//        res = hopper.route(req);
-//        if (res.hasErrors())
-//            throw new RuntimeException(res.getErrors().toString());
-//
-//        assert Math.round(res.getBest().getTime() / 1000d) == 184;
-//    }
 }

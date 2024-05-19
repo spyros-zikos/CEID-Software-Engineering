@@ -1,12 +1,9 @@
-com\mycompany\casheri\RoutePainter.class
-my\casheri\StartTripUI_old.class
 my\casheri\MenuUI$2.class
 my\casheri\PassengerUI.class
 com\mycompany\casheri\Database.class
 my\casheri\casheriUI$4.class
 my\casheri\RequestRideUI$3.class
 my\casheri\StartTripUI$2.class
-my\casheri\StartTripUI_old$2.class
 com\mycompany\casheri\Map.class
 my\casheri\StartTripUI.class
 com\mycompany\casheri\Driver.class
@@ -27,7 +24,6 @@ my\casheri\RequestRideUI$2.class
 my\casheri\casheriUI$5.class
 com\mycompany\casheri\Casheri.class
 my\casheri\MenuUI$1.class
-my\casheri\StartTripUI_old$1.class
 my\casheri\casheriUI$1.class
 my\casheri\PassengerUI$1.class
 my\casheri\StartTripUI$1.class

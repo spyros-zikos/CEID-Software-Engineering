@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.HashSet;
 import com.mycompany.casheri.Database;
 import com.mycompany.casheri.Point;
-import com.mycompany.casheri.RoutePainter;
 import com.mycompany.casheri.RoutingData;
 import com.mycompany.casheri.RoutingService;
 import com.mycompany.casheri.Map;
@@ -24,6 +23,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.util.List;
+import javax.swing.ImageIcon;
 import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.painter.CompoundPainter;
 import org.jxmapviewer.painter.Painter;
@@ -35,23 +35,20 @@ public class StartTripUI extends javax.swing.JFrame {
 
     public StartTripUI() {
         initComponents();
-        ArrayList<Point> points = getPoints("trip");
+        ArrayList<Point> driverPoints = getTrip();
+        ArrayList<Point> passengerPoints = getRide(Integer.valueOf(driverPoints.get(0).getName()));
         initMap();       
-        addPins(points);
+        addRoute(driverPoints);
+        driverPoints.addAll(passengerPoints);
+        addPins(driverPoints);
     }
     
-    private ArrayList<Point> getPoints(String queryType) {
+    private ArrayList<Point> getTrip() {
         ArrayList<Point> points = new ArrayList<>();
         Connection con = (new Database()).con();
         String query = null;
-        if ("trip".equals(queryType)) {
-            //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
-            query = "select * from trip where date_time >= NOW() and driver_id = 1 order by date_time asc";
-        } else if ("ride".equals(queryType)) {
-            query = "select * from trip where date_time >= NOW() and driver_id = 1 order by date_time asc";
-
-            query = "select * from ride where date_time >= NOW() and driver_id = 1 order by date_time asc";
-        }
+        //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
+        query = "select * from trip where date_time >= NOW() and driver_id = 1 order by date_time asc";
         
         Statement st;
         ResultSet rs;
@@ -62,9 +59,9 @@ public class StartTripUI extends javax.swing.JFrame {
             Point point_start;
             Point point_end;
             while (rs.next()) {
-                point_start = new Point("start", new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")), Point.PointType.START);                
-                point_end = new Point("end", new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")), Point.PointType.END);
-            
+                System.out.print("One More Time 1");
+                point_start = new Point(rs.getString("id"), new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")), Point.PointType.START);                
+                point_end = new Point(rs.getString("id"), new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")), Point.PointType.END);
                 points.add(point_start);
                 points.add(point_end);
                 break;
@@ -75,6 +72,34 @@ public class StartTripUI extends javax.swing.JFrame {
         return points;
     }
 
+    private ArrayList<Point> getRide(int trip_id) {
+        ArrayList<Point> points = new ArrayList<>();
+        Connection con = (new Database()).con();
+        String query = null;
+        //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
+        query = "select * from ride where trip_id=" + trip_id;
+        
+        Statement st;
+        ResultSet rs;
+        
+        try {
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            Point point_start;
+            Point point_end;
+            while (rs.next()) {
+                System.out.print("One More Time");
+                point_start = new Point(rs.getString("passenger_id"), new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")), Point.PointType.START);                
+                point_end = new Point(rs.getString("passenger_id"), new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")), Point.PointType.END);
+                points.add(point_start);
+                points.add(point_end);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return points;
+    }  
+    
     private void initMap() {
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
@@ -95,6 +120,7 @@ public class StartTripUI extends javax.swing.JFrame {
         for (Point point : points) {
             GeoPosition position = point.getCoord();
             Waypoint waypoint = new DefaultWaypoint(position);
+//            waypoint.addActionListener();
             waypoints.add(waypoint);
         }
 
@@ -104,13 +130,16 @@ public class StartTripUI extends javax.swing.JFrame {
             @Override
             public void paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp) {
                 Point2D point = map.getTileFactory().geoToPixel(wp.getPosition(), map.getZoom());
-                g.setColor(Color.YELLOW);
+                g.setColor(Color.RED);
+//                String image = "C:\\Users\\kalli\\Desktop\\github\\Software-Engineering-Project\\app\\casheri\\src\\main\\java\\icons\\pin_icon\\2642502.png";
+//                g.drawImage(new ImageIcon(getClass().getResource(image)),(int) point.getX() - 5, (int) point.getY() - 5);
                 g.fillOval((int) point.getX() - 5, (int) point.getY() - 5, 13, 13);
             }
         });
         map1.setOverlayPainter(waypointPainter);
-
-    //  Routing Data
+    }
+    
+    private void addRoute(ArrayList<Point> points) {
         if (points.size() == 2) {
             GeoPosition start = null;
             GeoPosition end = null;
@@ -127,7 +156,7 @@ public class StartTripUI extends javax.swing.JFrame {
                 routingData.clear();
             }
             map1.setRoutingData(routingData);        
-        }
+        }   
     }
 
     /**
