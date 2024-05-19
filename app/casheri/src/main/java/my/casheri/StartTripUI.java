@@ -1,13 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package my.casheri;
 
+package my.casheri;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import javax.swing.event.MouseInputListener;
 import org.jxmapviewer.OSMTileFactoryInfo;
-import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.GeoPosition;
@@ -15,106 +10,149 @@ import org.jxmapviewer.viewer.TileFactoryInfo;
 import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.Waypoint;
 import org.jxmapviewer.viewer.WaypointPainter;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
-import javax.swing.ImageIcon;
-
 import com.mycompany.casheri.Database;
 import com.mycompany.casheri.Point;
-import com.mycompany.casheri.Trip;
+import com.mycompany.casheri.RoutePainter;
+import com.mycompany.casheri.RoutingData;
+import com.mycompany.casheri.RoutingService;
+import com.mycompany.casheri.Map;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.util.List;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.painter.CompoundPainter;
+import org.jxmapviewer.painter.Painter;
+import org.jxmapviewer.viewer.DefaultWaypointRenderer;
 
 public class StartTripUI extends javax.swing.JFrame {
 
+    private List<RoutingData> routingData = new ArrayList<>();
+
     public StartTripUI() {
         initComponents();
-        ArrayList<Point> points = getPoints();
-        initMap();
+        ArrayList<Point> points = getPoints("trip");
+        initMap();       
         addPins(points);
     }
-
-    private ArrayList<Point> getPoints(){
-        
+    
+    private ArrayList<Point> getPoints(String queryType) {
         ArrayList<Point> points = new ArrayList<>();
         Connection con = (new Database()).con();
-        //here the driver is manually configured->driver_id=1
-        String query = "select * from trip where date_time >= NOW()and driver_id = 1 order by date_time asc";
+        String query = null;
+        if ("trip".equals(queryType)) {
+            //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
+            query = "select * from trip where date_time >= NOW() and driver_id = 1 order by date_time asc";
+        } else if ("ride".equals(queryType)) {
+            query = "select * from trip where date_time >= NOW() and driver_id = 1 order by date_time asc";
+
+            query = "select * from ride where date_time >= NOW() and driver_id = 1 order by date_time asc";
+        }
+        
         Statement st;
         ResultSet rs;
         
-        try{
+        try {
             st = con.createStatement();
             rs = st.executeQuery(query);
             Point point_start;
             Point point_end;
-            while(rs.next()){
-//                trip = new Trip(rs.getInt("id"), rs.getInt("driver_id"), rs.getString("date_time"), rs.getFloat("start_latitude"),
-//                        rs.getFloat("start_longitude"), rs.getFloat("end_latitude"), rs.getFloat("end_longitude"), rs.getFloat("cost"));
-                point_start = new Point("start", new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));
-                point_end = new Point("end", new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
-
+            while (rs.next()) {
+                point_start = new Point("start", new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")), Point.PointType.START);                
+                point_end = new Point("end", new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")), Point.PointType.END);
+            
                 points.add(point_start);
-                points.add(point_end);   
-                
+                points.add(point_end);
                 break;
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return points;
     }
-    
+
     private void initMap() {
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
-        jXMapViewer1.setTileFactory(tileFactory);
-        GeoPosition geo = new GeoPosition(38.2483182,21.7532223);
-        jXMapViewer1.setAddressLocation(geo);
-        jXMapViewer1.setZoom(12);
-        MouseInputListener mm = new PanMouseInputListener(jXMapViewer1);
-        jXMapViewer1.addMouseListener(mm);
-        jXMapViewer1.addMouseMotionListener(mm);
-        jXMapViewer1.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer1));
+        map1.setTileFactory(tileFactory);
+        GeoPosition geo = new GeoPosition(38.2483182, 21.7532223);
+
+        map1.setAddressLocation(geo);
+        map1.setZoom(7);
+        MouseInputListener mm = new PanMouseInputListener(map1);
+        map1.addMouseListener(mm);
+        map1.addMouseMotionListener(mm);
+        map1.addMouseWheelListener(new ZoomMouseWheelListenerCenter(map1));
     }
     
     private void addPins(ArrayList<Point> points) {
         Set<Waypoint> waypoints = new HashSet<>();
-
-        // Add coordinates for pins
+        
         for (Point point : points) {
-            GeoPosition position = point.getCoord(); 
-            // Create waypoints for pins
+            GeoPosition position = point.getCoord();
             Waypoint waypoint = new DefaultWaypoint(position);
-            // Add waypoints to the list
             waypoints.add(waypoint);
         }
-        
-        // Create a WaypointPainter to paint the waypoints on the map
+
         WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
         waypointPainter.setWaypoints(waypoints);
-        jXMapViewer1.setOverlayPainter(waypointPainter);
+        waypointPainter.setRenderer(new DefaultWaypointRenderer() {
+            @Override
+            public void paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp) {
+                Point2D point = map.getTileFactory().geoToPixel(wp.getPosition(), map.getZoom());
+                g.setColor(Color.YELLOW);
+                g.fillOval((int) point.getX() - 5, (int) point.getY() - 5, 13, 13);
+            }
+        });
+        map1.setOverlayPainter(waypointPainter);
+
+    //  Routing Data
+        if (points.size() == 2) {
+            GeoPosition start = null;
+            GeoPosition end = null;
+            for (Point p : points) {
+                if (p.getPointType() == Point.PointType.START) {
+                    start = p.getCoord();
+                } else if (p.getPointType() == Point.PointType.END) {
+                    end = p.getCoord();
+                }
+            }
+            if (start != null && end != null) {
+                routingData = RoutingService.getInstance().routing(start.getLatitude(), start.getLongitude(), end.getLatitude(), end.getLongitude());               
+            } else {
+                routingData.clear();
+            }
+            map1.setRoutingData(routingData);        
+        }
     }
-    
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jXMapViewer1 = new org.jxmapviewer.JXMapViewer();
+        map1 = new com.mycompany.casheri.Map();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        javax.swing.GroupLayout jXMapViewer1Layout = new javax.swing.GroupLayout(jXMapViewer1);
-        jXMapViewer1.setLayout(jXMapViewer1Layout);
-        jXMapViewer1Layout.setHorizontalGroup(
-            jXMapViewer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 455, Short.MAX_VALUE)
+        javax.swing.GroupLayout map1Layout = new javax.swing.GroupLayout(map1);
+        map1.setLayout(map1Layout);
+        map1Layout.setHorizontalGroup(
+            map1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 370, Short.MAX_VALUE)
         );
-        jXMapViewer1Layout.setVerticalGroup(
-            jXMapViewer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 249, Short.MAX_VALUE)
+        map1Layout.setVerticalGroup(
+            map1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 388, Short.MAX_VALUE)
         );
 
         jButton1.setText("Start Trip");
@@ -124,22 +162,23 @@ public class StartTripUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(248, 248, 248))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(53, 53, 53)
-                .addComponent(jXMapViewer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(106, 106, 106))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(map1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(155, 155, 155)
+                        .addComponent(jButton1)))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(88, 88, 88)
-                .addComponent(jXMapViewer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64)
+                .addContainerGap(29, Short.MAX_VALUE)
+                .addComponent(map1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addGap(31, 31, 31))
         );
 
         pack();
@@ -182,6 +221,6 @@ public class StartTripUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private org.jxmapviewer.JXMapViewer jXMapViewer1;
+    private com.mycompany.casheri.Map map1;
     // End of variables declaration//GEN-END:variables
 }
