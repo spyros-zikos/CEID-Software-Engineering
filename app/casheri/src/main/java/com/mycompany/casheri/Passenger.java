@@ -4,6 +4,8 @@
  */
 package com.mycompany.casheri;
 
+import org.jxmapviewer.viewer.GeoPosition;
+
 /**
  *
  * @author greg
@@ -14,7 +16,7 @@ public class Passenger extends User {
         super(id);
     }
     // Constructor
-    public Passenger(int id, String name, String password, Coordinates location, String userPhoto) {
+    public Passenger(int id, String name, String password, GeoPosition location, String userPhoto) {
         super(id, name, password, location, userPhoto);
     }
 
