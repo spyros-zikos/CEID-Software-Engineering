@@ -1,15 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.casheri;
 
 import java.util.ArrayList;
+import org.jxmapviewer.viewer.GeoPosition;
 
-/**
- *
- * @author Kallinikos
- */
 public class Driver extends User {
     private String carModel;
     private String carId;
@@ -18,7 +11,7 @@ public class Driver extends User {
     private ArrayList<Post> posts;
 
     // Constructor
-    public Driver(int id, String name, String password, Coordinates location, String userPhoto,
+    public Driver(int id, String name, String password, GeoPosition location, String userPhoto,
                   String carModel, String carId, String carColor, String carPhoto) {
         super(id, name, password, location, userPhoto);
         this.carModel = carModel;
@@ -66,22 +59,6 @@ public class Driver extends User {
 
     public void setPosts(ArrayList<Post> posts) {
         this.posts = posts;
-    }
-
-    // Override toString() method to provide a string representation of the Driver object
-    @Override
-    public String toString() {
-        return "Driver{" +
-                "carModel='" + carModel + '\'' +
-                ", carId='" + carId + '\'' +
-                ", carColor='" + carColor + '\'' +
-                ", carPhoto='" + carPhoto + '\'' +
-                ", id=" + getId() +
-                ", name='" + getName() + '\'' +
-                ", password='" + getPassword() + '\'' +
-                ", location=" + getLocation() +
-                ", userPhoto='" + getUserPhoto() + '\'' +
-                '}';
     }
 }
 

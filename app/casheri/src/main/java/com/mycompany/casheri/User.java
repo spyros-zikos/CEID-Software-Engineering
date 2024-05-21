@@ -1,32 +1,36 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.casheri;
 
-/**
- *
- * @author greg
- */
+import org.jxmapviewer.viewer.GeoPosition;
+
 public class User {
     private int id;
-    private String name;
+    private String uname;
     private String password;
-    private Coordinates location;
+    private GeoPosition location;
     private String userPhoto;
+    private int phone;
 
     // Simple Constructor
     public User(int id) {
         this.id = id;
     }
     
-    // Constructor
-    public User(int id, String name, String password, Coordinates location, String userPhoto) {
+    // Constructor Greg
+    public User(int id, String uname, String password, GeoPosition location, String userPhoto) {
         this.id = id;
-        this.name = name;
+        this.uname = uname;
         this.password = password;
         this.location = location;
         this.userPhoto = userPhoto;
+    }
+    
+    //Constructor Kalli
+    public User(int id, String uname, int phone, GeoPosition location) {
+        this.id = id;
+//        this.userType = userType;
+        this.uname = uname;
+        this.phone = phone;
+        this.location = location;
     }
 
     // Getters and setters
@@ -39,11 +43,11 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return uname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String uname) {
+        this.uname = uname;
     }
 
     public String getPassword() {
@@ -54,11 +58,11 @@ public class User {
         this.password = password;
     }
 
-    public Coordinates getLocation() {
+    public GeoPosition getLocation() {
         return location;
     }
 
-    public void setLocation(Coordinates location) {
+    public void setLocation(GeoPosition location) {
         this.location = location;
     }
 
@@ -70,16 +74,12 @@ public class User {
         this.userPhoto = userPhoto;
     }
 
-    // Override toString() method to provide a string representation of the User object
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", location=" + location +
-                ", userPhoto='" + userPhoto + '\'' +
-                '}';
+    public int getPhone() {
+        return phone;
+    }
+   
+    public void setPhone(int phone) {
+        this.phone = phone;
     }
 }
 
