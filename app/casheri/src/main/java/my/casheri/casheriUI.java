@@ -1,18 +1,26 @@
 package my.casheri;
 
 import javax.swing.ImageIcon;
+import java.sql.Connection; // Import the Connection class
+import java.sql.SQLException; // Import the SQLException class
+import com.mycompany.casheri.Database; // Import the Database class
 
 /**
  *
  * @author Damianos
  */
 public class casheriUI extends javax.swing.JFrame {
-
     /**
      * Creates new form casheriUI
      */
+    
+    // Database connection
+    public static Connection connection;
+    
     public casheriUI() {
         initComponents();
+        Database db = new Database();
+        this.connection = db.con();
     }
 
     /**
@@ -28,7 +36,7 @@ public class casheriUI extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        socialMediaButton = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
 
@@ -55,10 +63,10 @@ public class casheriUI extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setText("Preview Trip");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        socialMediaButton.setText("Social Media");
+        socialMediaButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                socialMediaButtonActionPerformed(evt);
             }
         });
 
@@ -78,7 +86,7 @@ public class casheriUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(78, 78, 78)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(socialMediaButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -103,7 +111,7 @@ public class casheriUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(socialMediaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(68, 68, 68))
@@ -113,7 +121,8 @@ public class casheriUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        new MySchedule().setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -126,9 +135,12 @@ public class casheriUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    private void socialMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_socialMediaButtonActionPerformed
+        SocialMediaFeedUI socialMediaFeed = new SocialMediaFeedUI();
+        socialMediaFeed.setVisible(true);
+        dispose(); // Close current frame
+        
+    }//GEN-LAST:event_socialMediaButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,9 +181,9 @@ public class casheriUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton socialMediaButton;
     // End of variables declaration//GEN-END:variables
 }
