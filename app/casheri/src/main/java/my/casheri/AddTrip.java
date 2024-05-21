@@ -2,8 +2,11 @@ package my.casheri;
 
 import java.sql.*;
 import com.mycompany.casheri.Database;
-import java.text.SimpleDateFormat;
-import javax.swing.JFormattedTextField;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.JOptionPane;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
@@ -11,16 +14,25 @@ import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
 import javax.swing.event.MouseInputListener;
+import org.jxmapviewer.viewer.WaypointPainter;
+import waypoint.EventWaypoint;
+import waypoint.MyWaypoint;
+import waypoint.WaypointRender;
 
 
 public class AddTrip extends javax.swing.JFrame {
     
     private int submit_flag = 0;
+    private int clicksLeft = 2;
+    
+    private final Set<MyWaypoint> waypoints = new HashSet<>();
+    private EventWaypoint event;
     
     public AddTrip() {
         initComponents();
         //getSthFromDB();
         init();
+
     }
     
     private void init() {
@@ -37,6 +49,23 @@ public class AddTrip extends javax.swing.JFrame {
         jXMapViewer.addMouseMotionListener(mm);
         jXMapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer));
         
+        jXMapViewer.addMouseListener(new MouseAdapter(){
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1 && clicksLeft > 0){
+                    java.awt.Point p = e.getPoint();
+                    GeoPosition geo = jXMapViewer.convertPointToGeoPosition(p);
+                    System.out.println("X:"+geo.getLatitude()+",Y:"+geo.getLongitude());
+                    if (clicksLeft == 2)
+                        addWaypoint(new MyWaypoint("Start", event, new GeoPosition(geo.getLatitude(), geo.getLongitude()), "D:\\Software-Engineering-Project\\app\\casheri\\src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
+                    if (clicksLeft == 1)
+                        addWaypoint(new MyWaypoint("End", event, new GeoPosition(geo.getLatitude(), geo.getLongitude()), "D:\\Software-Engineering-Project\\app\\casheri\\src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
+                    clicksLeft -= 1;
+                }
+            }
+        });
+        
+        event = getEvent();
+        
         // hide form
         jLabel2.setVisible(false);
         jLabel3.setVisible(false);
@@ -47,6 +76,10 @@ public class AddTrip extends javax.swing.JFrame {
         jSpinner1.setVisible(false);
         jComboBox1.setVisible(false);
     }
+    
+
+        //38.248015, 21.745228
+
     
     public void getSthFromDB() {
         Connection con = (new Database()).con();
@@ -66,7 +99,39 @@ public class AddTrip extends javax.swing.JFrame {
         }
     }
     
+    private void addWaypoint(MyWaypoint waypoint) {
+        for (MyWaypoint d: waypoints) {
+            jXMapViewer.remove(d.getButton());
+        }
+        waypoints.add(waypoint);
+        initWaypoint();
+    }
     
+    private void initWaypoint() {
+        WaypointPainter<MyWaypoint> wp = new WaypointRender();
+        wp.setWaypoints(waypoints);
+        jXMapViewer.setOverlayPainter(wp);
+        for (MyWaypoint d: waypoints) {
+            jXMapViewer.add(d.getButton());
+        }
+    }
+    
+    private void clearWaypoint() {
+        for (MyWaypoint d: waypoints) {
+            jXMapViewer.remove(d.getButton());
+        }
+        waypoints.clear();
+        initWaypoint();
+    }
+    
+    private EventWaypoint getEvent() {
+        return new EventWaypoint() {
+            @Override
+            public void selected(MyWaypoint waypoint) {
+                JOptionPane.showMessageDialog(AddTrip.this, waypoint.getName());
+            }
+        };
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -88,6 +153,8 @@ public class AddTrip extends javax.swing.JFrame {
         jSpinner1 = new javax.swing.JSpinner();
         jComboBox1 = new javax.swing.JComboBox<>();
         jXMapViewer = new org.jxmapviewer.JXMapViewer();
+        cmdAdd = new javax.swing.JButton();
+        cmdClear = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -142,6 +209,20 @@ public class AddTrip extends javax.swing.JFrame {
             .addGap(0, 381, Short.MAX_VALUE)
         );
 
+        cmdAdd.setText("Add points");
+        cmdAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdAddActionPerformed(evt);
+            }
+        });
+
+        cmdClear.setText("Clear Points");
+        cmdClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdClearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -149,13 +230,16 @@ public class AddTrip extends javax.swing.JFrame {
             .addComponent(jXMapViewer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(57, 57, 57))))
+                .addComponent(jLabel1)
+                .addGap(57, 57, 57))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cmdAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cmdClear, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(60, 60, 60)
@@ -205,7 +289,10 @@ public class AddTrip extends javax.swing.JFrame {
                 .addGap(7, 7, 7)
                 .addComponent(jXMapViewer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(cmdAdd)
+                    .addComponent(cmdClear))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -260,19 +347,14 @@ public class AddTrip extends javax.swing.JFrame {
             jButton1.setText("Submit");
             submit_flag = 1;
         
-            jLabel2.setVisible(true);
-            jLabel3.setVisible(true);
-            jLabel4.setVisible(true);
-            jLabel5.setVisible(true);
-            jTextField1.setVisible(true);
-            jTextField2.setVisible(true);
-            jSpinner1.setVisible(true);
-            jComboBox1.setVisible(true);
+            jLabel2.setVisible(true); jLabel3.setVisible(true); jLabel4.setVisible(true); jLabel5.setVisible(true);
+            jTextField1.setVisible(true); jTextField2.setVisible(true); jSpinner1.setVisible(true); jComboBox1.setVisible(true);
         } else {
             submit_flag = 0;
             // STORE DATA
             new casheriUI().setVisible(true);
             this.setVisible(false);
+            dispose();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -287,6 +369,16 @@ public class AddTrip extends javax.swing.JFrame {
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
 
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void cmdAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAddActionPerformed
+        waypoints.add(new MyWaypoint("Test 001", event, new GeoPosition(38.248015, 21.745228), "D:\\Software-Engineering-Project\\app\\casheri\\src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
+        initWaypoint();
+    }//GEN-LAST:event_cmdAddActionPerformed
+
+    private void cmdClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdClearActionPerformed
+        clearWaypoint();
+        clicksLeft = 2;
+    }//GEN-LAST:event_cmdClearActionPerformed
 
     /**
      * @param args the command line arguments
@@ -324,6 +416,8 @@ public class AddTrip extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cmdAdd;
+    private javax.swing.JButton cmdClear;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
