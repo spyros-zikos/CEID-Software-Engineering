@@ -45,7 +45,7 @@ public class PostUI extends javax.swing.JPanel {
         // Gia to date 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM");
         this.date = date.format(formatter);
-        this.imagePath = "src/main/java/social/media/elements/images/" + postImage;
+        this.imagePath = "src/main/java/icons/social_media_images/" + postImage;
         initComponents();
         tripPhoto.setIcon(ImageUtil.getScaledIcon(this.imagePath, 245, 133));
     }
