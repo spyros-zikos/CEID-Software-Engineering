@@ -355,6 +355,12 @@ public class AddTrip extends javax.swing.JFrame {
         } else {
             newTrip.setDriverId(driverId);
             newTrip.setDatetime(jTextField1.getText());  // 1234-12-12 12:12:12
+            newTrip.setDuration(jTextField2.getText());  // 34:34:34
+            newTrip.setPassengerCapacity((Integer) jSpinner1.getValue());
+            //newTrip.setPassengerCapacity(3);
+            newTrip.setRepeatTrip(1);
+            //newTrip.setRepeat((Integer) jComboBox1.getSelectedItem());
+            System.out.println(jComboBox1.getSelectedItem());
             newTrip.setCost(10);
             newTrip.storeTrip();
 
