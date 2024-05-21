@@ -62,8 +62,8 @@ public class StartTripUI extends javax.swing.JFrame {
             MyWaypoint point_end;
             User user;
             while (rs.next()) {
-                point_start = new MyWaypoint(rs.getInt("driver_id"), MyWaypoint.PointType.START, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
-                point_end = new MyWaypoint(rs.getInt("driver_id"), MyWaypoint.PointType.END, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
+                point_start = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.START, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
+                point_end = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.END, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
                 points.add(point_start);
                 points.add(point_end);
                 trip_id = rs.getInt("id");
@@ -81,8 +81,8 @@ public class StartTripUI extends javax.swing.JFrame {
             MyWaypoint point_start;
             MyWaypoint point_end;
             while (rs.next()) {
-                point_start = new MyWaypoint(rs.getInt("passenger_id"), MyWaypoint.PointType.START, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
-                point_end = new MyWaypoint(rs.getInt("passenger_id"), MyWaypoint.PointType.END, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
+                point_start = new MyWaypoint(MyWaypoint.UserType.passenger, rs.getInt("passenger_id"), MyWaypoint.PointType.START, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
+                point_end = new MyWaypoint(MyWaypoint.UserType.passenger, rs.getInt("passenger_id"), MyWaypoint.PointType.END, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
                 points.add(point_start);
                 points.add(point_end);
             }
@@ -105,9 +105,9 @@ public class StartTripUI extends javax.swing.JFrame {
             while (rs.next()) {
                 user = new User(rs.getInt("id"), rs.getString("uname"), rs.getInt("phone"), new GeoPosition(rs.getDouble("latitude"), rs.getDouble("longitude")));
                 users.add(user);
-                info = "Name: " + user.getUname() + "\n" +
+                info = "Name: " + user.getName() + "\n" +
                        "Phone: " + user.getPhone() + "\n";
-                
+                query = "select * from passenger where id = " + rs.getInt("id");
             }
         } catch (Exception ex) {
             ex.printStackTrace();

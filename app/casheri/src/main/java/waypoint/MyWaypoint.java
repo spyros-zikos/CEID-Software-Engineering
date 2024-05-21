@@ -7,6 +7,11 @@ import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.jxmapviewer.viewer.GeoPosition;
 
 public class MyWaypoint extends DefaultWaypoint {
+    private int id;
+    private JButton button;
+    private PointType pointType;
+    private String name;
+    private UserType type;
 
     public PointType getPointType() {
         return pointType;
@@ -31,23 +36,54 @@ public class MyWaypoint extends DefaultWaypoint {
     public void setButton(JButton button) {
         this.button = button;
     }
-
-    public MyWaypoint(int id, PointType pointType, EventWaypoint event, GeoPosition coord) {
+    
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public UserType getType() {
+        return type;
+    }
+    public void setType(UserType type) {
+        this.type = type;
+    }
+    
+    //Kalli
+    public MyWaypoint(UserType type, int id, PointType pointType, EventWaypoint event, GeoPosition coord) {
         super(coord);
         this.id = id;
+        this.type = type;
         this.pointType = pointType;
-        initButton(event);
+        initButton(event, type);
     }
-
+    
+    //Spyros
+    public MyWaypoint(String name, EventWaypoint event, GeoPosition coord, String iconPath) {
+        super(coord);
+        this.name = name;
+        initButton(event, iconPath);
+    }
+    
     public MyWaypoint() {
     }
-
-    private int id;
-    private JButton button;
-    private PointType pointType;
-
-    private void initButton(EventWaypoint event) {
-        button = new ButtonWaypoint();
+    
+    // Spyros
+    private void initButton(EventWaypoint event,String iconPath) {
+        button = new ButtonWaypoint(iconPath);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                event.selected(MyWaypoint.this);
+            }
+        });
+    }
+    
+    // Kalli
+    private void initButton(EventWaypoint event, UserType type) {
+        button = new ButtonWaypoint("src\\main\\java\\icons\\pin_icon\\pin1.png");
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -58,5 +94,9 @@ public class MyWaypoint extends DefaultWaypoint {
 
     public static enum PointType {
         START, END
+    }
+    
+    public static enum UserType {
+        driver, passenger
     }
 }
