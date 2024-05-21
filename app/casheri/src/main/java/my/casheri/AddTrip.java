@@ -76,7 +76,7 @@ public class AddTrip extends javax.swing.JFrame {
         jSpinner1.setVisible(false);
         jComboBox1.setVisible(false);
     }
-    
+
 
         //38.248015, 21.745228
 
@@ -153,7 +153,6 @@ public class AddTrip extends javax.swing.JFrame {
         jSpinner1 = new javax.swing.JSpinner();
         jComboBox1 = new javax.swing.JComboBox<>();
         jXMapViewer = new org.jxmapviewer.JXMapViewer();
-        cmdAdd = new javax.swing.JButton();
         cmdClear = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -209,13 +208,6 @@ public class AddTrip extends javax.swing.JFrame {
             .addGap(0, 381, Short.MAX_VALUE)
         );
 
-        cmdAdd.setText("Add points");
-        cmdAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmdAddActionPerformed(evt);
-            }
-        });
-
         cmdClear.setText("Clear Points");
         cmdClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -234,7 +226,6 @@ public class AddTrip extends javax.swing.JFrame {
                 .addGap(57, 57, 57))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cmdAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cmdClear, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
@@ -291,7 +282,6 @@ public class AddTrip extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(cmdAdd)
                     .addComponent(cmdClear))
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -343,6 +333,7 @@ public class AddTrip extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (submit_flag == 0) {
             jXMapViewer.setVisible(false);
+            cmdClear.setVisible(false);
             jLabel1.setText("Fill in Trip Details                           ");
             jButton1.setText("Submit");
             submit_flag = 1;
@@ -370,11 +361,10 @@ public class AddTrip extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void cmdAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAddActionPerformed
-        waypoints.add(new MyWaypoint("Test 001", event, new GeoPosition(38.248015, 21.745228), "D:\\Software-Engineering-Project\\app\\casheri\\src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
-        initWaypoint();
-    }//GEN-LAST:event_cmdAddActionPerformed
-
+    
+//        waypoints.add(new MyWaypoint("Test 001", event, new GeoPosition(38.248015, 21.745228), "D:\\Software-Engineering-Project\\app\\casheri\\src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
+//        initWaypoint();
+    
     private void cmdClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdClearActionPerformed
         clearWaypoint();
         clicksLeft = 2;
@@ -416,7 +406,6 @@ public class AddTrip extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cmdAdd;
     private javax.swing.JButton cmdClear;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
