@@ -15,6 +15,11 @@ public class User {
     private Coordinates location;
     private String userPhoto;
 
+    // Simple Constructor
+    public User(int id) {
+        this.id = id;
+    }
+    
     // Constructor
     public User(int id, String name, String password, Coordinates location, String userPhoto) {
         this.id = id;

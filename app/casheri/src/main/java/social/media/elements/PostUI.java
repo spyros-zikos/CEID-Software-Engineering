@@ -6,6 +6,8 @@ package social.media.elements;
 
 import javax.swing.ImageIcon;
 import java.awt.Image;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -32,8 +34,20 @@ public class PostUI extends javax.swing.JPanel {
     /**
      * Creates new form PostUI
      */
-    public PostUI() {
+    private String title;
+    private String date;
+    private String numPassengers;
+    private String imagePath;
+    
+    public PostUI(String title, LocalDate date, int numPassengers, String postImage) {
+        this.title = title;
+        this.numPassengers = Integer.toString(numPassengers);
+        // Gia to date 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM");
+        this.date = date.format(formatter);
+        this.imagePath = "src/main/java/social/media/elements/images/" + postImage;
         initComponents();
+        tripPhoto.setIcon(ImageUtil.getScaledIcon(this.imagePath, 245, 133));
     }
 
     /**
@@ -46,73 +60,66 @@ public class PostUI extends javax.swing.JPanel {
     private void initComponents() {
 
         postHeader = new javax.swing.JPanel();
-        destination = new javax.swing.JLabel();
-        date = new javax.swing.JLabel();
-        numPassengers = new javax.swing.JLabel();
+        destinationLabel = new javax.swing.JLabel();
+        dateLabel = new javax.swing.JLabel();
+        numPassengersLabel = new javax.swing.JLabel();
         tripPhoto = new javax.swing.JLabel();
 
-        destination.setText("Ski Trip Kalavrita");
+        setPreferredSize(new java.awt.Dimension(220, 214));
 
-        date.setText("17/2");
+        postHeader.setPreferredSize(new java.awt.Dimension(15, 50));
 
-        numPassengers.setText("3");
+        destinationLabel.setText(title);
+
+        dateLabel.setText(date);
+
+        numPassengersLabel.setText(numPassengers);
 
         javax.swing.GroupLayout postHeaderLayout = new javax.swing.GroupLayout(postHeader);
         postHeader.setLayout(postHeaderLayout);
         postHeaderLayout.setHorizontalGroup(
             postHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(postHeaderLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(destination, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(date)
+                .addGap(7, 7, 7)
+                .addComponent(destinationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(numPassengers)
-                .addContainerGap())
+                .addComponent(dateLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(numPassengersLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         postHeaderLayout.setVerticalGroup(
             postHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(postHeaderLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(postHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(destination)
-                    .addComponent(date)
-                    .addComponent(numPassengers))
+                    .addComponent(destinationLabel)
+                    .addComponent(dateLabel)
+                    .addComponent(numPassengersLabel))
                 .addContainerGap())
         );
-
-        tripPhoto.setIcon(ImageUtil.getScaledIcon("/images/ski.jpg", 367, 193));
-        tripPhoto.setMaximumSize(new java.awt.Dimension(367, 193));
-        tripPhoto.setMinimumSize(new java.awt.Dimension(367, 193));
-        tripPhoto.setPreferredSize(new java.awt.Dimension(367, 193));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(postHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tripPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+            .addComponent(tripPhoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(postHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(postHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tripPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(postHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tripPhoto, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel date;
-    private javax.swing.JLabel destination;
-    private javax.swing.JLabel numPassengers;
+    private javax.swing.JLabel dateLabel;
+    private javax.swing.JLabel destinationLabel;
+    private javax.swing.JLabel numPassengersLabel;
     private javax.swing.JPanel postHeader;
     private javax.swing.JLabel tripPhoto;
     // End of variables declaration//GEN-END:variables
