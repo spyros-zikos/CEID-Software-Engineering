@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.casheri;
 
 import java.sql.Connection;
@@ -11,7 +7,6 @@ public class Trip {
 
     private int id;
     private int driverId;
-    private String name;
     private String datetime;
     private GeoPosition coordStart;
     private GeoPosition coordEnd;
@@ -50,14 +45,7 @@ public class Trip {
         this.cost = cost;
     }
     
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-    
     public GeoPosition getCoordStart() {
         return coordStart;
     }
@@ -73,16 +61,7 @@ public class Trip {
     public void setCoordEnd(GeoPosition coord_end) {
         this.coordEnd = coord_end;
     }
-    
 
-    public Trip(String name, GeoPosition coord_start, GeoPosition coord_end) {
-        this.coordEnd = coord_end;
-        this.coordStart = coord_start;
-        this.name = name;
-    }
-    
-    public Trip() {}
-    
     public void storeTrip() {
         Connection con = (new Database()).con();
         String query = String.format("INSERT INTO TRIP VALUES (NULL, %d, '%s', %f, %f, %f, %f, %f) ",

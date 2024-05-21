@@ -354,7 +354,7 @@ public class AddTrip extends javax.swing.JFrame {
             jTextField1.setVisible(true); jTextField2.setVisible(true); jSpinner1.setVisible(true); jComboBox1.setVisible(true);
         } else {
             newTrip.setDriverId(driverId);
-            newTrip.setDatetime(jTextField1.getText());
+            newTrip.setDatetime(jTextField1.getText());  // 1234-12-12 12:12:12
             newTrip.setCost(10);
             newTrip.storeTrip();
 
