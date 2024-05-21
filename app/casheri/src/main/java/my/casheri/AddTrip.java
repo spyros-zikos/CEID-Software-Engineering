@@ -56,9 +56,9 @@ public class AddTrip extends javax.swing.JFrame {
                     GeoPosition geo = jXMapViewer.convertPointToGeoPosition(p);
                     System.out.println("X:"+geo.getLatitude()+",Y:"+geo.getLongitude());
                     if (clicksLeft == 2)
-                        addWaypoint(new MyWaypoint("Start", event, new GeoPosition(geo.getLatitude(), geo.getLongitude()), "D:\\Software-Engineering-Project\\app\\casheri\\src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
+                        addWaypoint(new MyWaypoint("Start", event, new GeoPosition(geo.getLatitude(), geo.getLongitude()), "src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
                     if (clicksLeft == 1)
-                        addWaypoint(new MyWaypoint("End", event, new GeoPosition(geo.getLatitude(), geo.getLongitude()), "D:\\Software-Engineering-Project\\app\\casheri\\src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
+                        addWaypoint(new MyWaypoint("End", event, new GeoPosition(geo.getLatitude(), geo.getLongitude()), "src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
                     clicksLeft -= 1;
                 }
             }
