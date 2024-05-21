@@ -2,6 +2,7 @@ package my.casheri;
 
 import java.sql.*;
 import com.mycompany.casheri.Database;
+import com.mycompany.casheri.Trip;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashSet;
@@ -22,8 +23,10 @@ import waypoint.WaypointRender;
 
 public class AddTrip extends javax.swing.JFrame {
     
+    private int driverId = 1; // <------ to change
     private int submit_flag = 0;
     private int clicksLeft = 2;
+    private Trip newTrip = new Trip();
     
     private final Set<MyWaypoint> waypoints = new HashSet<>();
     private EventWaypoint event;
@@ -32,7 +35,7 @@ public class AddTrip extends javax.swing.JFrame {
         initComponents();
         //getSthFromDB();
         init();
-
+        
     }
     
     private void init() {
@@ -54,11 +57,14 @@ public class AddTrip extends javax.swing.JFrame {
                 if(e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1 && clicksLeft > 0){
                     java.awt.Point p = e.getPoint();
                     GeoPosition geo = jXMapViewer.convertPointToGeoPosition(p);
-                    System.out.println("X:"+geo.getLatitude()+",Y:"+geo.getLongitude());
-                    if (clicksLeft == 2)
+                    // System.out.println("X:"+geo.getLatitude()+",Y:"+geo.getLongitude());
+                    if (clicksLeft == 2) {
                         addWaypoint(new MyWaypoint("Start", event, new GeoPosition(geo.getLatitude(), geo.getLongitude()), "src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
-                    if (clicksLeft == 1)
+                        newTrip.setCoordStart(new GeoPosition(geo.getLatitude(), geo.getLongitude()));
+                    } else if (clicksLeft == 1) {
                         addWaypoint(new MyWaypoint("End", event, new GeoPosition(geo.getLatitude(), geo.getLongitude()), "src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
+                        newTrip.setCoordStart(new GeoPosition(geo.getLatitude(), geo.getLongitude()));
+                    }
                     clicksLeft -= 1;
                 }
             }
@@ -77,10 +83,6 @@ public class AddTrip extends javax.swing.JFrame {
         jComboBox1.setVisible(false);
     }
 
-
-        //38.248015, 21.745228
-
-    
     public void getSthFromDB() {
         Connection con = (new Database()).con();
         String query = "select * from driver ";
@@ -133,23 +135,6 @@ public class AddTrip extends javax.swing.JFrame {
         };
     }
     
-    private void storeTrip() {
-        Connection con = (new Database()).con();
-        String query = "select * from driver ";
-        Statement st;
-        ResultSet rs;
-        
-        try{
-            st = con.createStatement();
-            rs = st.executeQuery(query);
-
-            while(rs.next()){
-                jLabel1.setText(rs.getString("car_id"));
-            }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -368,7 +353,11 @@ public class AddTrip extends javax.swing.JFrame {
             jLabel2.setVisible(true); jLabel3.setVisible(true); jLabel4.setVisible(true); jLabel5.setVisible(true);
             jTextField1.setVisible(true); jTextField2.setVisible(true); jSpinner1.setVisible(true); jComboBox1.setVisible(true);
         } else {
-            storeTrip();
+            newTrip.setDriverId(driverId);
+            newTrip.setDatetime(jTextField1.getText());
+            newTrip.setCost(10);
+            newTrip.storeTrip();
+
             new casheriUI().setVisible(true);
             this.setVisible(false);
             dispose();
@@ -376,7 +365,7 @@ public class AddTrip extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
@@ -384,7 +373,7 @@ public class AddTrip extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-
+        
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void cmdClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdClearActionPerformed
