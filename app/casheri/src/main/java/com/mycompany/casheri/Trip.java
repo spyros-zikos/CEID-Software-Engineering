@@ -8,8 +8,35 @@ public class Trip {
     private int id;
     private int driverId;
     private String datetime;
+    private String duration;
     private GeoPosition coordStart;
     private GeoPosition coordEnd;
+    private int passengerCapacity;
+    private int repeatTrip;
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public int getPassengerCapacity() {
+        return passengerCapacity;
+    }
+
+    public void setPassengerCapacity(int passengerCapacity) {
+        this.passengerCapacity = passengerCapacity;
+    }
+
+    public int getRepeatTrip() {
+        return repeatTrip;
+    }
+
+    public void setRepeatTrip(int repeatTrip) {
+        this.repeatTrip = repeatTrip;
+    }
     private float cost;
     
     
@@ -64,9 +91,9 @@ public class Trip {
 
     public void storeTrip() {
         Connection con = (new Database()).con();
-        String query = String.format("INSERT INTO TRIP VALUES (NULL, %d, '%s', %f, %f, %f, %f, %f) ",
-            driverId, datetime, coordStart.getLatitude(), coordStart.getLongitude(),
-            coordStart.getLatitude(), coordStart.getLongitude(), cost);
+        String query = String.format("INSERT INTO TRIP VALUES (NULL, %d, '%s', '%s', %f, %f, %f, %f, %d, %d, %f) ",
+            driverId, datetime, duration, coordStart.getLatitude(), coordStart.getLongitude(),
+            coordStart.getLatitude(), coordStart.getLongitude(), passengerCapacity, repeatTrip, cost);
         try{
             con.createStatement().executeUpdate(query);
         }catch(Exception ex){

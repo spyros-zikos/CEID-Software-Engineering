@@ -1,3 +1,4 @@
+drop database casheri;
 create database casheri;
 use casheri;
 CREATE TABLE `User`(
@@ -27,10 +28,13 @@ CREATE TABLE `Trip`(
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `driver_id` INT UNSIGNED NOT NULL,
     `date_time` DATETIME NOT NULL,
+    `duration` TIME NOT NULL,
     `start_latitude` DECIMAL(18,9) NOT NULL,
     `start_longitude` DECIMAL(18,9) NOT NULL,
     `end_latitude` DECIMAL(18,9) NOT NULL,
     `end_longitude` DECIMAL(18,9) NOT NULL,
+    `passenger_capacity` INT(4) NOT NULL,
+    `repeat_trip` TINYINT(1) NOT NULL,
     `cost` FLOAT NOT NULL
 );
 CREATE TABLE `Passenger`(
