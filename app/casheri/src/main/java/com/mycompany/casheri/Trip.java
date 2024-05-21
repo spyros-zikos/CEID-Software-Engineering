@@ -7,7 +7,6 @@ public class Trip {
 
     private int id;
     private int driverId;
-
     private String datetime;
     private GeoPosition coordStart;
     private GeoPosition coordEnd;
