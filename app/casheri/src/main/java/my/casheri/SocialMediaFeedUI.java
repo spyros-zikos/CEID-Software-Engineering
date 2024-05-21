@@ -4,24 +4,44 @@
  */
 package my.casheri;
 
+import com.mycompany.casheri.Post;
+import com.mycompany.casheri.SocialMediaFeed;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import social.media.elements.PostUI;
-import javax.swing.Box;
 
 /**
  *
  * @author Greg
  */
 public class SocialMediaFeedUI extends javax.swing.JFrame {
-    
-    private casheriUI mainMenu; // Gia na mporw na epistrepsw sto main menu otan patisw "back"
     /**
      * Creates new form SocialMediaFeedUI
      */
-    public SocialMediaFeedUI(casheriUI mainMenu) {
+    
+    private Connection connection;
+    private SocialMediaFeed socialMediaFeed;
+    
+    public SocialMediaFeedUI() {
         initComponents();
-        this.mainMenu = mainMenu;
-        //feed.add(Box.createVerticalStrut(7));
-        feed.add(new PostUI());  
+        this.connection = casheriUI.connection;
+        try {
+            this.socialMediaFeed = new SocialMediaFeed(100, 1, connection);
+            showPosts(socialMediaFeed.getPosts());
+        } catch (SQLException ex) {
+            System.out.println("Error occurred while creating SocialMediaFeed: " + ex.getMessage());
+        }
+    }
+    
+    public void showPosts(ArrayList<Post> posts){
+        for (Post post : posts) {
+            int numPassengers = post.getPassengers().size();
+            PostUI postUI = new PostUI(post.getTitle(), post.getDate(), numPassengers, post.getPhoto());
+            feed.add(postUI);
+        }
+        feed.revalidate();
+        feed.repaint();
     }
 
     /**
@@ -34,8 +54,8 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
     private void initComponents() {
 
         backButton = new javax.swing.JButton();
-        footer = new javax.swing.JPanel();
         newPostButton = new javax.swing.JButton();
+        feedScrollPane = new javax.swing.JScrollPane();
         feed = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -56,43 +76,29 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout footerLayout = new javax.swing.GroupLayout(footer);
-        footer.setLayout(footerLayout);
-        footerLayout.setHorizontalGroup(
-            footerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(footerLayout.createSequentialGroup()
-                .addGap(98, 98, 98)
-                .addComponent(newPostButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(114, Short.MAX_VALUE))
-        );
-        footerLayout.setVerticalGroup(
-            footerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(newPostButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        feedScrollPane.setPreferredSize(new java.awt.Dimension(272, 373));
 
-        javax.swing.GroupLayout feedLayout = new javax.swing.GroupLayout(feed);
-        feed.setLayout(feedLayout);
-        feedLayout.setHorizontalGroup(
-            feedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        feedLayout.setVerticalGroup(
-            feedLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 367, Short.MAX_VALUE)
-        );
+        feed.setLayout(new javax.swing.BoxLayout(feed, javax.swing.BoxLayout.Y_AXIS));
+        feedScrollPane.setViewportView(feed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(feed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(footer, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(backButton)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(110, 110, 110)
+                                .addComponent(newPostButton))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(backButton)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(feedScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -101,10 +107,10 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(backButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(feed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(footer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(feedScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(13, 13, 13)
+                .addComponent(newPostButton)
+                .addGap(5, 5, 5))
         );
 
         pack();
@@ -112,7 +118,7 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         this.setVisible(false);
-        mainMenu.setVisible(true);
+        new casheriUI().setVisible(true);
         
     }//GEN-LAST:event_backButtonActionPerformed
 
@@ -150,7 +156,7 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new SocialMediaFeedUI().setVisible(true);
+                new SocialMediaFeedUI().setVisible(true);
             }
         });
     }
@@ -158,7 +164,7 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JPanel feed;
-    private javax.swing.JPanel footer;
+    private javax.swing.JScrollPane feedScrollPane;
     private javax.swing.JButton newPostButton;
     // End of variables declaration//GEN-END:variables
 }

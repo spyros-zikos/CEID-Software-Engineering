@@ -9,6 +9,10 @@ package com.mycompany.casheri;
  * @author greg
  */
 public class Passenger extends User {
+    // Default Constructor
+    public Passenger(int id){
+        super(id);
+    }
     // Constructor
     public Passenger(int id, String name, String password, Coordinates location, String userPhoto) {
         super(id, name, password, location, userPhoto);
