@@ -57,7 +57,7 @@ public class MyWaypoint extends DefaultWaypoint {
         this.id = id;
         this.type = type;
         this.pointType = pointType;
-        initButton(event, type);
+        initButton(event, type, id);
     }
     
     //Spyros
@@ -82,8 +82,12 @@ public class MyWaypoint extends DefaultWaypoint {
     }
     
     // Kalli
-    private void initButton(EventWaypoint event, UserType type) {
-        button = new ButtonWaypoint("src\\main\\java\\icons\\pin_icon\\pin1.png");
+    private void initButton(EventWaypoint event, UserType type, int id) {
+        if (type == UserType.driver) {
+            button = new ButtonWaypoint("src\\main\\java\\icons\\pin_icon\\driver.png");
+        } else if (type == UserType.passenger) {
+            button = new ButtonWaypoint("src\\main\\java\\icons\\pin_icon\\user" + id + ".png");
+        }
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {

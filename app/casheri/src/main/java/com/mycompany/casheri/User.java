@@ -1,5 +1,6 @@
 package com.mycompany.casheri;
 
+import java.math.BigInteger;
 import org.jxmapviewer.viewer.GeoPosition;
 
 public class User {
@@ -8,7 +9,7 @@ public class User {
     private String password;
     private GeoPosition location;
     private String userPhoto;
-    private int phone;
+    private String phone;
 
     // Simple Constructor
     public User(int id) {
@@ -25,7 +26,7 @@ public class User {
     }
     
     //Constructor Kalli
-    public User(int id, String uname, int phone, GeoPosition location) {
+    public User(int id, String uname, String phone, GeoPosition location) {
         this.id = id;
 //        this.userType = userType;
         this.uname = uname;
@@ -74,11 +75,11 @@ public class User {
         this.userPhoto = userPhoto;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
    
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 }

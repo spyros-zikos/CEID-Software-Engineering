@@ -25,7 +25,8 @@ import waypoint.WaypointRender;
 
 public class StartTripUI extends javax.swing.JFrame {
 
-    private final List<User> users = new ArrayList<>();
+//    private final List<User> users = new ArrayList<>();
+    private final Set<MyWaypoint> driverPoints = new HashSet<>();
     private List<RoutingData> routingData = new ArrayList<>();
     private EventWaypoint event;
 
@@ -35,11 +36,11 @@ public class StartTripUI extends javax.swing.JFrame {
         initMap();  
 
         Set<MyWaypoint> points = getScheduledTrip();
-        Set<MyWaypoint> driverPoints = new HashSet<>();
+//        Set<MyWaypoint> driverPoints = new HashSet<>();
         List<MyWaypoint> tempList = new ArrayList<>(points); 
-        for (int i = 0; i < 2; i++) {
-            driverPoints.add(tempList.get(i));
-        }
+//        for (int i = 0; i < 2; i++) {
+//            driverPoints.add(tempList.get(i));
+//        }
         addPins(points);
         addRoute(driverPoints);
         
@@ -51,6 +52,8 @@ public class StartTripUI extends javax.swing.JFrame {
         //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
         String query = "select * from trip where date_time >= NOW() and driver_id = 1 order by date_time asc";
         int trip_id = 0;
+        MyWaypoint point_start;
+        MyWaypoint point_end;
         
         Statement st;
         ResultSet rs;
@@ -58,14 +61,13 @@ public class StartTripUI extends javax.swing.JFrame {
         try {
             st = con.createStatement();
             rs = st.executeQuery(query);
-            MyWaypoint point_start;
-            MyWaypoint point_end;
-            User user;
             while (rs.next()) {
                 point_start = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.START, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
                 point_end = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.END, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
                 points.add(point_start);
                 points.add(point_end);
+                driverPoints.add(point_start);
+                driverPoints.add(point_end);
                 trip_id = rs.getInt("id");
                 break;
             }
@@ -78,8 +80,6 @@ public class StartTripUI extends javax.swing.JFrame {
         try {
             st = con.createStatement();
             rs = st.executeQuery(query);
-            MyWaypoint point_start;
-            MyWaypoint point_end;
             while (rs.next()) {
                 point_start = new MyWaypoint(MyWaypoint.UserType.passenger, rs.getInt("passenger_id"), MyWaypoint.PointType.START, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
                 point_end = new MyWaypoint(MyWaypoint.UserType.passenger, rs.getInt("passenger_id"), MyWaypoint.PointType.END, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
@@ -103,10 +103,10 @@ public class StartTripUI extends javax.swing.JFrame {
             rs = st.executeQuery(query);
             User user;
             while (rs.next()) {
-                user = new User(rs.getInt("id"), rs.getString("uname"), rs.getInt("phone"), new GeoPosition(rs.getDouble("latitude"), rs.getDouble("longitude")));
-                users.add(user);
-                info = "Name: " + user.getName() + "\n" +
-                       "Phone: " + user.getPhone() + "\n";
+                user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("phone"), new GeoPosition(rs.getDouble("latitude"), rs.getDouble("longitude")));
+//                users.add(user);
+                info = "<html>Name: " + user.getName() + 
+                       "<br> Phone: " + user.getPhone() + "<html>";
                 query = "select * from passenger where id = " + rs.getInt("id");
             }
         } catch (Exception ex) {
@@ -165,9 +165,9 @@ public class StartTripUI extends javax.swing.JFrame {
         return new EventWaypoint() {
             @Override
             public void selected(MyWaypoint waypoint) {
-                String path = "src\\main\\java\\icons\\user_icon\\user1" + waypoint.getId() + ".png";
+                String path = "src\\main\\java\\icons\\user_icon\\user" + waypoint.getId() + ".png";
                 jLabel1.setIcon(new ImageIcon(path));
-                jLabel2.setText(String.valueOf(waypoint.getId()));
+                jLabel2.setText(getUser(waypoint.getId()));
             }
         };
     }
@@ -180,29 +180,33 @@ public class StartTripUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        map1 = new com.mycompany.casheri.Map();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        map1 = new com.mycompany.casheri.Map();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(296, 455));
+
+        jButton1.setText("Start Trip");
+
+        jLabel1.setPreferredSize(new java.awt.Dimension(100, 100));
+
+        jLabel2.setPreferredSize(new java.awt.Dimension(50, 100));
+
+        map1.setMaximumSize(new java.awt.Dimension(32767, 32767));
+        map1.setPreferredSize(new java.awt.Dimension(260, 306));
 
         javax.swing.GroupLayout map1Layout = new javax.swing.GroupLayout(map1);
         map1.setLayout(map1Layout);
         map1Layout.setHorizontalGroup(
             map1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 370, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         map1Layout.setVerticalGroup(
             map1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 388, Short.MAX_VALUE)
+            .addGap(0, 276, Short.MAX_VALUE)
         );
-
-        jButton1.setText("Start Trip");
-
-        jLabel1.setPreferredSize(new java.awt.Dimension(50, 50));
-
-        jLabel2.setPreferredSize(new java.awt.Dimension(50, 100));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -211,30 +215,31 @@ public class StartTripUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(155, 155, 155)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(map1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
+                        .addContainerGap()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(map1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(61, 61, 61)
+                .addComponent(jButton1)
+                .addGap(105, 105, 105))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(map1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(map1, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addGap(15, 15, 15))
+                .addGap(44, 44, 44))
         );
 
         pack();
