@@ -1,4 +1,4 @@
-
+//Kallinikos: useless class (trash)
 package com.mycompany.casheri;
 
 import org.jxmapviewer.viewer.DefaultWaypoint;
