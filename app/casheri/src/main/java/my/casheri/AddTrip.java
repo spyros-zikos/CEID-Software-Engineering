@@ -116,11 +116,15 @@ public class AddTrip extends javax.swing.JFrame {
     }
     
     private float calculateCost(GeoPosition start, GeoPosition end) {
-        return Math.round((float) ((start.getLatitude()*100000000 + 
-                                    start.getLongitude()*100000000 + 
-                                    end.getLatitude()*100000000 + 
-                                    end.getLongitude()*100000000))
+        return Math.round((float) ((start.getLatitude()*1000000000 + 
+                                    start.getLongitude()*1000000000 + 
+                                    end.getLatitude()*1000000000 + 
+                                    end.getLongitude()*1000000000))
                                   % 1000) / (float) 100;
+    }
+    
+    private String durationEstimate(GeoPosition start, GeoPosition end) {
+        return "02:30:54";
     }
     
 
@@ -165,7 +169,6 @@ public class AddTrip extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setText("YYYY-MM-DD hh:mm:ss");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -336,6 +339,7 @@ public class AddTrip extends javax.swing.JFrame {
             cmdClear.setVisible(false);
             jLabel1.setText("Fill in Trip Details                           ");
             jButton1.setText("Submit");
+            jTextField2.setText(durationEstimate(newTrip.getCoordStart(), newTrip.getCoordEnd()));
             submit_flag = 1;
         
             jLabel2.setVisible(true); jLabel3.setVisible(true); jLabel4.setVisible(true); jLabel5.setVisible(true);
@@ -356,15 +360,15 @@ public class AddTrip extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        
+
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        
+
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void cmdClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdClearActionPerformed
@@ -372,7 +376,7 @@ public class AddTrip extends javax.swing.JFrame {
         clicksLeft = 2;
     }//GEN-LAST:event_cmdClearActionPerformed
 
-    
+
     /**
      * @param args the command line arguments
      */
