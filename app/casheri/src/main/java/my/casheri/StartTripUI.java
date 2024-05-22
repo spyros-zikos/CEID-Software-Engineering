@@ -105,14 +105,38 @@ public class StartTripUI extends javax.swing.JFrame {
             while (rs.next()) {
                 user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("phone"), new GeoPosition(rs.getDouble("latitude"), rs.getDouble("longitude")));
 //                users.add(user);
-                info = "<html>Name: " + user.getName() + 
+                if (rs.getString("type").equals("passenger")) {
+                    System.out.print("HERE");
+                    info = "<html>Name: " + user.getName() + 
+                       "<br> Phone: " + user.getPhone() +
+                       getPassengerInfo(rs.getInt("id"), con) + "<html>";
+                } else {
+                    info = "<html>Name: " + user.getName() + 
                        "<br> Phone: " + user.getPhone() + "<html>";
-                query = "select * from passenger where id = " + rs.getInt("id");
+                }                
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         } 
         
+        return info;
+    }
+    
+    private String getPassengerInfo(int id, Connection con) {
+        String query = "select * from passenger where user_id = " + id;
+        Statement st;
+        ResultSet rs;
+        String info = null;
+        try {
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            while (rs.next()) {
+                info = "<br> Rank: " + rs.getFloat("reviews_rank") +
+                       "<br> Total Trips: " + rs.getInt("total_trips");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return info;
     }
     
