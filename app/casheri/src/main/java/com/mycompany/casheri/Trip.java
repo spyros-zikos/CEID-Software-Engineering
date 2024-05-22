@@ -116,6 +116,6 @@ public class Trip {
         
         return "<html>Date: " + str[0] +
                 "<br>Time: " + str[1] +
-                "<br>Cost: " + getCost() + "<html>";
+                "<br>Trip Cost: " + getCost() + "<html>";
     }
 }

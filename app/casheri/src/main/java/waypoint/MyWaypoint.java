@@ -97,7 +97,7 @@ public class MyWaypoint extends DefaultWaypoint {
     }
 
     public static enum PointType {
-        START, END
+        Start, End
     }
     
     public static enum UserType {
