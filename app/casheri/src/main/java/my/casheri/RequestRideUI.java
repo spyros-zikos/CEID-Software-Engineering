@@ -1,36 +1,91 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package my.casheri;
 
-import org.jxmapviewer.viewer.DefaultTileFactory;
-import javax.swing.event.MouseInputListener;
+import com.mycompany.casheri.Ride;
+import com.mycompany.casheri.Trip;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.jxmapviewer.OSMTileFactoryInfo;
-import org.jxmapviewer.VirtualEarthTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
+import org.jxmapviewer.viewer.DefaultTileFactory;
 import org.jxmapviewer.viewer.GeoPosition;
 import org.jxmapviewer.viewer.TileFactoryInfo;
-import org.jxmapviewer.viewer.DefaultWaypoint;
-import org.jxmapviewer.viewer.Waypoint;
+import javax.swing.event.MouseInputListener;
 import org.jxmapviewer.viewer.WaypointPainter;
-import java.awt.Dimension;
+import waypoint.EventWaypoint;
+import waypoint.MyWaypoint;
+import waypoint.WaypointRender;
 
-/**
- *
- * @author Damianos
- */
 public class RequestRideUI extends javax.swing.JFrame {
 
-    /**
-     * Creates new form RequestRideUI
-     */
+    private int driverId = 1; // <------ to change
+    private int submit_flag = 0;
+    private int clicksLeft = 2;
+    private Trip newTrip = new Trip();
+    private Ride newRide = new Ride();
+    private final Set<MyWaypoint> waypoints = new HashSet<>();
+    private EventWaypoint event;
+    private String[] tripOptions;
+    
     public RequestRideUI() {
         initComponents();
         initMap();
     }
-
+    
+    private String durationEstimate(GeoPosition start, GeoPosition end) {
+        return "00:30:54";
+    }
+    
+        private void addWaypoint(MyWaypoint waypoint) {
+        for (MyWaypoint d: waypoints) {
+            jXMapViewer1.remove(d.getButton());
+        }
+        waypoints.add(waypoint);
+        initWaypoint();
+    }
+    
+    private void initWaypoint() {
+        WaypointPainter<MyWaypoint> wp = new WaypointRender();
+        wp.setWaypoints(waypoints);
+        jXMapViewer1.setOverlayPainter(wp);
+        for (MyWaypoint d: waypoints) {
+            jXMapViewer1.add(d.getButton());
+        }
+    }
+    
+    private void clearWaypoint() {
+        for (MyWaypoint d: waypoints) {
+            jXMapViewer1.remove(d.getButton());
+        }
+        waypoints.clear();
+        initWaypoint();
+    }
+    
+    private EventWaypoint getEvent() {
+        return new EventWaypoint() {
+            @Override
+            public void selected(MyWaypoint waypoint) {
+                JOptionPane.showMessageDialog(RequestRideUI.this, waypoint.getName());
+            }
+        };
+    }
+    
+    private float calculateCost(GeoPosition start, GeoPosition end) {
+        return Math.round((float) ((start.getLatitude()*1000000000 + 
+                                    start.getLongitude()*1000000000 + 
+                                    end.getLatitude()*1000000000 + 
+                                    end.getLongitude()*1000000000))
+                                  % 1000) / (float) 100;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,10 +97,12 @@ public class RequestRideUI extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jPanel1 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        cmdClear1 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
         jXMapViewer1 = new org.jxmapviewer.JXMapViewer();
 
         jTextArea1.setColumns(20);
@@ -54,110 +111,175 @@ public class RequestRideUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        cmdClear1.setText("Clear Pins");
 
-        jTextField1.setText("From");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
-        jTextField2.setText("To");
-
-        jButton1.setText("Search");
+        jButton1.setText("Next");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(33, 33, 33)
-                        .addComponent(jButton1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jLabel2.setText("jLabel2");
+
+        jLabel1.setText("Select Start and End Trip Location");
+
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(jList1);
 
         javax.swing.GroupLayout jXMapViewer1Layout = new javax.swing.GroupLayout(jXMapViewer1);
         jXMapViewer1.setLayout(jXMapViewer1Layout);
         jXMapViewer1Layout.setHorizontalGroup(
             jXMapViewer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 284, Short.MAX_VALUE)
         );
         jXMapViewer1Layout.setVerticalGroup(
             jXMapViewer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 341, Short.MAX_VALUE)
+            .addGap(0, 436, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jXMapViewer1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jXMapViewer1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(cmdClear1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(58, 58, 58))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(82, 82, 82)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(106, Short.MAX_VALUE)))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(54, 54, 54)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(55, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jXMapViewer1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jXMapViewer1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmdClear1)
+                    .addComponent(jButton1))
+                .addGap(9, 9, 9))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(121, 121, 121)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(353, Short.MAX_VALUE)))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(184, 184, 184)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(76, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-private void initMap() {
-    TileFactoryInfo info = new OSMTileFactoryInfo();
-    DefaultTileFactory tileFactory = new DefaultTileFactory(info);
-    jXMapViewer1.setTileFactory(tileFactory);
-    GeoPosition geo = new GeoPosition(38.2483182, 21.7532223);
-    jXMapViewer1.setAddressLocation(geo);
-    jXMapViewer1.setZoom(12);
-    MouseInputListener mm = new PanMouseInputListener(jXMapViewer1);
-    jXMapViewer1.addMouseListener(mm);
-    jXMapViewer1.addMouseMotionListener(mm);
-    jXMapViewer1.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer1));
-
-    // Set preferred size
-    jXMapViewer1.setPreferredSize(new Dimension(800, 600)); // Adjust the dimensions as needed
-}
-
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        if (submit_flag == 0) {
+            if (clicksLeft > 0) {
+                JOptionPane.showMessageDialog(this, "Please select both start and end points on the map.");
+                return;
+            }
+            jXMapViewer1.setVisible(false);
+            cmdClear1.setVisible(false);
+            jLabel1.setText("Fill in Ride Details");
+            jButton1.setText("Submit");
+            submit_flag = 1;
+
+            // Query and display closest trips
+            List<Trip> closestTrips = newRide.getClosestTrips(newRide.getCoordStart(), newRide.getCoordEnd());
+            tripOptions = new String[closestTrips.size()];
+            for (int i = 0; i < closestTrips.size(); i++) {
+                Trip trip = closestTrips.get(i);
+                tripOptions[i] = "Trip ID: " + trip.getId() + " - Start: (" + trip.getCoordStart().getLatitude() + ", " + trip.getCoordStart().getLongitude() + ") - End: (" + trip.getCoordEnd().getLatitude() + ", " + trip.getCoordEnd().getLongitude() + ")";
+            }
+            jList1.setListData(tripOptions); // Set list data
+
+            jLabel2.setVisible(true);
+            jScrollPane2.setVisible(true);
+        } else {
+            String selectedTrip = jList1.getSelectedValue();
+            if (selectedTrip != null) {
+                int selectedTripId = Integer.parseInt(selectedTrip.split(" ")[2]);
+                newRide.setTripId(selectedTripId);
+            }
+
+            newRide.setDriverId(driverId);
+            newRide.setDatetime("2024-12-12 12:12:12");
+            newRide.setDuration("00:32:00");
+            newRide.setPassengerId(2);
+            newRide.setCost(calculateCost(newRide.getCoordStart(), newRide.getCoordEnd()));
+            newRide.storeRide();
+
+            this.setVisible(false);
+            dispose();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    private void initMap() {
+        TileFactoryInfo info = new OSMTileFactoryInfo();
+        DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+        jXMapViewer1.setTileFactory(tileFactory);
+        GeoPosition geo = new GeoPosition(38.2469604,21.7356681);
+        jXMapViewer1.setAddressLocation(geo);
+        jXMapViewer1.setZoom(5);
+        
+        // Create event mouse move
+        MouseInputListener mm = new PanMouseInputListener(jXMapViewer1);
+        jXMapViewer1.addMouseListener(mm);
+        jXMapViewer1.addMouseMotionListener(mm);
+        jXMapViewer1.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jXMapViewer1));
+        
+        jXMapViewer1.addMouseListener(new MouseAdapter(){
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1 && clicksLeft > 0){
+                    java.awt.Point p = e.getPoint();
+                    GeoPosition geo = jXMapViewer1.convertPointToGeoPosition(p);
+                    // System.out.println("X:"+geo.getLatitude()+",Y:"+geo.getLongitude());
+                    if (clicksLeft == 2) {
+                        addWaypoint(new MyWaypoint("Start", event, new GeoPosition(geo.getLatitude(), geo.getLongitude()), "src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
+                        newRide.setCoordStart(new GeoPosition(geo.getLatitude(), geo.getLongitude()));
+                    } else if (clicksLeft == 1) {
+                        addWaypoint(new MyWaypoint("End", event, new GeoPosition(geo.getLatitude(), geo.getLongitude()), "src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
+                        newRide.setCoordEnd(new GeoPosition(geo.getLatitude(), geo.getLongitude()));
+                    }
+                    clicksLeft -= 1;
+                }
+            }
+        });
+        
+        event = getEvent();
+        
+        // hide form
+
+
+    }
+
 
     /**
      * @param args the command line arguments
@@ -195,19 +317,15 @@ private void initMap() {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cmdClear1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private org.jxmapviewer.JXMapViewer jXMapViewer1;
-    private org.jxmapviewer.JXMapViewer jXMapViewer2;
-    private org.jxmapviewer.JXMapViewer jXMapViewer3;
-    private org.jxmapviewer.JXMapViewer jXMapViewer4;
-    private org.jxmapviewer.JXMapViewer jXMapViewer5;
-    private org.jxmapviewer.JXMapViewer jXMapViewer6;
-    private org.jxmapviewer.JXMapViewer jXMapViewer7;
     // End of variables declaration//GEN-END:variables
 
 }
