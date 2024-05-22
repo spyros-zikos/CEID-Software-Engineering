@@ -87,8 +87,8 @@
           </Group>
           <Group type="103" rootIndex="9" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="220" max="32767" attributes="0"/>
-                  <Component id="jButton1" min="-2" pref="70" max="-2" attributes="0"/>
+                  <EmptySpace pref="210" max="32767" attributes="0"/>
+                  <Component id="jButton1" min="-2" pref="80" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -156,7 +156,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="258" max="-2" attributes="0"/>
                   <Component id="jSpinner1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="176" max="32767" attributes="0"/>
+                  <EmptySpace pref="175" max="32767" attributes="0"/>
               </Group>
           </Group>
           <Group type="103" rootIndex="8" groupAlignment="0" attributes="0">
@@ -231,6 +231,14 @@
       </Events>
     </Component>
     <Component class="javax.swing.JSpinner" name="jSpinner1">
+      <Properties>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[35, 29]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[35, 29]"/>
+        </Property>
+      </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="jComboBox1">
       <Properties>

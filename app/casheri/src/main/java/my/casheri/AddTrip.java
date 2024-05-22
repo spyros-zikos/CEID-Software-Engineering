@@ -182,6 +182,9 @@ public class AddTrip extends javax.swing.JFrame {
             }
         });
 
+        jSpinner1.setMinimumSize(new java.awt.Dimension(35, 29));
+        jSpinner1.setPreferredSize(new java.awt.Dimension(35, 29));
+
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Don't Repeat", "Weakly" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -260,8 +263,8 @@ public class AddTrip extends javax.swing.JFrame {
                     .addContainerGap(134, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(220, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(210, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap()))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -311,7 +314,7 @@ public class AddTrip extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(258, 258, 258)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(176, Short.MAX_VALUE)))
+                    .addContainerGap(175, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(317, 317, 317)
