@@ -1,7 +1,5 @@
 package my.casheri;
 
-import java.sql.*;
-import com.mycompany.casheri.Database;
 import com.mycompany.casheri.Trip;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -33,9 +31,7 @@ public class AddTrip extends javax.swing.JFrame {
     
     public AddTrip() {
         initComponents();
-        //getSthFromDB();
-        init();
-        
+        init(); 
     }
     
     private void init() {
@@ -63,7 +59,7 @@ public class AddTrip extends javax.swing.JFrame {
                         newTrip.setCoordStart(new GeoPosition(geo.getLatitude(), geo.getLongitude()));
                     } else if (clicksLeft == 1) {
                         addWaypoint(new MyWaypoint("End", event, new GeoPosition(geo.getLatitude(), geo.getLongitude()), "src\\main\\java\\icons\\pin_icon\\start_pin_1_small.png"));
-                        newTrip.setCoordStart(new GeoPosition(geo.getLatitude(), geo.getLongitude()));
+                        newTrip.setCoordEnd(new GeoPosition(geo.getLatitude(), geo.getLongitude()));
                     }
                     clicksLeft -= 1;
                 }
@@ -83,23 +79,7 @@ public class AddTrip extends javax.swing.JFrame {
         jComboBox1.setVisible(false);
     }
 
-    public void getSthFromDB() {
-        Connection con = (new Database()).con();
-        String query = "select * from driver ";
-        Statement st;
-        ResultSet rs;
-        
-        try{
-            st = con.createStatement();
-            rs = st.executeQuery(query);
 
-            while(rs.next()){
-                jLabel1.setText(rs.getString("car_id"));
-            }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-    }
     
     private void addWaypoint(MyWaypoint waypoint) {
         for (MyWaypoint d: waypoints) {
@@ -133,6 +113,18 @@ public class AddTrip extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(AddTrip.this, waypoint.getName());
             }
         };
+    }
+    
+    private float calculateCost(GeoPosition start, GeoPosition end) {
+        return Math.round((float) ((start.getLatitude()*1000000000 + 
+                                    start.getLongitude()*1000000000 + 
+                                    end.getLatitude()*1000000000 + 
+                                    end.getLongitude()*1000000000))
+                                  % 1000) / (float) 100;
+    }
+    
+    private String durationEstimate(GeoPosition start, GeoPosition end) {
+        return "02:30:54";
     }
     
 
@@ -177,7 +169,6 @@ public class AddTrip extends javax.swing.JFrame {
             }
         });
 
-        jTextField1.setText("YYYY-MM-DD hh:mm:ss");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -348,6 +339,7 @@ public class AddTrip extends javax.swing.JFrame {
             cmdClear.setVisible(false);
             jLabel1.setText("Fill in Trip Details                           ");
             jButton1.setText("Submit");
+            jTextField2.setText(durationEstimate(newTrip.getCoordStart(), newTrip.getCoordEnd()));
             submit_flag = 1;
         
             jLabel2.setVisible(true); jLabel3.setVisible(true); jLabel4.setVisible(true); jLabel5.setVisible(true);
@@ -357,11 +349,8 @@ public class AddTrip extends javax.swing.JFrame {
             newTrip.setDatetime(jTextField1.getText());  // 1234-12-12 12:12:12
             newTrip.setDuration(jTextField2.getText());  // 34:34:34
             newTrip.setPassengerCapacity((Integer) jSpinner1.getValue());
-            //newTrip.setPassengerCapacity(3);
-            newTrip.setRepeatTrip(1);
-            //newTrip.setRepeat((Integer) jComboBox1.getSelectedItem());
-            System.out.println(jComboBox1.getSelectedItem());
-            newTrip.setCost(10);
+            newTrip.setRepeatTrip( ((String) jComboBox1.getSelectedItem()).equals("Don't Repeat") ? 0 : 1 );
+            newTrip.setCost(calculateCost(newTrip.getCoordStart(), newTrip.getCoordEnd()));
             newTrip.storeTrip();
 
             new casheriUI().setVisible(true);
@@ -371,15 +360,15 @@ public class AddTrip extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        
+
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        
+
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void cmdClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdClearActionPerformed
@@ -387,7 +376,7 @@ public class AddTrip extends javax.swing.JFrame {
         clicksLeft = 2;
     }//GEN-LAST:event_cmdClearActionPerformed
 
-    
+
     /**
      * @param args the command line arguments
      */

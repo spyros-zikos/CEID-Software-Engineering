@@ -87,23 +87,23 @@ public class Trip {
         return coordStart;
     }
 
-    public void setCoordStart(GeoPosition coord_start) {
-        this.coordStart = coord_start;
+    public void setCoordStart(GeoPosition coordStart) {
+        this.coordStart = coordStart;
     }
     
     public GeoPosition getCoordEnd() {
         return coordEnd;
     }
 
-    public void setCoordEnd(GeoPosition coord_end) {
-        this.coordEnd = coord_end;
+    public void setCoordEnd(GeoPosition coordEnd) {
+        this.coordEnd = coordEnd;
     }
 
     public void storeTrip() {
         Connection con = (new Database()).con();
         String query = String.format("INSERT INTO TRIP VALUES (NULL, %d, '%s', '%s', %f, %f, %f, %f, %d, %d, %f) ",
             driverId, datetime, duration, coordStart.getLatitude(), coordStart.getLongitude(),
-            coordStart.getLatitude(), coordStart.getLongitude(), passengerCapacity, repeatTrip, cost);
+            coordEnd.getLatitude(), coordEnd.getLongitude(), passengerCapacity, repeatTrip, cost);
         try{
             con.createStatement().executeUpdate(query);
         }catch(Exception ex){
