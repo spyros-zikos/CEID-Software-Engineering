@@ -1,6 +1,9 @@
 package com.mycompany.casheri;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import org.jxmapviewer.viewer.GeoPosition;
 
 public class Trip {
@@ -101,9 +104,11 @@ public class Trip {
 
     public void storeTrip() {
         Connection con = (new Database()).con();
-        String query = String.format("INSERT INTO TRIP VALUES (NULL, %d, '%s', '%s', %f, %f, %f, %f, %d, %d, %f) ",
-            driverId, datetime, duration, coordStart.getLatitude(), coordStart.getLongitude(),
-            coordEnd.getLatitude(), coordEnd.getLongitude(), passengerCapacity, repeatTrip, cost);
+ 
+        String query = "INSERT INTO trip(id,driver_id,date_time,duration,start_latitude,start_longitude,end_latitude,end_longitude,passenger_capacity,repeat_trip,cost)" +
+                        "VALUES(NULL,"+driverId+",'" +datetime+"', '"+duration+"'," +coordStart.getLatitude()+","+coordStart.getLongitude()+"," +
+                        coordEnd.getLatitude()+","+ coordEnd.getLongitude()+","+ passengerCapacity+","+repeatTrip+","+cost+")";
+
         try{
             con.createStatement().executeUpdate(query);
         }catch(Exception ex){

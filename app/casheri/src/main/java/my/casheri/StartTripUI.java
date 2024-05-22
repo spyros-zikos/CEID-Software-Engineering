@@ -110,7 +110,6 @@ public class StartTripUI extends javax.swing.JFrame {
             while (rs.next()) {
                 user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("phone"), new GeoPosition(rs.getDouble("latitude"), rs.getDouble("longitude")));
                 if (rs.getString("type").equals("passenger")) {
-                    System.out.print("HERE");
                     info = "<html>Name: " + user.getName() + 
                        "<br> Phone: " + user.getPhone() +
                        getPassengerInfo(rs.getInt("id"), con) + "<html>";
