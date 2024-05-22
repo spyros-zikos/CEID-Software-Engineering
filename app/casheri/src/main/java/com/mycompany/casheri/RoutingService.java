@@ -5,40 +5,41 @@ import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.ResponsePath;
 import com.graphhopper.config.CHProfile;
-import com.graphhopper.config.LMProfile;
 import com.graphhopper.config.Profile;
-import static com.graphhopper.json.Statement.If;
-import static com.graphhopper.json.Statement.Op.LIMIT;
-import static com.graphhopper.json.Statement.Op.MULTIPLY;
-import com.graphhopper.util.CustomModel;
 import com.graphhopper.util.GHUtility;
 import com.graphhopper.util.Instruction;
 import com.graphhopper.util.InstructionList;
 import com.graphhopper.util.PointList;
 import com.graphhopper.util.Translation;
-import com.graphhopper.util.shapes.GHPoint;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Scanner;
 public class RoutingService {
     
     private static RoutingService instance;
-    private final GraphHopper hopper;
+    private GraphHopper hopper;
 
-    public static RoutingService getInstance() {//double start_lat, double start_long, double end_lat, double end_long
+    public static RoutingService getInstance() {
         if (instance == null) {
-            instance = new RoutingService();//start_lat, start_long, end_lat, end_long
+            instance = new RoutingService();
         }
         return instance;
     }
 
-    private RoutingService() {//double start_lat, double start_long, double end_lat, double end_long     
-//        String ghLoc = "C:\\Users\\kalli\\Desktop\\github\\Software-Engineering-Project\\app\\casheri\\jar_files\\graphhopper_lib\\greece-latest.osm.pbf";
+    private RoutingService() {
         String ghLoc = "osm_files\\greece-latest.osm.pbf";
+        
+        try {
+            new Scanner(new File(ghLoc));
+        } catch (FileNotFoundException e) {
+            System.out.println("MISSING ROUTING FILE!!!\nPlease download it from here: https://download.geofabrik.de/europe/greece-latest.osm.pbf\nSave it in osm_files directory with the default filename.");
+            System.exit(0);
+        }
 
         hopper = createGraphHopperInstance(ghLoc);
-//        customizableRouting(ghLoc, start_lat, start_long, end_lat, end_long);
     }
 
     private GraphHopper createGraphHopperInstance(String ghLoc) {
