@@ -13,7 +13,19 @@ public class Trip {
     private GeoPosition coordEnd;
     private int passengerCapacity;
     private int repeatTrip;
+    private float cost;
 
+    public Trip(int id, int driver_id, String datetime, float cost) {
+        this.id = id;
+        this.driverId = driver_id;
+        this.datetime = datetime;
+        this.cost = cost;
+    }
+    
+    public Trip() {
+        
+    }
+    
     public String getDuration() {
         return duration;
     }
@@ -36,9 +48,7 @@ public class Trip {
 
     public void setRepeatTrip(int repeatTrip) {
         this.repeatTrip = repeatTrip;
-    }
-    private float cost;
-    
+    }    
     
     public int getDriverId() {
         return driverId;
@@ -99,5 +109,13 @@ public class Trip {
         }catch(Exception ex){
             ex.printStackTrace();
         }
+    }
+    
+    public String getTripInfo() {
+        String[] str = getDatetime().split("\\s+");
+        
+        return "<html>Date: " + str[0] +
+                "<br>Time: " + str[1] +
+                "<br>Cost: " + getCost() + "<html>";
     }
 }
