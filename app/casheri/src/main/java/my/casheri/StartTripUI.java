@@ -38,7 +38,6 @@ public class StartTripUI extends javax.swing.JFrame {
         this.setSize(296,455);
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
-//        jOptionPane1.setVisible(false);
         initMap();  
         Set<MyWaypoint> points = getScheduledTrip();
         
