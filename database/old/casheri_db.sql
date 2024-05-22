@@ -8,7 +8,8 @@ CREATE TABLE `User`(
     `password` VARCHAR(255) NOT NULL,
     `phone` BIGINT NOT NULL,
     `latitude` DECIMAL(18,9) NOT NULL,
-    `longitude` DECIMAL(18,9) NOT NULL
+    `longitude` DECIMAL(18,9) NOT NULL,
+	`type` VARCHAR(255) NOT NULL
 );
 ALTER TABLE
     `User` ADD UNIQUE `user_username_unique`(`username`);
@@ -40,7 +41,7 @@ CREATE TABLE `Trip`(
 CREATE TABLE `Passenger`(
     `user_id` INT UNSIGNED NOT NULL,
     `total_trips` INT NOT NULL,
-    `reviews_rank` VARCHAR(255) NOT NULL,
+    `reviews_rank` DECIMAL(4,2) NOT NULL,
     PRIMARY KEY(`user_id`)
 );
 CREATE TABLE `Post`(
