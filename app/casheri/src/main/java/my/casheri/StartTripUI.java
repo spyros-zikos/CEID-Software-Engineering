@@ -17,32 +17,37 @@ import com.mycompany.casheri.Database;
 import waypoint.EventWaypoint;
 import com.mycompany.casheri.RoutingData;
 import com.mycompany.casheri.RoutingService;
+import com.mycompany.casheri.Trip;
 import com.mycompany.casheri.User;
 import java.util.List;
 import javax.swing.ImageIcon;
 import waypoint.WaypointRender;
+import java.awt.Color;
 
 
 public class StartTripUI extends javax.swing.JFrame {
 
-    private final List<User> users = new ArrayList<>();
+    private final Set<MyWaypoint> driverPoints = new HashSet<>();
     private List<RoutingData> routingData = new ArrayList<>();
     private EventWaypoint event;
+    private Trip scheduledTrip;
 
 
     public StartTripUI() {
         initComponents();
+        this.setSize(296,455);
+        this.setLocationRelativeTo(null);
+        this.getContentPane().setBackground(Color.decode("#FFFFBA"));
+//        jOptionPane1.setVisible(false);
         initMap();  
-
         Set<MyWaypoint> points = getScheduledTrip();
-        Set<MyWaypoint> driverPoints = new HashSet<>();
-        List<MyWaypoint> tempList = new ArrayList<>(points); 
-        for (int i = 0; i < 2; i++) {
-            driverPoints.add(tempList.get(i));
-        }
-        addPins(points);
-        addRoute(driverPoints);
         
+        String path = "src\\main\\java\\icons\\user_icon\\user" + 1 + ".png";
+        jLabel1.setIcon(new ImageIcon(path));
+        jLabel2.setText(getUser(1) + "<html><br>Start Point<html>");
+        
+        addPins(points);
+        addRoute(driverPoints);        
     }
    
     private Set<MyWaypoint> getScheduledTrip() {
@@ -51,6 +56,8 @@ public class StartTripUI extends javax.swing.JFrame {
         //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
         String query = "select * from trip where date_time >= NOW() and driver_id = 1 order by date_time asc";
         int trip_id = 0;
+        MyWaypoint point_start;
+        MyWaypoint point_end;
         
         Statement st;
         ResultSet rs;
@@ -58,14 +65,14 @@ public class StartTripUI extends javax.swing.JFrame {
         try {
             st = con.createStatement();
             rs = st.executeQuery(query);
-            MyWaypoint point_start;
-            MyWaypoint point_end;
-            User user;
             while (rs.next()) {
-                point_start = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.START, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
-                point_end = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.END, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
+                scheduledTrip = new Trip(rs.getInt("id"), rs.getInt("driver_id"), rs.getString("date_time"), rs.getFloat("cost"));
+                point_start = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.Start, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
+                point_end = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.End, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
                 points.add(point_start);
                 points.add(point_end);
+                driverPoints.add(point_start);
+                driverPoints.add(point_end);
                 trip_id = rs.getInt("id");
                 break;
             }
@@ -78,11 +85,9 @@ public class StartTripUI extends javax.swing.JFrame {
         try {
             st = con.createStatement();
             rs = st.executeQuery(query);
-            MyWaypoint point_start;
-            MyWaypoint point_end;
             while (rs.next()) {
-                point_start = new MyWaypoint(MyWaypoint.UserType.passenger, rs.getInt("passenger_id"), MyWaypoint.PointType.START, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
-                point_end = new MyWaypoint(MyWaypoint.UserType.passenger, rs.getInt("passenger_id"), MyWaypoint.PointType.END, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
+                point_start = new MyWaypoint(MyWaypoint.UserType.passenger, rs.getInt("passenger_id"), MyWaypoint.PointType.Start, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
+                point_end = new MyWaypoint(MyWaypoint.UserType.passenger, rs.getInt("passenger_id"), MyWaypoint.PointType.End, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
                 points.add(point_start);
                 points.add(point_end);
             }
@@ -103,11 +108,17 @@ public class StartTripUI extends javax.swing.JFrame {
             rs = st.executeQuery(query);
             User user;
             while (rs.next()) {
-                user = new User(rs.getInt("id"), rs.getString("uname"), rs.getInt("phone"), new GeoPosition(rs.getDouble("latitude"), rs.getDouble("longitude")));
-                users.add(user);
-                info = "Name: " + user.getName() + "\n" +
-                       "Phone: " + user.getPhone() + "\n";
-                query = "select * from passenger where id = " + rs.getInt("id");
+                user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("phone"), new GeoPosition(rs.getDouble("latitude"), rs.getDouble("longitude")));
+                if (rs.getString("type").equals("passenger")) {
+                    System.out.print("HERE");
+                    info = "<html>Name: " + user.getName() + 
+                       "<br> Phone: " + user.getPhone() +
+                       getPassengerInfo(rs.getInt("id"), con) + "<html>";
+                } else {
+                    info = "<html>Name: " + user.getName() + 
+                           "<br>Phone: " + user.getPhone() +
+                           "<br>" + scheduledTrip.getTripInfo() + "<html>";
+                }                
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -116,14 +127,32 @@ public class StartTripUI extends javax.swing.JFrame {
         return info;
     }
     
+    private String getPassengerInfo(int id, Connection con) {
+        String query = "select * from passenger where user_id = " + id;
+        Statement st;
+        ResultSet rs;
+        String info = null;
+        try {
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            while (rs.next()) {
+                info = "<br> Rank: " + rs.getFloat("reviews_rank") +
+                       "<br> Total Trips: " + rs.getInt("total_trips");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return info;
+    }
+    
     private void initMap() {
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
         map1.setTileFactory(tileFactory);
-        GeoPosition geo = new GeoPosition(38.2483182, 21.7532223);
+        GeoPosition geo = new GeoPosition(38.2483182, 21.7532223);//38.2483182, 21.7532223
 
         map1.setAddressLocation(geo);
-        map1.setZoom(7);
+        map1.setZoom(8);
         MouseInputListener mm = new PanMouseInputListener(map1);
         map1.addMouseListener(mm);
         map1.addMouseMotionListener(mm);
@@ -146,9 +175,9 @@ public class StartTripUI extends javax.swing.JFrame {
             GeoPosition start = null;
             GeoPosition end = null;
             for (MyWaypoint p : points) {
-                if (p.getPointType() == MyWaypoint.PointType.START) {
+                if (p.getPointType() == MyWaypoint.PointType.Start) {
                     start = p.getPosition();
-                } else if (p.getPointType() == MyWaypoint.PointType.END) {
+                } else if (p.getPointType() == MyWaypoint.PointType.End) {
                     end = p.getPosition();
                 }
             }
@@ -165,9 +194,9 @@ public class StartTripUI extends javax.swing.JFrame {
         return new EventWaypoint() {
             @Override
             public void selected(MyWaypoint waypoint) {
-                String path = "src\\main\\java\\icons\\user_icon\\user1" + waypoint.getId() + ".png";
+                String path = "src\\main\\java\\icons\\user_icon\\user" + waypoint.getId() + ".png";
                 jLabel1.setIcon(new ImageIcon(path));
-                jLabel2.setText(String.valueOf(waypoint.getId()));
+                jLabel2.setText(getUser(waypoint.getId()) + "<html><br>" + waypoint.getPointType() + " Point<html>");
             }
         };
     }
@@ -180,65 +209,94 @@ public class StartTripUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        map1 = new com.mycompany.casheri.Map();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        map1 = new com.mycompany.casheri.Map();
+        jOptionPane1 = new javax.swing.JOptionPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(296, 455));
+
+        jButton1.setBackground(new java.awt.Color(236, 218, 61));
+        jButton1.setText("Start Trip");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setPreferredSize(new java.awt.Dimension(100, 100));
+
+        jLabel2.setBackground(new java.awt.Color(255, 255, 0));
+        jLabel2.setPreferredSize(new java.awt.Dimension(50, 100));
+
+        map1.setPreferredSize(new java.awt.Dimension(260, 300));
 
         javax.swing.GroupLayout map1Layout = new javax.swing.GroupLayout(map1);
         map1.setLayout(map1Layout);
         map1Layout.setHorizontalGroup(
             map1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 370, Short.MAX_VALUE)
+            .addGap(0, 260, Short.MAX_VALUE)
         );
         map1Layout.setVerticalGroup(
             map1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 388, Short.MAX_VALUE)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
-
-        jButton1.setText("Start Trip");
-
-        jLabel1.setPreferredSize(new java.awt.Dimension(50, 50));
-
-        jLabel2.setPreferredSize(new java.awt.Dimension(50, 100));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(155, 155, 155)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(map1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(40, 40, 40)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(map1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(61, 61, 61)
+                .addComponent(jButton1)
+                .addGap(105, 105, 105))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jOptionPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(map1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(map1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
-                .addGap(15, 15, 15))
+                .addGap(20, 20, 20))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(0, 185, Short.MAX_VALUE)
+                    .addComponent(jOptionPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 186, Short.MAX_VALUE)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        int response = jOptionPane1.showConfirmDialog(this, "Are you sure you want to start the trip?", "Confirm Payment", jOptionPane1.YES_NO_OPTION, jOptionPane1.QUESTION_MESSAGE);
+        if (response == jOptionPane1.YES_OPTION) {
+            new Navigation().setVisible(true);
+            this.setVisible(false);
+        } 
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -279,6 +337,7 @@ public class StartTripUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JOptionPane jOptionPane1;
     private com.mycompany.casheri.Map map1;
     // End of variables declaration//GEN-END:variables
 }
