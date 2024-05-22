@@ -1,9 +1,6 @@
 package com.mycompany.casheri;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
 import org.jxmapviewer.viewer.GeoPosition;
 
 public class Trip {
