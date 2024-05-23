@@ -54,8 +54,10 @@ CREATE TABLE `Post`(
 CREATE TABLE `Ride`(
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `trip_id` INT UNSIGNED NOT NULL,
+	`driver_id` INT UNSIGNED NOT NULL,
     `passenger_id` INT UNSIGNED NOT NULL,
     `date_time` DATETIME NOT NULL,
+    `duration` TIME NOT NULL,
     `start_latitude` DECIMAL(18,9) NOT NULL,
     `start_longitude` DECIMAL(18,9) NOT NULL,
     `end_latitude` DECIMAL(18,9) NOT NULL,
