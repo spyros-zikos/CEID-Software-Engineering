@@ -14,12 +14,23 @@ public class Trip {
     private int passengerCapacity;
     private int repeatTrip;
     private float cost;
-
+    private int passengers;
+    private float profit;
+    
     public Trip(int id, int driver_id, String datetime, float cost) {
         this.id = id;
         this.driverId = driver_id;
         this.datetime = datetime;
         this.cost = cost;
+    }
+    
+    public Trip(int id, int driver_id, String datetime, String duration, int passengers, float profit) {
+        this.id = id;
+        this.driverId = driver_id;
+        this.datetime = datetime;
+        this.duration = duration;
+        this.passengers = passengers;
+        this.profit = profit;
     }
     
     public Trip() {
@@ -97,6 +108,22 @@ public class Trip {
 
     public void setCoordEnd(GeoPosition coordEnd) {
         this.coordEnd = coordEnd;
+    }
+    
+    public int getPassengers() {
+        return passengers;
+    }
+
+    public void setPassengers(int passengers) {
+        this.passengers = passengers;
+    }
+
+    public float getProfit() {
+        return profit;
+    }
+
+    public void setProfit(float profit) {
+        this.profit = profit;
     }
 
     public void storeTrip() {

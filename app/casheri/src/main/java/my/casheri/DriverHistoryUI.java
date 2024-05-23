@@ -1,16 +1,123 @@
 package my.casheri;
 
+import com.mycompany.casheri.Database;
+import com.mycompany.casheri.Trip;
+import java.awt.BorderLayout;
 import java.awt.Color;
+import static java.lang.Math.round;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 public class DriverHistoryUI extends javax.swing.JFrame {
 
+    private List<Trip> completedTrips = new ArrayList<>();
+    private Filters selectedFilters = null; 
+    private boolean filter = false;
     public DriverHistoryUI() {
+        init();
+    }
+    
+    public DriverHistoryUI(Filters filters) {
+        selectedFilters = filters;
+        filter = true;
+        init();
+    }
+    
+    private void init() {
         initComponents();
         this.setSize(296,455);
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
+        getCompletedTrips();
+        displayTable();
+    }
+    
+    private void getCompletedTrips() {
+        Connection con = (new Database()).con();    
+        //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
+        String query = null;
+        if (filter) {
+            query = "select * from trip where driver_id = 1 and status = 'completed'" +
+            " and date_time between '" + selectedFilters.getStartDateTime() + "' and '" + selectedFilters.getEndDateTime() + 
+            "' and duration between '" + selectedFilters.getMinDuration() + "' and '" + selectedFilters.getMaxDuration() +
+            "' order by date_time asc";
+        } else {
+            query = "select * from trip where driver_id = 1 and status = 'completed' order by date_time asc";
+        }
+      
+        Statement st;
+        ResultSet rs;
+        
+        try {
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            while (rs.next()) {
+                List<Float> temp = getTripProfit(rs.getInt("id"),con);
+                int passengers = round(temp.get(0));
+                float profit = temp.get(1);
+                boolean val = false;
+                if (filter) {
+                    boolean val1 = (selectedFilters.getMaxProfit() >= profit && profit >= selectedFilters.getMinProfit());
+                    boolean val2 = (selectedFilters.getMaxPassengers() >= passengers && passengers >= selectedFilters.getMinPassengers());
+                    val = val1 && val2;
+                    if (val) {
+                        completedTrips.add(new Trip(rs.getInt("id"), rs.getInt("driver_id"), rs.getString("date_time"),
+                                                                        rs.getString("duration"), passengers, profit));
+                    }
+                } else {
+                    completedTrips.add(new Trip(rs.getInt("id"), rs.getInt("driver_id"), rs.getString("date_time"),
+                                                                        rs.getString("duration"), passengers, profit));
+                }
+                
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
     }
 
+    private List<Float> getTripProfit(int id, Connection con) {
+        String query = "select SUM(cost), COUNT(id) from ride where trip_id = " + id;
+        List<Float> values = new ArrayList<>();
+        Statement st;
+        ResultSet rs;
+        
+        try {
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            rs.next();
+            values.add(rs.getFloat("COUNT(id)"));
+            values.add(rs.getFloat("SUM(cost)"));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+      return values;
+    }
+    
+    private void displayTable(){
+        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
+        Object []  row = new Object [5];
+        for(int i=0; i<completedTrips.size(); i++){
+            row[0]= completedTrips.get(i).getDatetime();
+            row[1]= completedTrips.get(i).getDuration();
+            row[2]= completedTrips.get(i).getPassengers();  
+            row[3]= completedTrips.get(i).getProfit();
+
+            model.addRow(row);
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -68,7 +175,7 @@ public class DriverHistoryUI extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 129, Short.MAX_VALUE)
+            .addGap(0, 135, Short.MAX_VALUE)
         );
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(280, 200));
@@ -76,17 +183,14 @@ public class DriverHistoryUI extends javax.swing.JFrame {
         jTable1.setBackground(new java.awt.Color(255, 250, 228));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "DateTime", "Duration", "Passengers", "Profit"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -98,11 +202,7 @@ public class DriverHistoryUI extends javax.swing.JFrame {
         jTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
             jTable1.getColumnModel().getColumn(2).setPreferredWidth(100);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -120,15 +220,15 @@ public class DriverHistoryUI extends javax.swing.JFrame {
                 .addComponent(jButton1)
                 .addGap(36, 36, 36))
             .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(25, 25, 25))
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addGap(25, 25, 25))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,10 +241,10 @@ public class DriverHistoryUI extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(jButton4)
+                    .addComponent(jButton3))
                 .addContainerGap(81, Short.MAX_VALUE))
         );
 
@@ -165,6 +265,29 @@ public class DriverHistoryUI extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        DefaultCategoryDataset barChartData = new DefaultCategoryDataset();
+        float sumProfit = 0;
+        int sumPassengers = 0;
+        
+        for(int i=0; i<completedTrips.size(); i++) {
+            sumProfit += completedTrips.get(i).getProfit();
+        }
+        for(int i=0; i<completedTrips.size(); i++) {
+            sumPassengers += completedTrips.get(i).getPassengers();
+        }
+        barChartData.setValue(sumProfit,"","Profit");
+        barChartData.setValue(sumPassengers,"","Passengers");
+        barChartData.setValue(completedTrips.size(),"","Total Trips");
+
+        JFreeChart barChart = ChartFactory.createBarChart("title", "", "", barChartData,PlotOrientation.VERTICAL, false,true,false);
+        CategoryPlot barchrt = barChart.getCategoryPlot();
+        barchrt.setRangeGridlinePaint(Color.BLACK);
+  
+        ChartPanel chartPanel  = new ChartPanel(barChart);
+        chartPanel.setSize(260,135);
+        jPanel1.removeAll();
+        jPanel1.add(chartPanel);//, BorderLayout.CENTER
+        jPanel1.updateUI();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
