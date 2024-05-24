@@ -148,7 +148,6 @@ public class Ride {
                 trip.setCoordEnd(new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
                 trip.setPassengerCapacity(rs.getInt("passenger_capacity"));
                 trip.setRepeatTrip(rs.getInt("repeat_trip"));
-                trip.setCost(rs.getFloat("cost"));
                 trips.add(trip);
             }
         } catch (SQLException ex) {

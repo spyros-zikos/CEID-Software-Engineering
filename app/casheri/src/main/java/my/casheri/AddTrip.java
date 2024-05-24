@@ -353,7 +353,6 @@ public class AddTrip extends javax.swing.JFrame {
             newTrip.setDuration(jTextField2.getText());  // 34:34:34
             newTrip.setPassengerCapacity((Integer) jSpinner1.getValue());
             newTrip.setRepeatTrip( ((String) jComboBox1.getSelectedItem()).equals("Don't Repeat") ? 0 : 1 );
-            newTrip.setCost(calculateCost(newTrip.getCoordStart(), newTrip.getCoordEnd()));
             newTrip.storeTrip();
 
             new casheriUI().setVisible(true);

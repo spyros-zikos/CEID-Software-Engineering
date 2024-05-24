@@ -13,15 +13,13 @@ public class Trip {
     private GeoPosition coordEnd;
     private int passengerCapacity;
     private int repeatTrip;
-    private float cost;
     private int passengers;
     private float profit;
     
-    public Trip(int id, int driver_id, String datetime, float cost) {
+    public Trip(int id, int driver_id, String datetime) {
         this.id = id;
         this.driverId = driver_id;
         this.datetime = datetime;
-        this.cost = cost;
     }
     
     public Trip(int id, int driver_id, String datetime, String duration, int passengers, float profit) {
@@ -83,16 +81,7 @@ public class Trip {
 
     public void setDatetime(String datetime) {
         this.datetime = datetime;
-    }
-
-    public float getCost() {
-        return cost;
-    }
-
-    public void setCost(float cost) {
-        this.cost = cost;
-    }
-    
+    }   
 
     public GeoPosition getCoordStart() {
         return coordStart;
@@ -129,9 +118,9 @@ public class Trip {
     public void storeTrip() {
         Connection con = (new Database()).con();
  
-        String query = "INSERT INTO trip(id,driver_id,date_time,duration,start_latitude,start_longitude,end_latitude,end_longitude,passenger_capacity,repeat_trip,cost)" +
+        String query = "INSERT INTO trip(id,driver_id,date_time,duration,start_latitude,start_longitude,end_latitude,end_longitude,passenger_capacity,repeat_trip)" +
                         "VALUES(NULL,"+driverId+",'" +datetime+"', '"+duration+"'," +coordStart.getLatitude()+","+coordStart.getLongitude()+"," +
-                        coordEnd.getLatitude()+","+ coordEnd.getLongitude()+","+ passengerCapacity+","+repeatTrip+","+cost+")";
+                        coordEnd.getLatitude()+","+ coordEnd.getLongitude()+","+ passengerCapacity+","+repeatTrip+")";
 
         try{
             con.createStatement().executeUpdate(query);
@@ -144,7 +133,6 @@ public class Trip {
         String[] str = getDatetime().split("\\s+");
         
         return "<html>Date: " + str[0] +
-                "<br>Time: " + str[1] +
-                "<br>Trip Cost: " + getCost() + "<html>";
+                "<br>Time: " + str[1] + "<html>";
     }
 }

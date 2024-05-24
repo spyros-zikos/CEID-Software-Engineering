@@ -24,7 +24,6 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import waypoint.WaypointRender;
 import java.awt.Color;
-import java.util.TimerTask;
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -72,7 +71,7 @@ public class StartTripUI extends javax.swing.JFrame {
             st = con.createStatement();
             rs = st.executeQuery(query);
             while (rs.next()) {
-                scheduledTrip = new Trip(rs.getInt("id"), rs.getInt("driver_id"), rs.getString("date_time"), rs.getFloat("cost"));
+                scheduledTrip = new Trip(rs.getInt("id"), rs.getInt("driver_id"), rs.getString("date_time"));
                 point_start = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.Start, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
                 point_end = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.End, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
                 points.add(point_start);
