@@ -3,14 +3,28 @@ package my.casheri;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.Timer;  // For implementing dynamic updates
+
+
 
 public class PassengerUI extends javax.swing.JFrame {
 
     private String fullName;
+    private Integer passenger_id;
     
-    public PassengerUI(String fullName) {
+    public PassengerUI(String fullName, Integer passenger_id) {
         this.fullName = fullName;
+        this.passenger_id = passenger_id;
         initComponents();
+        updateButtonVisibility();
+        timer.start();
     }
 
     /**
@@ -25,6 +39,7 @@ public class PassengerUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -43,15 +58,19 @@ public class PassengerUI extends javax.swing.JFrame {
             }
         });
 
+        jButton4.setText("View Live Trip Route");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -60,7 +79,12 @@ public class PassengerUI extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(25, 25, 25)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 33, Short.MAX_VALUE)))
+                        .addGap(0, 33, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -72,7 +96,9 @@ public class PassengerUI extends javax.swing.JFrame {
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(254, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(190, Short.MAX_VALUE))
         );
 
         pack();
@@ -83,6 +109,61 @@ public class PassengerUI extends javax.swing.JFrame {
        new RequestRideUI().setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        Integer rideId = getInProgressRideId(passenger_id);
+        ViewLiveTripRouteUI liveTripUI = new ViewLiveTripRouteUI(rideId,passenger_id); // Assuming constructor takes a tripId
+        liveTripUI.setVisible(true);
+        dispose();
+
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    
+    private Integer getInProgressRideId(int passengerId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Integer rideId = null;  // This will store the ride ID if found
+
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/casheri", "root", "root");
+            String sql = "SELECT ride.id FROM trip JOIN ride ON ride.trip_id = trip.id WHERE trip.status = 'inprogress' AND ride.passenger_id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, passengerId);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                rideId = rs.getInt(1); // Get the ride id from the result set
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return rideId;  // Return the ride ID or null if no in-progress ride was found
+    }
+
+    private void updateButtonVisibility() {
+        Integer rideId = getInProgressRideId(passenger_id); // Assume 'id' is the passenger's ID
+        boolean isInProgress = rideId != null;
+        jButton4.setVisible(isInProgress);  // Update button visibility based on the ride status
+    }
+
+
+    // Example of using a Timer to refresh the button visibility every 5 seconds
+Timer timer = new Timer(5000, new ActionListener() {
+    public void actionPerformed(ActionEvent evt) {
+        Integer rideId = getInProgressRideId(passenger_id); // Assume 'id' is the passenger's ID
+        boolean isInProgress = rideId != null;
+        jButton4.setVisible(isInProgress);
+    }
+});
 
     /**
      * @param args the command line arguments
@@ -114,13 +195,14 @@ public class PassengerUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PassengerUI("testUsername").setVisible(true);
+                new PassengerUI("testUsername",0).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
