@@ -106,7 +106,7 @@ public class MenuUI extends javax.swing.JFrame {
                             if (rsDriver.next()) {
                                 new casheriUI().setVisible(true);
                             } else {
-                                new PassengerUI(fullName).setVisible(true);
+                                new PassengerUI(fullName,userId).setVisible(true);
                             }
                         }
                     }
