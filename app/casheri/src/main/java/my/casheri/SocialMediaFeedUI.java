@@ -1,5 +1,6 @@
 package my.casheri;
 
+import com.mycompany.casheri.Database;
 import com.mycompany.casheri.Post;
 import com.mycompany.casheri.SocialMediaFeed;
 import java.sql.Connection;
@@ -7,14 +8,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import social.media.elements.PostUI;
 
+
 public class SocialMediaFeedUI extends javax.swing.JFrame {
-    
+
     private Connection connection;
     private SocialMediaFeed socialMediaFeed;
     
     public SocialMediaFeedUI() {
         initComponents();
-        this.connection = casheriUI.connection;
+        this.connection = (new Database()).con();
         try {
             this.socialMediaFeed = new SocialMediaFeed(100, 1, connection);
             showPosts(socialMediaFeed.getPosts());

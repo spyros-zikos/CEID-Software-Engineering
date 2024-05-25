@@ -115,14 +115,6 @@ public class AddTrip extends javax.swing.JFrame {
         };
     }
     
-    private float calculateCost(GeoPosition start, GeoPosition end) {
-        return Math.round((float) ((start.getLatitude()*1000000000 + 
-                                    start.getLongitude()*1000000000 + 
-                                    end.getLatitude()*1000000000 + 
-                                    end.getLongitude()*1000000000))
-                                  % 1000) / (float) 100;
-    }
-    
     private String durationEstimate(GeoPosition start, GeoPosition end) {
         return "02:30:54";
     }
@@ -339,9 +331,9 @@ public class AddTrip extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (submit_flag == 0) {
             jXMapViewer.setVisible(false);
-            cmdClear.setVisible(false);
             jLabel1.setText("Fill in Trip Details                           ");
             jButton1.setText("Submit");
+            cmdClear.setText("Abort");
             jTextField2.setText(durationEstimate(newTrip.getCoordStart(), newTrip.getCoordEnd()));
             submit_flag = 1;
         
@@ -374,8 +366,14 @@ public class AddTrip extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void cmdClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdClearActionPerformed
-        clearWaypoint();
-        clicksLeft = 2;
+        if (submit_flag == 0) {
+            clearWaypoint();
+            clicksLeft = 2;
+        } else {
+            new casheriUI().setVisible(true);
+            this.setVisible(false);
+            dispose();
+        }
     }//GEN-LAST:event_cmdClearActionPerformed
 
 
