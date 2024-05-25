@@ -3,15 +3,28 @@ package my.casheri;
 import javax.swing.ImageIcon;
 import java.sql.Connection; // Import the Connection class
 import com.mycompany.casheri.Database; // Import the Database class
+import java.sql.ResultSet;
 
 public class casheriUI extends javax.swing.JFrame {
 
-    public static Connection connection;
+    private Connection con;
+    private int navigation_flag = 0;
     
     public casheriUI() {
         initComponents();
-        Database db = new Database();
-        this.connection = db.con();
+        
+        con = (new Database()).con();
+        String query = "select status from trip where driver_id = 1";
+        ResultSet rs;
+        
+        try {
+            rs = con.createStatement().executeQuery(query);
+            while (rs.next()) if (rs.getString("status").equals("inprogress")) navigation_flag = 1;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        if (navigation_flag == 1) startTripButton.setText("Navigation");
     }
 
     /**
@@ -118,13 +131,16 @@ public class casheriUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void startTripButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startTripButtonActionPerformed
-        // TODO add your handling code here:
-        new StartTripUI().setVisible(true);
-        this.setVisible(false);
+        if (navigation_flag == 0) {
+            new StartTripUI().setVisible(true);
+            this.setVisible(false);
+        } else {
+            new Navigation().setVisible(true);
+            this.setVisible(false);
+        }
     }//GEN-LAST:event_startTripButtonActionPerformed
 
     private void driverHistoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_driverHistoryButtonActionPerformed
-        // TODO add your handling code here:
         new DriverHistoryUI().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_driverHistoryButtonActionPerformed

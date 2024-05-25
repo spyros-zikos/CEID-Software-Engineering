@@ -37,7 +37,7 @@ public class StartTripUI extends javax.swing.JFrame {
     private List<RoutingData> routingData = new ArrayList<>();
     private EventWaypoint event;
     private Trip scheduledTrip;
-     
+
     public StartTripUI() { 
         initComponents();
         this.setSize(296,455);
@@ -229,6 +229,14 @@ public class StartTripUI extends javax.swing.JFrame {
         dialog.setVisible(true);
     }
     
+    private void startRides() {
+        Connection con = (new Database()).con();
+        String query = "UPDATE RIDE SET STATUS='waiting' WHERE trip_id=" + scheduledTrip.getId();
+
+        try{ con.createStatement().executeUpdate(query); }
+        catch(Exception ex){ ex.printStackTrace(); }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -346,6 +354,8 @@ public class StartTripUI extends javax.swing.JFrame {
             }
             showNotification(dialog);
             
+            startRides();
+            
             Timer timer = new Timer(1500, e->{
                 dialog.dispose();
                 new Navigation().setVisible(true);
@@ -357,7 +367,6 @@ public class StartTripUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
         new casheriUI().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
