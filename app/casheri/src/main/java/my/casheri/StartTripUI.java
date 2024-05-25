@@ -19,10 +19,16 @@ import com.mycompany.casheri.RoutingData;
 import com.mycompany.casheri.RoutingService;
 import com.mycompany.casheri.Trip;
 import com.mycompany.casheri.User;
+import java.awt.BorderLayout;
 import java.util.List;
 import javax.swing.ImageIcon;
 import waypoint.WaypointRender;
 import java.awt.Color;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 
 public class StartTripUI extends javax.swing.JFrame {
@@ -38,7 +44,6 @@ public class StartTripUI extends javax.swing.JFrame {
         this.setSize(296,455);
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
-//        jOptionPane1.setVisible(false);
         initMap();  
         Set<MyWaypoint> points = getScheduledTrip();
         
@@ -66,7 +71,7 @@ public class StartTripUI extends javax.swing.JFrame {
             st = con.createStatement();
             rs = st.executeQuery(query);
             while (rs.next()) {
-                scheduledTrip = new Trip(rs.getInt("id"), rs.getInt("driver_id"), rs.getString("date_time"), rs.getFloat("cost"));
+                scheduledTrip = new Trip(rs.getInt("id"), rs.getInt("driver_id"), rs.getString("date_time"));
                 point_start = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.Start, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
                 point_end = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.End, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
                 points.add(point_start);
@@ -199,6 +204,21 @@ public class StartTripUI extends javax.swing.JFrame {
             }
         };
     }
+    
+    private static void showNotification(JDialog dialog) {
+        dialog.setUndecorated(true); 
+        dialog.setLayout(new BorderLayout());
+
+        JLabel messageLabel = new JLabel("Passengers will be notified", SwingConstants.CENTER);
+        messageLabel.setOpaque(true);
+        messageLabel.setBackground(new Color(255, 255, 224)); 
+        messageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        dialog.add(messageLabel, BorderLayout.CENTER);
+        dialog.setSize(250, 100);
+        dialog.setLocationRelativeTo(null); 
+        dialog.setVisible(true);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -307,8 +327,17 @@ public class StartTripUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         int response = jOptionPane1.showConfirmDialog(this, "Are you sure you want to start the trip?", "Confirm Payment", jOptionPane1.YES_NO_OPTION, jOptionPane1.QUESTION_MESSAGE);
         if (response == jOptionPane1.YES_OPTION) {
-            new Navigation().setVisible(true);
-            this.setVisible(false);
+            JDialog dialog = new JDialog();
+            showNotification(dialog);
+            
+            Timer timer = new Timer(1500, e->{
+                dialog.dispose();
+                new Navigation().setVisible(true);
+                this.setVisible(false);
+            });
+            timer.setRepeats(false); 
+            timer.start();
+            
         } 
     }//GEN-LAST:event_jButton1ActionPerformed
 

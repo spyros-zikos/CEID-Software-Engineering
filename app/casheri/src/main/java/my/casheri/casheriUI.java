@@ -1,13 +1,20 @@
 package my.casheri;
 
 import javax.swing.ImageIcon;
-import java.sql.Connection;
-import com.mycompany.casheri.Database;
+import java.sql.Connection; // Import the Connection class
+import java.sql.SQLException; // Import the SQLException class
+import com.mycompany.casheri.Database; // Import the Database class
 
-
+/**
+ *
+ * @author Damianos
+ */
 public class casheriUI extends javax.swing.JFrame {
-
-    private int navigationFlag = 0;
+    /**
+     * Creates new form casheriUI
+     */
+    
+    // Database connection
     public static Connection connection;
     
     public casheriUI() {
@@ -25,13 +32,13 @@ public class casheriUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        startTripButton = new javax.swing.JButton();
+        driverHistoryButton = new javax.swing.JButton();
         socialMediaButton = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jToggleButton1 = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -42,17 +49,17 @@ public class casheriUI extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Start Trip");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        startTripButton.setText("Start Trip");
+        startTripButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                startTripButtonActionPerformed(evt);
             }
         });
 
-        jButton4.setText("History");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        driverHistoryButton.setText("History");
+        driverHistoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                driverHistoryButtonActionPerformed(evt);
             }
         });
 
@@ -70,37 +77,27 @@ public class casheriUI extends javax.swing.JFrame {
         jLabel1.setText("jLabel1");
         jLabel1.setToolTipText("");
 
-        jToggleButton1.setText("Navigation");
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(128, 128, 128))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(78, 78, 78)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(socialMediaButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(startTripButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(driverHistoryButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(56, 56, 56)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jToggleButton1)))
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(61, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(128, 128, 128))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,16 +107,14 @@ public class casheriUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(startTripButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(socialMediaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
-                .addComponent(jToggleButton1)
-                .addContainerGap())
+                .addComponent(driverHistoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(68, 68, 68))
         );
 
         pack();
@@ -129,42 +124,27 @@ public class casheriUI extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         new MySchedule().setVisible(true);
         this.setVisible(false);
-        dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        if (navigationFlag == 0) {
-            new StartTripUI().setVisible(true);
-            this.setVisible(false);
-            dispose();
-        } else {
-            new Navigation().setVisible(true);
-            this.setVisible(false);
-            dispose();
-        }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void startTripButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startTripButtonActionPerformed
+        // TODO add your handling code here:
+        new StartTripUI().setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_startTripButtonActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void driverHistoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_driverHistoryButtonActionPerformed
+        // TODO add your handling code here:
+        new DriverHistoryUI().setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_driverHistoryButtonActionPerformed
 
     private void socialMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_socialMediaButtonActionPerformed
         SocialMediaFeedUI socialMediaFeed = new SocialMediaFeedUI();
         socialMediaFeed.setVisible(true);
         dispose(); // Close current frame
+        
     }//GEN-LAST:event_socialMediaButtonActionPerformed
 
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        if(jToggleButton1.isSelected()){
-            navigationFlag = 1;
-            jButton3.setText("Navigation");
-        } else {
-            navigationFlag = 0;
-            jButton3.setText("Start Trip");
-        }
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
-
-    
     /**
      * @param args the command line arguments
      */
@@ -201,12 +181,12 @@ public class casheriUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton driverHistoryButton;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JButton socialMediaButton;
+    private javax.swing.JButton startTripButton;
     // End of variables declaration//GEN-END:variables
 }
