@@ -61,7 +61,8 @@ CREATE TABLE `Ride`(
     `start_longitude` DECIMAL(18,9) NOT NULL,
     `end_latitude` DECIMAL(18,9) NOT NULL,
     `end_longitude` DECIMAL(18,9) NOT NULL,
-    `cost` DOUBLE(8, 2) NOT NULL
+    `cost` DOUBLE(8, 2) NOT NULL,
+    `status` ENUM('inthefuture', 'waiting', 'inprogress', 'completed') NOT NULL default 'inthefuture'
 );
 ALTER TABLE
     `Post` ADD CONSTRAINT `post_driver_id_foreign` FOREIGN KEY(`driver_id`) REFERENCES `Driver`(`user_id`);
