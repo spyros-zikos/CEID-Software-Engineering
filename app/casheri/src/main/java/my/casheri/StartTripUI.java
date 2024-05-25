@@ -1,5 +1,6 @@
 
 package my.casheri;
+
 import waypoint.MyWaypoint;
 import org.jxmapviewer.viewer.DefaultTileFactory;
 import javax.swing.event.MouseInputListener;
@@ -30,16 +31,14 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-
 public class StartTripUI extends javax.swing.JFrame {
 
     private final Set<MyWaypoint> driverPoints = new HashSet<>();
     private List<RoutingData> routingData = new ArrayList<>();
     private EventWaypoint event;
     private Trip scheduledTrip;
-
-
-    public StartTripUI() {
+     
+    public StartTripUI() { 
         initComponents();
         this.setSize(296,455);
         this.setLocationRelativeTo(null);
@@ -47,30 +46,36 @@ public class StartTripUI extends javax.swing.JFrame {
         initMap();  
         Set<MyWaypoint> points = getScheduledTrip();
         
+        //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
         String path = "src\\main\\java\\icons\\user_icon\\user" + 1 + ".png";
         jLabel1.setIcon(new ImageIcon(path));
-        jLabel2.setText(getUser(1) + "<html><br>Start Point<html>");
-        
-        addPins(points);
-        addRoute(driverPoints);        
+        if (points == null) {
+            jLabel2.setText("<html><br>NO SCEDULED TRIP FOUND!<html>");  
+            jButton1.setVisible(false);
+        } else {            
+            jLabel2.setText(getUser(1) + "<html><br>Start Point<html>");
+            addPins(points);
+            addRoute(driverPoints);  
+        }             
     }
    
     private Set<MyWaypoint> getScheduledTrip() {
         Set<MyWaypoint> points = new HashSet<>();
         Connection con = (new Database()).con();    
         //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
-        String query = "select * from trip where date_time >= NOW() and driver_id = 1 order by date_time asc";
+        String query = "select * from trip where date_time >= NOW() and driver_id = 1 and status=\'incomplete\' order by date_time asc";
         int trip_id = 0;
         MyWaypoint point_start;
         MyWaypoint point_end;
-        
+
         Statement st;
         ResultSet rs;
-        
+        boolean hasResult = false;
         try {
             st = con.createStatement();
             rs = st.executeQuery(query);
             while (rs.next()) {
+                hasResult = true;
                 scheduledTrip = new Trip(rs.getInt("id"), rs.getInt("driver_id"), rs.getString("date_time"));
                 point_start = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.Start, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
                 point_end = new MyWaypoint(MyWaypoint.UserType.driver, rs.getInt("driver_id"), MyWaypoint.PointType.End, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
@@ -79,12 +84,16 @@ public class StartTripUI extends javax.swing.JFrame {
                 driverPoints.add(point_start);
                 driverPoints.add(point_end);
                 trip_id = rs.getInt("id");
+
                 break;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         
+        if (!hasResult)
+            return null;
+            
         query = "select * from ride where trip_id = " + trip_id;
         
         try {
@@ -116,8 +125,8 @@ public class StartTripUI extends javax.swing.JFrame {
                 user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("phone"), new GeoPosition(rs.getDouble("latitude"), rs.getDouble("longitude")));
                 if (rs.getString("type").equals("passenger")) {
                     info = "<html>Name: " + user.getName() + 
-                       "<br> Phone: " + user.getPhone() +
-                       getPassengerInfo(rs.getInt("id"), con) + "<html>";
+                           "<br> Phone: " + user.getPhone() +
+                           getPassengerInfo(rs.getInt("id"), con) + "<html>";
                 } else {
                     info = "<html>Name: " + user.getName() + 
                            "<br>Phone: " + user.getPhone() +
@@ -148,10 +157,11 @@ public class StartTripUI extends javax.swing.JFrame {
         }
         return info;
     }
-    
+     
     private void initMap() {
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+        
         map1.setTileFactory(tileFactory);
         GeoPosition geo = new GeoPosition(38.2483182, 21.7532223);//38.2483182, 21.7532223
 
@@ -161,7 +171,7 @@ public class StartTripUI extends javax.swing.JFrame {
         map1.addMouseListener(mm);
         map1.addMouseMotionListener(mm);
         map1.addMouseWheelListener(new ZoomMouseWheelListenerCenter(map1));
-        
+
         event = getEvent();
     }
     
@@ -328,6 +338,12 @@ public class StartTripUI extends javax.swing.JFrame {
         int response = jOptionPane1.showConfirmDialog(this, "Are you sure you want to start the trip?", "Confirm Payment", jOptionPane1.YES_NO_OPTION, jOptionPane1.QUESTION_MESSAGE);
         if (response == jOptionPane1.YES_OPTION) {
             JDialog dialog = new JDialog();
+            
+            try{
+                (new Database()).con().createStatement().executeUpdate("UPDATE trip SET status = 'inprogress' WHERE id = " + scheduledTrip.getId() );
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
             showNotification(dialog);
             
             Timer timer = new Timer(1500, e->{
@@ -337,7 +353,6 @@ public class StartTripUI extends javax.swing.JFrame {
             });
             timer.setRepeats(false); 
             timer.start();
-            
         } 
     }//GEN-LAST:event_jButton1ActionPerformed
 

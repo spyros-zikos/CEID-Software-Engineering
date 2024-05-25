@@ -36,7 +36,7 @@ CREATE TABLE `Trip`(
     `end_longitude` DECIMAL(18,9) NOT NULL,
     `passenger_capacity` INT(4) NOT NULL,
     `repeat_trip` TINYINT(1) NOT NULL,
-    `status` ENUM('completed', 'notcompleted', 'inprogress', 'canceled') NOT NULL default 'notcompleted'
+    `status` ENUM('completed', 'incomplete', 'inprogress', 'canceled') NOT NULL default 'incomplete'
 );
 CREATE TABLE `Passenger`(
     `user_id` INT UNSIGNED NOT NULL,
