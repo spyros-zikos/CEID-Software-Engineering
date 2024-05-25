@@ -1,4 +1,4 @@
-package my.casheri;
+package com.mycompany.casheri;
 
 public class Filters {
 

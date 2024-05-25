@@ -1,5 +1,6 @@
 package my.casheri;
 
+import com.mycompany.casheri.Filters;
 import com.mycompany.casheri.Database;
 import com.mycompany.casheri.Trip;
 import java.awt.Color;
@@ -33,6 +34,7 @@ public class DriverHistoryUI extends javax.swing.JFrame {
     private List<Trip> completedTrips = new ArrayList<>();
     private Filters selectedFilters = null; 
     private boolean filter = false;
+    
     public DriverHistoryUI() {
         init();
     }
@@ -73,6 +75,7 @@ public class DriverHistoryUI extends javax.swing.JFrame {
         try {
             st = con.createStatement();
             rs = st.executeQuery(query);
+            
             while (rs.next()) {
                 List<Float> temp = getTripProfit(rs.getInt("id"),con);
                 int passengers = round(temp.get(0));
@@ -90,7 +93,6 @@ public class DriverHistoryUI extends javax.swing.JFrame {
                     completedTrips.add(new Trip(rs.getInt("id"), rs.getInt("driver_id"), rs.getString("date_time"),
                                                                         rs.getString("duration"), passengers, profit));
                 }
-                
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -117,15 +119,21 @@ public class DriverHistoryUI extends javax.swing.JFrame {
     }
     
     private void displayTable(){
-        DefaultTableModel model = (DefaultTableModel)statsTable.getModel();
-        Object []  row = new Object [5];
-        for(int i=0; i<completedTrips.size(); i++){
-            row[0]= completedTrips.get(i).getDatetime();
-            row[1]= completedTrips.get(i).getDuration();
-            row[2]= completedTrips.get(i).getPassengers();  
-            row[3]= completedTrips.get(i).getProfit();
+        if(completedTrips.size() < 1) {
+            jLabel1.setVisible(true);
+            jLabel1.setText("NO TRIP FOUND!");
+        } else {
+            jLabel1.setVisible(false);
+            DefaultTableModel model = (DefaultTableModel)statsTable.getModel();
+            Object []  row = new Object [5];
+            for(int i=0; i<completedTrips.size(); i++){
+                row[0]= completedTrips.get(i).getDatetime();
+                row[1]= completedTrips.get(i).getDuration();
+                row[2]= completedTrips.get(i).getPassengers();  
+                row[3]= completedTrips.get(i).getProfit();
 
-            model.addRow(row);
+                model.addRow(row);
+            }
         }
     }
     
@@ -165,6 +173,7 @@ public class DriverHistoryUI extends javax.swing.JFrame {
         menuButton = new javax.swing.JButton();
         filtersButton = new javax.swing.JButton();
         barChartPane = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         statsTable = new javax.swing.JTable();
 
@@ -205,15 +214,23 @@ public class DriverHistoryUI extends javax.swing.JFrame {
 
         barChartPane.setBackground(new java.awt.Color(255, 250, 228));
 
+        jLabel1.setText("jLabel1");
+
         javax.swing.GroupLayout barChartPaneLayout = new javax.swing.GroupLayout(barChartPane);
         barChartPane.setLayout(barChartPaneLayout);
         barChartPaneLayout.setHorizontalGroup(
             barChartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(barChartPaneLayout.createSequentialGroup()
+                .addGap(68, 68, 68)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         barChartPaneLayout.setVerticalGroup(
             barChartPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 135, Short.MAX_VALUE)
+            .addGroup(barChartPaneLayout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(jLabel1)
+                .addContainerGap(64, Short.MAX_VALUE))
         );
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(280, 200));
@@ -291,7 +308,11 @@ public class DriverHistoryUI extends javax.swing.JFrame {
 
     private void filtersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersButtonActionPerformed
         // TODO add your handling code here:
-        new FiltersUI().setVisible(true);
+        if(filter) 
+            new FiltersUI(selectedFilters).setVisible(true);
+        else
+            new FiltersUI().setVisible(true);
+        
         this.setVisible(false);
     }//GEN-LAST:event_filtersButtonActionPerformed
 
@@ -412,6 +433,7 @@ public class DriverHistoryUI extends javax.swing.JFrame {
     private javax.swing.JButton calculateButton;
     private javax.swing.JButton downloadButton;
     private javax.swing.JButton filtersButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton menuButton;
     private javax.swing.JTable statsTable;

@@ -1,20 +1,39 @@
 package my.casheri;
 
 import java.awt.Color;
-import my.casheri.Filters;
+import com.mycompany.casheri.Filters;
 
 public class FiltersUI extends javax.swing.JFrame {
     
     private Filters selectedFilters = null; 
 
     public FiltersUI() {
+        init();
+        getFilters();
+    }
+    
+    public FiltersUI(Filters selectedFilters) {
+        init();
+        this.selectedFilters = selectedFilters;
+        setFilters();
+        getFilters();
+    }
+    
+    private void init() {
         initComponents();
         this.setSize(296,455);
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
-        getFilters();
     }
-
+    
+    private void setFilters() {
+        startDateTime.setText(selectedFilters.getStartDateTime()); endDateTime.setText(selectedFilters.getEndDateTime()); 
+        minDuration.setText(selectedFilters.getMinDuration()); maxDuration.setText(selectedFilters.getMaxDuration());
+        minPassengers.setValue(selectedFilters.getMinPassengers()); 
+        maxPassengers.setValue(selectedFilters.getMaxPassengers());
+        minProfit.setText(String.valueOf(selectedFilters.getMinProfit())); maxProfit.setText(String.valueOf(selectedFilters.getMaxProfit()));
+    }
+    
     private void getFilters() {
         selectedFilters = new Filters(startDateTime.getText(), endDateTime.getText(), minDuration.getText(), maxDuration.getText(),
                 (Integer)minPassengers.getValue(), (Integer)maxPassengers.getValue(), Float.valueOf(minProfit.getText()), Float.valueOf(maxProfit.getText()));

@@ -2,19 +2,10 @@ package my.casheri;
 
 import javax.swing.ImageIcon;
 import java.sql.Connection; // Import the Connection class
-import java.sql.SQLException; // Import the SQLException class
 import com.mycompany.casheri.Database; // Import the Database class
 
-/**
- *
- * @author Damianos
- */
 public class casheriUI extends javax.swing.JFrame {
-    /**
-     * Creates new form casheriUI
-     */
-    
-    // Database connection
+
     public static Connection connection;
     
     public casheriUI() {
