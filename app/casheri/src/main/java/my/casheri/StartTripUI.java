@@ -335,7 +335,7 @@ public class StartTripUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        int response = jOptionPane1.showConfirmDialog(this, "Are you sure you want to start the trip?", "Confirm Payment", jOptionPane1.YES_NO_OPTION, jOptionPane1.QUESTION_MESSAGE);
+        int response = jOptionPane1.showConfirmDialog(this, "Are you sure you want to start the trip?", "Confirm Start Trip", jOptionPane1.YES_NO_OPTION, jOptionPane1.QUESTION_MESSAGE);
         if (response == jOptionPane1.YES_OPTION) {
             JDialog dialog = new JDialog();
             
