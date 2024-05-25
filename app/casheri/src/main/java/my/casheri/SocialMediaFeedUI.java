@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package my.casheri;
 
 import com.mycompany.casheri.Post;
@@ -11,14 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import social.media.elements.PostUI;
 
-/**
- *
- * @author Greg
- */
 public class SocialMediaFeedUI extends javax.swing.JFrame {
-    /**
-     * Creates new form SocialMediaFeedUI
-     */
     
     private Connection connection;
     private SocialMediaFeed socialMediaFeed;
