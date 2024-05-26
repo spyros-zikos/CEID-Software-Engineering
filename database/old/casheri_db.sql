@@ -9,7 +9,8 @@ CREATE TABLE `User`(
     `phone` BIGINT NOT NULL,
     `latitude` DECIMAL(18,9) NOT NULL,
     `longitude` DECIMAL(18,9) NOT NULL,
-	`type` VARCHAR(255) NOT NULL
+    `type` VARCHAR(255) NOT NULL,
+    `balance` DECIMAL(10,2) NOT NULL default 50.00
 );
 ALTER TABLE
     `User` ADD UNIQUE `user_username_unique`(`username`);

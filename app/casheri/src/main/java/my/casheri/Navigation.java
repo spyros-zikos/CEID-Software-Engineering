@@ -387,9 +387,9 @@ public class Navigation extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        if (jButton3Mode==0)
+        if (jButton3Mode==1)
             pickUp(passengerId);
-        else
+        else if (jButton3Mode==2)
             dropOff(passengerId);
     }//GEN-LAST:event_jButton3ActionPerformed
 

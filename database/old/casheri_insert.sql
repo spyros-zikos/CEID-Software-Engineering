@@ -15,7 +15,7 @@ INSERT INTO passenger(user_id,total_trips,reviews_rank)
 -- INSERT INTO trip(id,driver_id,date_time,duration,start_latitude,start_longitude,end_latitude,end_longitude,passenger_capacity,repeat_trip)
 -- 		VALUES(null,1,"2024-01-04 14:30:00","00:23:00",38.255309,21.746003,38.289863,21.795714,4,0);
 INSERT INTO trip(id,driver_id,date_time,duration,start_latitude,start_longitude,end_latitude,end_longitude,passenger_capacity,repeat_trip,status)
-		VALUES(null,1,"2024-01-08 13:30:00","00:16:00",38.255309,21.746003,38.289863,21.795714,4,0,'incomplete');
+		VALUES(null,1,"2024-01-08 13:30:00","00:16:00",38.255309,21.746003,38.289863,21.795714,4,0,'completed');
 
 -- INSERT INTO trip(id,driver_id,date_time,duration,start_latitude,start_longitude,end_latitude,end_longitude,passenger_capacity,repeat_trip)
 -- 		VALUES(null,1,"2024-01-16 13:00:00","00:30:00",38.255309,21.746003,38.289863,21.795714,4,0);
