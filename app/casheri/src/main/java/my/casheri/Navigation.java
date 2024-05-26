@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.event.MouseInputListener;
 import org.jxmapviewer.OSMTileFactoryInfo;
 import org.jxmapviewer.input.PanMouseInputListener;
@@ -34,9 +35,12 @@ public class Navigation extends javax.swing.JFrame {
     private EventWaypoint event;
     private Trip scheduledTrip;
     private int passengerId = -1;
+    private JOptionPane jOptionPane1 = new JOptionPane();
+    private int jButton3Mode;
 
     public Navigation() {
         initComponents();
+        
         jOptionPane1.setVisible(false);
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
         initMap();
@@ -47,7 +51,9 @@ public class Navigation extends javax.swing.JFrame {
         jLabel2.setText(getUser(1) + "<html><br>Start Point<html>");
         
         addPins(points);
-        addRoute(driverPoints);    
+        addRoute(driverPoints);
+        
+        jButton3.setVisible(false);
     }
     
     private Set<MyWaypoint> getScheduledTrip() {
@@ -90,7 +96,8 @@ public class Navigation extends javax.swing.JFrame {
                 point_end = new MyWaypoint(MyWaypoint.UserType.passenger, rs.getInt("passenger_id"), MyWaypoint.PointType.End, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
                 if (rs.getString("status").equals("waiting"))
                     points.add(point_start);
-                points.add(point_end);
+                else
+                    points.add(point_end);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -199,9 +206,16 @@ public class Navigation extends javax.swing.JFrame {
                 jLabel2.setText(getUser(waypoint.getId()) + "<html><br>" + waypoint.getPointType() + " Point<html>");
                 if (waypoint.getType()==MyWaypoint.UserType.driver) {
                     passengerId = -1;
+                    jButton3Mode = 0;
                 } else {
                     passengerId = waypoint.getId();
+                    if (waypoint.getPointType() == MyWaypoint.PointType.Start) {
+                        jButton3Mode = 1;
+                    } else if (waypoint.getPointType() == MyWaypoint.PointType.End) {
+                        jButton3Mode = 2;
+                    }
                 }
+                setUpButton(jButton3Mode);
             }
         };
     }
@@ -229,6 +243,29 @@ public class Navigation extends javax.swing.JFrame {
         this.setVisible(false);
         dispose();
     }
+    
+    private void dropOff(int id) {
+        Connection con = (new Database()).con();
+        String query = "UPDATE RIDE SET STATUS='completed' WHERE passenger_id=" + id + " and trip_id=" + scheduledTrip.getId();
+        try{ con.createStatement().executeUpdate(query); }
+        catch(Exception ex){ ex.printStackTrace(); }
+        
+        new Navigation().setVisible(true);
+        this.setVisible(false);
+        dispose();
+    }
+    
+    private void setUpButton(int mode) {
+        if (mode==1) {
+            jButton3.setText("<html>Pick<br>Up</html>");
+            jButton3.setVisible(true);
+        } else if (mode==2) {
+            jButton3.setText("<html>Drop<br>Off</html>");
+            jButton3.setVisible(true);
+        } else {
+            jButton3.setVisible(false);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -243,14 +280,11 @@ public class Navigation extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jOptionPane1 = new javax.swing.JOptionPane();
         map1 = new com.mycompany.casheri.Map();
-        jButton4 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(296, 455));
-        setPreferredSize(new java.awt.Dimension(296, 455));
         setSize(new java.awt.Dimension(296, 455));
 
         jLabel1.setText("jLabel1");
@@ -273,13 +307,6 @@ public class Navigation extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("<html>Drop<br> Off</html>");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
         map1.setPreferredSize(new java.awt.Dimension(260, 300));
 
         javax.swing.GroupLayout map1Layout = new javax.swing.GroupLayout(map1);
@@ -290,13 +317,13 @@ public class Navigation extends javax.swing.JFrame {
         );
         map1Layout.setVerticalGroup(
             map1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 265, Short.MAX_VALUE)
+            .addGap(0, 297, Short.MAX_VALUE)
         );
 
-        jButton4.setText("<html>Pick<br> Up</html>");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jButton3.setText("<html>Pick<br> Up</html>");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -305,25 +332,19 @@ public class Navigation extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jOptionPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46))
+                .addGap(39, 39, 39)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(map1, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE))
         );
@@ -332,16 +353,11 @@ public class Navigation extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(60, 60, 60)
-                .addComponent(jOptionPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 164, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(314, 314, 314)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton1))
@@ -349,8 +365,8 @@ public class Navigation extends javax.swing.JFrame {
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(114, 114, 114)
-                    .addComponent(map1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(76, Short.MAX_VALUE)))
+                    .addComponent(map1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(44, Short.MAX_VALUE)))
         );
 
         pack();
@@ -371,13 +387,11 @@ public class Navigation extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // drop off
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        if (passengerId > 0)
+        if (jButton3Mode==0)
             pickUp(passengerId);
-    }//GEN-LAST:event_jButton4ActionPerformed
+        else
+            dropOff(passengerId);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -418,10 +432,8 @@ public class Navigation extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JOptionPane jOptionPane1;
     private com.mycompany.casheri.Map map1;
     // End of variables declaration//GEN-END:variables
 }
