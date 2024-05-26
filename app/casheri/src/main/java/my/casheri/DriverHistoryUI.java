@@ -318,7 +318,7 @@ public class DriverHistoryUI extends javax.swing.JFrame {
 
     private void menuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButtonActionPerformed
         // TODO add your handling code here:
-        new casheriUI().setVisible(true);
+        new DriverMenuUI().setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_menuButtonActionPerformed
 
