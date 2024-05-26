@@ -347,7 +347,7 @@ public class AddTripUI extends javax.swing.JFrame {
             newTrip.setRepeatTrip( ((String) jComboBox1.getSelectedItem()).equals("Don't Repeat") ? 0 : 1 );
             newTrip.storeTrip();
 
-            new casheriUI().setVisible(true);
+            new DriverMenuUI().setVisible(true);
             this.setVisible(false);
             dispose();
         }
