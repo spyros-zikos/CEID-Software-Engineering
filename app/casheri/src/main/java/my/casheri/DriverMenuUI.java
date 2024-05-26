@@ -5,12 +5,12 @@ import java.sql.Connection; // Import the Connection class
 import com.mycompany.casheri.Database; // Import the Database class
 import java.sql.ResultSet;
 
-public class casheriUI extends javax.swing.JFrame {
+public class DriverMenuUI extends javax.swing.JFrame {
 
     private Connection con;
     private int navigation_flag = 0;
     
-    public casheriUI() {
+    public DriverMenuUI() {
         initComponents();
         
         con = (new Database()).con();
@@ -169,20 +169,21 @@ public class casheriUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(casheriUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DriverMenuUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(casheriUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DriverMenuUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(casheriUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DriverMenuUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(casheriUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DriverMenuUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new casheriUI().setVisible(true);
+                new DriverMenuUI().setVisible(true);
             }
         });
     }

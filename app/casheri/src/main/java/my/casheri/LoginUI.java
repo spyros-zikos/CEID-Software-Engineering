@@ -11,12 +11,12 @@ import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
 
-public class MenuUI extends javax.swing.JFrame {
+public class LoginUI extends javax.swing.JFrame {
 
     /**
      * Creates new form MenuUI
      */
-    public MenuUI() {
+    public LoginUI() {
         initComponents();
     }
 
@@ -41,7 +41,7 @@ public class MenuUI extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Login");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -60,8 +60,8 @@ public class MenuUI extends javax.swing.JFrame {
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(112, 112, 112)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(92, 92, 92)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(69, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -71,9 +71,9 @@ public class MenuUI extends javax.swing.JFrame {
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addGap(34, 34, 34)
                 .addComponent(jButton1)
-                .addGap(154, 154, 154))
+                .addGap(155, 155, 155))
         );
 
         pack();
@@ -104,7 +104,7 @@ public class MenuUI extends javax.swing.JFrame {
                         pstDriver.setInt(1, userId);
                         try (ResultSet rsDriver = pstDriver.executeQuery()) {
                             if (rsDriver.next()) {
-                                new casheriUI().setVisible(true);
+                                new DriverMenuUI().setVisible(true);
                             } else {
                                 new PassengerUI(fullName,userId).setVisible(true);
                             }
@@ -139,20 +139,21 @@ public class MenuUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MenuUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MenuUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MenuUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MenuUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoginUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MenuUI().setVisible(true);
+                new LoginUI().setVisible(true);
             }
         });
     }

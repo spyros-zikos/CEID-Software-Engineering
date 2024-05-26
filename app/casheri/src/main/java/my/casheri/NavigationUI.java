@@ -227,7 +227,7 @@ public class NavigationUI extends javax.swing.JFrame {
         try{ con.createStatement().executeUpdate(query); }
         catch(Exception ex){ ex.printStackTrace(); }
         
-        new casheriUI().setVisible(true);
+        new DriverMenuUI().setVisible(true);
         this.setVisible(false);
         dispose();
     }
@@ -381,7 +381,7 @@ public class NavigationUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        new casheriUI().setVisible(true);
+        new DriverMenuUI().setVisible(true);
         this.setVisible(false);
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
