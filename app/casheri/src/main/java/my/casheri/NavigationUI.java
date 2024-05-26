@@ -28,7 +28,7 @@ import waypoint.MyWaypoint;
 import waypoint.WaypointRender;
 
 
-public class Navigation extends javax.swing.JFrame {
+public class NavigationUI extends javax.swing.JFrame {
 
     private final Set<MyWaypoint> driverPoints = new HashSet<>();
     private List<RoutingData> routingData = new ArrayList<>();
@@ -38,7 +38,7 @@ public class Navigation extends javax.swing.JFrame {
     private JOptionPane jOptionPane1 = new JOptionPane();
     private int jButton3Mode;
 
-    public Navigation() {
+    public NavigationUI() {
         initComponents();
         
         jOptionPane1.setVisible(false);
@@ -239,7 +239,7 @@ public class Navigation extends javax.swing.JFrame {
         try{ con.createStatement().executeUpdate(query); }
         catch(Exception ex){ ex.printStackTrace(); }
         
-        new Navigation().setVisible(true);
+        new NavigationUI().setVisible(true);
         this.setVisible(false);
         dispose();
     }
@@ -250,7 +250,7 @@ public class Navigation extends javax.swing.JFrame {
         try{ con.createStatement().executeUpdate(query); }
         catch(Exception ex){ ex.printStackTrace(); }
         
-        new Navigation().setVisible(true);
+        new NavigationUI().setVisible(true);
         this.setVisible(false);
         dispose();
     }
@@ -410,20 +410,21 @@ public class Navigation extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Navigation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NavigationUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Navigation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NavigationUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Navigation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NavigationUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Navigation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NavigationUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Navigation().setVisible(true);
+                new NavigationUI().setVisible(true);
             }
         });
     }

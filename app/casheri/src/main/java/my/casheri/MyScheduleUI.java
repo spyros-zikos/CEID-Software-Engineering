@@ -8,12 +8,12 @@ package my.casheri;
  *
  * @author zikos
  */
-public class MySchedule extends javax.swing.JFrame {
+public class MyScheduleUI extends javax.swing.JFrame {
 
     /**
      * Creates new form MySchedule
      */
-    public MySchedule() {
+    public MyScheduleUI() {
         initComponents();
         this.setLocationRelativeTo(null);
     }
@@ -30,7 +30,6 @@ public class MySchedule extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(296, 455));
 
         jButton1.setText("Add Trip");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -60,7 +59,7 @@ public class MySchedule extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         new AddTrip().setVisible(true);
+         new AddTripUI().setVisible(true);
          this.setVisible(false);    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -80,20 +79,21 @@ public class MySchedule extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MySchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MyScheduleUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MySchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MyScheduleUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MySchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MyScheduleUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MySchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MyScheduleUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MySchedule().setVisible(true);
+                new MyScheduleUI().setVisible(true);
             }
         });
     }
