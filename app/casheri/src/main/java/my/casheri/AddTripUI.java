@@ -19,7 +19,7 @@ import waypoint.MyWaypoint;
 import waypoint.WaypointRender;
 
 
-public class AddTrip extends javax.swing.JFrame {
+public class AddTripUI extends javax.swing.JFrame {
     
     private int driverId = 1; // <------ to change
     private int submit_flag = 0;
@@ -29,7 +29,7 @@ public class AddTrip extends javax.swing.JFrame {
     private final Set<MyWaypoint> waypoints = new HashSet<>();
     private EventWaypoint event;
     
-    public AddTrip() {
+    public AddTripUI() {
         initComponents();
         init(); 
     }
@@ -110,7 +110,7 @@ public class AddTrip extends javax.swing.JFrame {
         return new EventWaypoint() {
             @Override
             public void selected(MyWaypoint waypoint) {
-                JOptionPane.showMessageDialog(AddTrip.this, waypoint.getName());
+                JOptionPane.showMessageDialog(AddTripUI.this, waypoint.getName());
             }
         };
     }
@@ -370,7 +370,7 @@ public class AddTrip extends javax.swing.JFrame {
             clearWaypoint();
             clicksLeft = 2;
         } else {
-            new casheriUI().setVisible(true);
+            new MyScheduleUI().setVisible(true);
             this.setVisible(false);
             dispose();
         }
@@ -394,20 +394,21 @@ public class AddTrip extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddTrip.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddTripUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddTrip.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddTripUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddTrip.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddTripUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddTrip.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AddTripUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AddTrip().setVisible(true);
+                new AddTripUI().setVisible(true);
             }
         });
     }

@@ -358,7 +358,7 @@ public class StartTripUI extends javax.swing.JFrame {
             
             Timer timer = new Timer(1500, e->{
                 dialog.dispose();
-                new Navigation().setVisible(true);
+                new NavigationUI().setVisible(true);
                 this.setVisible(false);
             });
             timer.setRepeats(false); 
