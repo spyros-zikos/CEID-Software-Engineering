@@ -250,9 +250,34 @@ public class NavigationUI extends javax.swing.JFrame {
         try{ con.createStatement().executeUpdate(query); }
         catch(Exception ex){ ex.printStackTrace(); }
         
+        changeBalance();
+        
         new NavigationUI().setVisible(true);
         this.setVisible(false);
         dispose();
+    }
+    
+    private void changeBalance() {
+        try{
+            ResultSet rs1 = new Database().executeQuery("SELECT cost FROM ride WHERE trip_id=" + 
+                    scheduledTrip.getId() + " and passenger_id=" + passengerId);
+            rs1.next();
+            float rideCost = (float) Math.round(rs1.getDouble("cost")*100)/100;
+            
+            ResultSet rs2 = new Database().executeQuery("SELECT balance FROM user WHERE id="+passengerId);
+            rs2.next();
+            float passengerBalance = (float) Math.round(rs2.getDouble("balance")*100)/100;
+            
+            new Database().executeUpdate("UPDATE user SET balance=" + 
+                    (passengerBalance - rideCost) + " WHERE id=" + passengerId);
+            
+            ResultSet rs3 = new Database().executeQuery("SELECT balance FROM user WHERE id="+scheduledTrip.getDriverId());
+            rs3.next();
+            float driverBalance = (float) Math.round(rs3.getDouble("balance")*100)/100;
+        
+            new Database().executeUpdate("UPDATE user SET balance=" +  (driverBalance + 
+                    rideCost) + " WHERE id=" + scheduledTrip.getDriverId());
+        } catch(Exception ex) {ex.printStackTrace();}
     }
     
     private void setUpButton(int mode) {
