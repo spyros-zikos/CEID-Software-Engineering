@@ -10,7 +10,8 @@ CREATE TABLE `User`(
     `latitude` DECIMAL(18,9) NOT NULL,
     `longitude` DECIMAL(18,9) NOT NULL,
     `type` VARCHAR(255) NOT NULL,
-    `balance` DECIMAL(10,2) NOT NULL default 50.00
+    `balance` DECIMAL(10,2) NOT NULL default 50.00,
+    `gps` TINYINT(1) NOT NULL default 0
 );
 ALTER TABLE
     `User` ADD UNIQUE `user_username_unique`(`username`);

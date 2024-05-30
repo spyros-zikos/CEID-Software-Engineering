@@ -1,36 +1,47 @@
 package my.casheri;
 
 import javax.swing.ImageIcon;
-import java.sql.Connection; // Import the Connection class
-import com.mycompany.casheri.Database; // Import the Database class
+import com.mycompany.casheri.Database;
 import java.sql.ResultSet;
 
 public class DriverMenuUI extends javax.swing.JFrame {
-
-    private Connection con;
     private int navigation_flag = 0;
     private int driverΙd;
+    private int gps;
     
     public DriverMenuUI(int driverΙd) {
         this.driverΙd = driverΙd;
         initComponents();
-        
-        con = (new Database()).con();
-        String query = "select status from trip where driver_id = 1";
-        ResultSet rs;
-        
+        startTripOrNavigation();
+        getGPS();
+    }
+    
+    public DriverMenuUI() {}
+    
+    public void startTripOrNavigation() {
         try {
-            rs = con.createStatement().executeQuery(query);
-            while (rs.next()) if (rs.getString("status").equals("inprogress")) navigation_flag = 1;
+            ResultSet rs = new Database().executeQuery("select status from trip where driver_id="+driverΙd);
+            while (rs.next()) 
+                if (rs.getString("status").equals("inprogress"))
+                    navigation_flag = 1;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
         if (navigation_flag == 1) startTripButton.setText("Navigation");
     }
     
-    public DriverMenuUI() {
-
+    public void getGPS() {
+        try {
+            ResultSet rs = new Database().executeQuery("select gps from user where id="+driverΙd);
+            rs.next();
+            gps = rs.getInt("gps");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        if (gps == 1)
+            jToggleButton1.setSelected(true);
+        else
+            jToggleButton1.setSelected(false);
     }
 
     /**
@@ -48,6 +59,7 @@ public class DriverMenuUI extends javax.swing.JFrame {
         driverHistoryButton = new javax.swing.JButton();
         socialMediaButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jToggleButton1 = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -84,6 +96,13 @@ public class DriverMenuUI extends javax.swing.JFrame {
         jLabel1.setText("WELCOME!!!");
         jLabel1.setToolTipText("");
 
+        jToggleButton1.setText("GPS");
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -94,18 +113,26 @@ public class DriverMenuUI extends javax.swing.JFrame {
                     .addComponent(socialMediaButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(startTripButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(driverHistoryButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel1)))
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(83, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(107, 107, 107))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(110, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jToggleButton1)
+                .addGap(36, 36, 36)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                 .addComponent(startTripButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -123,29 +150,39 @@ public class DriverMenuUI extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         new MyScheduleUI(driverΙd).setVisible(true);
         this.setVisible(false);
+        dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void startTripButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startTripButtonActionPerformed
         if (navigation_flag == 0) {
             new StartTripUI(driverΙd).setVisible(true);
             this.setVisible(false);
+            dispose();
         } else {
             new NavigationUI(driverΙd).setVisible(true);
             this.setVisible(false);
+            dispose();
         }
     }//GEN-LAST:event_startTripButtonActionPerformed
 
     private void driverHistoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_driverHistoryButtonActionPerformed
         new DriverHistoryUI(driverΙd).setVisible(true);
         this.setVisible(false);
+        dispose();
     }//GEN-LAST:event_driverHistoryButtonActionPerformed
 
     private void socialMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_socialMediaButtonActionPerformed
         SocialMediaFeedUI socialMediaFeed = new SocialMediaFeedUI();
         socialMediaFeed.setVisible(true);
-        dispose(); // Close current frame
-        
+        dispose();
     }//GEN-LAST:event_socialMediaButtonActionPerformed
+
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        if (gps == 1)
+            new Database().executeUpdate("UPDATE user SET gps=" + (gps = 0) + " WHERE id=" + driverΙd);
+        else
+            new Database().executeUpdate("UPDATE user SET gps=" + (gps = 1) + " WHERE id=" + driverΙd);
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,7 +215,7 @@ public class DriverMenuUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DriverMenuUI().setVisible(true);
+                new DriverMenuUI(1).setVisible(true);
             }
         });
     }
@@ -188,6 +225,7 @@ public class DriverMenuUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JButton socialMediaButton;
     private javax.swing.JButton startTripButton;
     // End of variables declaration//GEN-END:variables
