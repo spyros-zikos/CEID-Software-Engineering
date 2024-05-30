@@ -34,15 +34,22 @@ public class DriverHistoryUI extends javax.swing.JFrame {
     private List<Trip> completedTrips = new ArrayList<>();
     private Filters selectedFilters = null; 
     private boolean filter = false;
+    private int driver_id;
     
-    public DriverHistoryUI() {
+    public DriverHistoryUI(int driver_id) {
+        this.driver_id = driver_id;
         init();
     }
     
-    public DriverHistoryUI(Filters filters) {
+    public DriverHistoryUI(Filters filters, int driver_id) {
+        this.driver_id = driver_id;
         selectedFilters = filters;
         filter = true;
         init();
+    }
+    
+    public DriverHistoryUI() {
+        
     }
     
     private void init() {
@@ -61,12 +68,12 @@ public class DriverHistoryUI extends javax.swing.JFrame {
         //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
         String query = null;
         if (filter) {
-            query = "select * from trip where driver_id = 1 and status = 'completed'" +
+            query = "select * from trip where driver_id = " + driver_id + " and status = 'completed'" +
             " and date_time between '" + selectedFilters.getStartDateTime() + "' and '" + selectedFilters.getEndDateTime() + 
             "' and duration between '" + selectedFilters.getMinDuration() + "' and '" + selectedFilters.getMaxDuration() +
             "' order by date_time asc";
         } else {
-            query = "select * from trip where driver_id = 1 and status = 'completed' order by date_time asc";
+            query = "select * from trip where driver_id = " + driver_id + " and status = 'completed' order by date_time asc";
         }
       
         Statement st;
@@ -230,7 +237,7 @@ public class DriverHistoryUI extends javax.swing.JFrame {
             .addGroup(barChartPaneLayout.createSequentialGroup()
                 .addGap(55, 55, 55)
                 .addComponent(jLabel1)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(82, Short.MAX_VALUE))
         );
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(280, 200));
@@ -296,11 +303,11 @@ public class DriverHistoryUI extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(barChartPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(calculateButton)
                     .addComponent(downloadButton))
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         pack();
@@ -309,16 +316,16 @@ public class DriverHistoryUI extends javax.swing.JFrame {
     private void filtersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersButtonActionPerformed
         // TODO add your handling code here:
         if(filter) 
-            new FiltersUI(selectedFilters).setVisible(true);
+            new FiltersUI(selectedFilters, driver_id).setVisible(true);
         else
-            new FiltersUI().setVisible(true);
+            new FiltersUI(driver_id).setVisible(true);
         
         this.setVisible(false);
     }//GEN-LAST:event_filtersButtonActionPerformed
 
     private void menuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButtonActionPerformed
         // TODO add your handling code here:
-        new DriverMenuUI().setVisible(true);
+        new DriverMenuUI(driver_id).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_menuButtonActionPerformed
 
@@ -358,7 +365,7 @@ public class DriverHistoryUI extends javax.swing.JFrame {
         ChartPanel chartPanel  = new ChartPanel(barChart);
         chartPanel.setSize(260,135);
         barChartPane.removeAll();
-        barChartPane.add(chartPanel);//, BorderLayout.CENTER
+        barChartPane.add(chartPanel);
         barChartPane.updateUI();
     }//GEN-LAST:event_calculateButtonActionPerformed
 

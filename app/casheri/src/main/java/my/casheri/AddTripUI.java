@@ -28,7 +28,7 @@ import waypoint.WaypointRender;
 
 public class AddTripUI extends javax.swing.JFrame {
     
-    private int driverId = 1; // <------ to change
+    private int driverId;
     private int submit_flag = 0;
     private int clicksLeft = 2;
     private Trip newTrip = new Trip();
@@ -36,7 +36,8 @@ public class AddTripUI extends javax.swing.JFrame {
     private final Set<MyWaypoint> waypoints = new HashSet<>();
     private EventWaypoint event;
     
-    public AddTripUI() {
+    public AddTripUI(int driverId) {
+        this.driverId = driverId;
         initComponents();
         init(); 
         this.setLayout(null);
@@ -401,7 +402,7 @@ public class AddTripUI extends javax.swing.JFrame {
             clearWaypoint();
             clicksLeft = 2;
         } else {
-            new MyScheduleUI().setVisible(true);
+            new MyScheduleUI(driverId).setVisible(true);
             this.setVisible(false);
             dispose();
         }
@@ -439,7 +440,7 @@ public class AddTripUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AddTripUI().setVisible(true);
+                new AddTripUI(1).setVisible(true);
             }
         });
     }

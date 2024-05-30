@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.casheri;
 
 import org.jxmapviewer.viewer.GeoPosition;
 
-/**
- *
- * @author greg
- */
 public class Passenger extends User {
     // Default Constructor
     public Passenger(int id){

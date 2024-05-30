@@ -1,19 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package my.casheri;
 
-/**
- *
- * @author zikos
- */
+
 public class MyScheduleUI extends javax.swing.JFrame {
 
-    /**
-     * Creates new form MySchedule
-     */
-    public MyScheduleUI() {
+    private int driverId;
+    public MyScheduleUI(int driverId) {
+        this.driverId = driverId;
         initComponents();
         this.setLocationRelativeTo(null);
     }
@@ -71,11 +63,11 @@ public class MyScheduleUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         new AddTripUI().setVisible(true);
+         new AddTripUI(driverId).setVisible(true);
          this.setVisible(false);    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         new DriverMenuUI().setVisible(true);
+         new DriverMenuUI(driverId).setVisible(true);
          this.setVisible(false); 
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -110,7 +102,7 @@ public class MyScheduleUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MyScheduleUI().setVisible(true);
+                new MyScheduleUI(1).setVisible(true);
             }
         });
     }

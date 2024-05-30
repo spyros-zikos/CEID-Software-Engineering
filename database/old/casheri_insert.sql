@@ -28,11 +28,11 @@ INSERT INTO trip(id,driver_id,date_time,duration,start_latitude,start_longitude,
 -- INSERT INTO trip(id,driver_id,date_time,duration,start_latitude,start_longitude,end_latitude,end_longitude,passenger_capacity,repeat_trip)
 -- 		VALUES(null,1,"2024-03-14 13:00:00","00:15:54",38.255309,21.746003,38.289863,21.795714,1,0); 
 INSERT INTO trip(id,driver_id,date_time,duration,start_latitude,start_longitude,end_latitude,end_longitude,passenger_capacity,repeat_trip)
-		VALUES(null,1,"2024-05-29 13:00:00","00:13:54",38.267711,21.752934,38.289221,21.794528,2,0);
+		VALUES(null,1,"2024-06-10 13:00:00","00:13:54",38.267711,21.752934,38.289221,21.794528,2,0);
 INSERT INTO trip(id,driver_id,date_time,duration,start_latitude,start_longitude,end_latitude,end_longitude,passenger_capacity,repeat_trip)
-		VALUES(null,1,"2024-06-01 13:00:00","00:06:54",38.245730236,21.731042862,38.256514756,21.743402481,2,0);
+		VALUES(null,1,"2024-06-12 13:00:00","00:06:54",38.245730236,21.731042862,38.256514756,21.743402481,2,0);
 INSERT INTO trip(id,driver_id,date_time,duration,start_latitude,start_longitude,end_latitude,end_longitude,passenger_capacity,repeat_trip)
-		VALUES(null,1,"2024-06-02 13:00:00","00:12:54",38.245730236,21.731042862,38.256514756,21.743402481,2,0);
+		VALUES(null,1,"2024-06-13 13:00:00","00:12:54",38.245730236,21.731042862,38.256514756,21.743402481,2,0);
         
         
 INSERT INTO ride(id,trip_id,driver_id,passenger_id,date_time,duration,start_latitude,start_longitude,end_latitude,end_longitude,cost)

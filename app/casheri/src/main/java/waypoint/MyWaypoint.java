@@ -87,8 +87,7 @@ public class MyWaypoint extends DefaultWaypoint {
             button = new ButtonWaypoint("src\\main\\java\\icons\\pin_icon\\driver.png");
         } else if (type == UserType.passenger) {
             button = new ButtonWaypoint("src\\main\\java\\icons\\pin_icon\\user" + id + ".png");
-        }
-        else if (type == UserType.car) {
+        } else if (type == UserType.car) {
             button = new ButtonWaypoint("src\\main\\java\\icons\\pin_icon\\car.png");
         }
         button.addActionListener(new ActionListener() {
@@ -104,6 +103,6 @@ public class MyWaypoint extends DefaultWaypoint {
     }
     
     public static enum UserType {
-        driver, passenger,car
+        driver, passenger, car
     }
 }

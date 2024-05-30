@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package social.media.elements;
 
 import javax.swing.ImageIcon;
@@ -9,10 +5,6 @@ import java.awt.Image;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-/**
- *
- * @author Greg
- */
 class ImageUtil {    
     public static ImageIcon getScaledIcon(String path, int width, int height) {
         // Load the image from the path
