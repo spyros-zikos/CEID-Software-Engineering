@@ -40,22 +40,20 @@ public class NavigationUI extends javax.swing.JFrame {
     private int jButton3Mode;
 
     public NavigationUI(int driverId) {
-        this.driverId = driverId;
-        
         initComponents();
         
-        jOptionPane1.setVisible(false);
+        this.driverId = driverId;
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
+        
         initMap();
         Set<MyWaypoint> points = getScheduledTrip();
+        addPins(points);
+        addRoute(driverPoints);
         
         String path = "src\\main\\java\\icons\\user_icon\\user" + driverId + ".png";
         jLabel1.setIcon(new ImageIcon(path));
         jLabel2.setText(getUser(driverId) + "<html><br>Start Point<html>");
-        
-        addPins(points);
-        addRoute(driverPoints);
-        
+        jOptionPane1.setVisible(false);
         jButton3.setVisible(false);
     }
     
@@ -155,10 +153,21 @@ public class NavigationUI extends javax.swing.JFrame {
     }
     
     private void initMap() {
+        float x = 0;
+        float y = 0;
+        try {
+            ResultSet rs = new Database().executeQuery("select latitude, longitude from user where id="+driverId);
+            rs.next();
+            x = rs.getFloat("latitude");
+            y = rs.getFloat("longitude");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
         map1.setTileFactory(tileFactory);
-        GeoPosition geo = new GeoPosition(38.2483182, 21.7532223);//38.2483182, 21.7532223
+        GeoPosition geo = new GeoPosition(x, y); //38.2483182, 21.7532223
 
         map1.setAddressLocation(geo);
         map1.setZoom(8);
