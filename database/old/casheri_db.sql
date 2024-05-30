@@ -65,6 +65,12 @@ CREATE TABLE `Ride`(
     `cost` DOUBLE(8, 2) NOT NULL,
     `status` ENUM('inthefuture', 'waiting', 'inprogress', 'completed') NOT NULL default 'inthefuture'
 );
+CREATE TABLE `Notifications`(
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `sender_id` INT UNSIGNED NOT NULL,
+    `receiver_id` INT UNSIGNED NOT NULL,
+    `text` TEXT NOT NULL
+);
 ALTER TABLE
     `Post` ADD CONSTRAINT `post_driver_id_foreign` FOREIGN KEY(`driver_id`) REFERENCES `Driver`(`user_id`);
 ALTER TABLE
@@ -79,3 +85,7 @@ ALTER TABLE
     `Ride` ADD CONSTRAINT `ride_passenger_id_foreign` FOREIGN KEY(`passenger_id`) REFERENCES `Passenger`(`user_id`);
 ALTER TABLE
     `Passenger` ADD CONSTRAINT `passenger_user_id_foreign` FOREIGN KEY(`user_id`) REFERENCES `User`(`id`);
+ALTER TABLE
+    `Notifications` ADD CONSTRAINT `notifications_receiver_id_foreign` FOREIGN KEY(`receiver_id`) REFERENCES `User`(`id`);
+ALTER TABLE
+    `Notifications` ADD CONSTRAINT `notifications_sender_id_foreign` FOREIGN KEY(`sender_id`) REFERENCES `User`(`id`);
