@@ -41,7 +41,7 @@ public class AddTripUI extends javax.swing.JFrame {
         initComponents();
         init(); 
         this.setLayout(null);
-        //this.setSize(296,455);
+        this.getContentPane().setBackground(Color.decode("#FFFFBA"));
     }
     
     private void init() {
