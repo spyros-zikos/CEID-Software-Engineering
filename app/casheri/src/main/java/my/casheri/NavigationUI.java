@@ -30,6 +30,7 @@ import waypoint.WaypointRender;
 
 public class NavigationUI extends javax.swing.JFrame {
 
+    private int driverId;
     private final Set<MyWaypoint> driverPoints = new HashSet<>();
     private List<RoutingData> routingData = new ArrayList<>();
     private EventWaypoint event;
@@ -38,7 +39,9 @@ public class NavigationUI extends javax.swing.JFrame {
     private JOptionPane jOptionPane1 = new JOptionPane();
     private int jButton3Mode;
 
-    public NavigationUI() {
+    public NavigationUI(int driverId) {
+        this.driverId = driverId;
+        
         initComponents();
         
         jOptionPane1.setVisible(false);
@@ -46,9 +49,9 @@ public class NavigationUI extends javax.swing.JFrame {
         initMap();
         Set<MyWaypoint> points = getScheduledTrip();
         
-        String path = "src\\main\\java\\icons\\user_icon\\user" + 1 + ".png";
+        String path = "src\\main\\java\\icons\\user_icon\\user" + driverId + ".png";
         jLabel1.setIcon(new ImageIcon(path));
-        jLabel2.setText(getUser(1) + "<html><br>Start Point<html>");
+        jLabel2.setText(getUser(driverId) + "<html><br>Start Point<html>");
         
         addPins(points);
         addRoute(driverPoints);
@@ -59,8 +62,7 @@ public class NavigationUI extends javax.swing.JFrame {
     private Set<MyWaypoint> getScheduledTrip() {
         Set<MyWaypoint> points = new HashSet<>();
         Connection con = (new Database()).con();    
-        //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
-        String query = "select * from trip where status='inprogress'";
+        String query = "select * from trip where status='inprogress' and driver_id="+driverId;
         int trip_id = 0;
         MyWaypoint point_start;
         MyWaypoint point_end;
@@ -227,7 +229,7 @@ public class NavigationUI extends javax.swing.JFrame {
         try{ con.createStatement().executeUpdate(query); }
         catch(Exception ex){ ex.printStackTrace(); }
         
-        new DriverMenuUI().setVisible(true);
+        new DriverMenuUI(driverId).setVisible(true);
         this.setVisible(false);
         dispose();
     }
@@ -239,7 +241,7 @@ public class NavigationUI extends javax.swing.JFrame {
         try{ con.createStatement().executeUpdate(query); }
         catch(Exception ex){ ex.printStackTrace(); }
         
-        new NavigationUI().setVisible(true);
+        new NavigationUI(driverId).setVisible(true);
         this.setVisible(false);
         dispose();
     }
@@ -252,7 +254,7 @@ public class NavigationUI extends javax.swing.JFrame {
         
         changeBalance();
         
-        new NavigationUI().setVisible(true);
+        new NavigationUI(driverId).setVisible(true);
         this.setVisible(false);
         dispose();
     }
@@ -406,7 +408,7 @@ public class NavigationUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        new DriverMenuUI().setVisible(true);
+        new DriverMenuUI(driverId).setVisible(true);
         this.setVisible(false);
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -449,7 +451,7 @@ public class NavigationUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NavigationUI().setVisible(true);
+                new NavigationUI(1).setVisible(true);
             }
         });
     }

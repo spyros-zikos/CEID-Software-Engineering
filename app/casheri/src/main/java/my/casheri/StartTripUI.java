@@ -383,7 +383,7 @@ public class StartTripUI extends javax.swing.JFrame {
             
             Timer timer = new Timer(1500, e->{
                 dialog.dispose();
-                new NavigationUI().setVisible(true);
+                new NavigationUI(driver_id).setVisible(true);
                 this.setVisible(false);
             });
             timer.setRepeats(false); 
@@ -426,7 +426,7 @@ public class StartTripUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new StartTripUI().setVisible(true);
+                new StartTripUI(1).setVisible(true);
             }
         });
     }
