@@ -6,16 +6,16 @@ import com.mycompany.casheri.Filters;
 public class FiltersUI extends javax.swing.JFrame {
     
     private Filters selectedFilters = null; 
-    private int driver_id;
+    private int driverΙd;
 
-    public FiltersUI(int driver_id) {
-        this.driver_id = driver_id;
+    public FiltersUI(int driverΙd) {
+        this.driverΙd = driverΙd;
         init();
         getFilters();
     }
     
-    public FiltersUI(Filters selectedFilters, int driver_id) {
-        this.driver_id = driver_id;
+    public FiltersUI(Filters selectedFilters, int driverΙd) {
+        this.driverΙd = driverΙd;
         init();
         this.selectedFilters = selectedFilters;
         setFilters();
@@ -240,7 +240,7 @@ public class FiltersUI extends javax.swing.JFrame {
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         // TODO add your handling code here:
         getFilters();
-        new DriverHistoryUI(selectedFilters, driver_id).setVisible(true);
+        new DriverHistoryUI(selectedFilters, driverΙd).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_saveButtonActionPerformed
 
