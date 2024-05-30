@@ -34,15 +34,15 @@ public class DriverHistoryUI extends javax.swing.JFrame {
     private List<Trip> completedTrips = new ArrayList<>();
     private Filters selectedFilters = null; 
     private boolean filter = false;
-    private int driver_id;
+    private int driverΙd;
     
-    public DriverHistoryUI(int driver_id) {
-        this.driver_id = driver_id;
+    public DriverHistoryUI(int driverΙd) {
+        this.driverΙd = driverΙd;
         init();
     }
     
-    public DriverHistoryUI(Filters filters, int driver_id) {
-        this.driver_id = driver_id;
+    public DriverHistoryUI(Filters filters, int driverΙd) {
+        this.driverΙd = driverΙd;
         selectedFilters = filters;
         filter = true;
         init();
@@ -68,12 +68,12 @@ public class DriverHistoryUI extends javax.swing.JFrame {
         //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
         String query = null;
         if (filter) {
-            query = "select * from trip where driver_id = " + driver_id + " and status = 'completed'" +
+            query = "select * from trip where driver_id = " + driverΙd + " and status = 'completed'" +
             " and date_time between '" + selectedFilters.getStartDateTime() + "' and '" + selectedFilters.getEndDateTime() + 
             "' and duration between '" + selectedFilters.getMinDuration() + "' and '" + selectedFilters.getMaxDuration() +
             "' order by date_time asc";
         } else {
-            query = "select * from trip where driver_id = " + driver_id + " and status = 'completed' order by date_time asc";
+            query = "select * from trip where driver_id = " + driverΙd + " and status = 'completed' order by date_time asc";
         }
       
         Statement st;
@@ -316,16 +316,16 @@ public class DriverHistoryUI extends javax.swing.JFrame {
     private void filtersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersButtonActionPerformed
         // TODO add your handling code here:
         if(filter) 
-            new FiltersUI(selectedFilters, driver_id).setVisible(true);
+            new FiltersUI(selectedFilters, driverΙd).setVisible(true);
         else
-            new FiltersUI(driver_id).setVisible(true);
+            new FiltersUI(driverΙd).setVisible(true);
         
         this.setVisible(false);
     }//GEN-LAST:event_filtersButtonActionPerformed
 
     private void menuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButtonActionPerformed
         // TODO add your handling code here:
-        new DriverMenuUI(driver_id).setVisible(true);
+        new DriverMenuUI(driverΙd).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_menuButtonActionPerformed
 

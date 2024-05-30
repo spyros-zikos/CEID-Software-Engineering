@@ -9,10 +9,10 @@ public class DriverMenuUI extends javax.swing.JFrame {
 
     private Connection con;
     private int navigation_flag = 0;
-    private int driver_id;
+    private int driverΙd;
     
-    public DriverMenuUI(int driver_id) {
-        this.driver_id = driver_id;
+    public DriverMenuUI(int driverΙd) {
+        this.driverΙd = driverΙd;
         initComponents();
         
         con = (new Database()).con();
@@ -30,19 +30,7 @@ public class DriverMenuUI extends javax.swing.JFrame {
     }
     
     public DriverMenuUI() {
-//        initComponents();        
-//        con = (new Database()).con();
-//        String query = "select status from trip where driver_id = 1";
-//        ResultSet rs;
-//        
-//        try {
-//            rs = con.createStatement().executeQuery(query);
-//            while (rs.next()) if (rs.getString("status").equals("inprogress")) navigation_flag = 1;
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//        
-//        if (navigation_flag == 1) startTripButton.setText("Navigation");
+
     }
 
     /**
@@ -133,22 +121,22 @@ public class DriverMenuUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        new MyScheduleUI(driver_id).setVisible(true);
+        new MyScheduleUI(driverΙd).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void startTripButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startTripButtonActionPerformed
         if (navigation_flag == 0) {
-            new StartTripUI(driver_id).setVisible(true);
+            new StartTripUI(driverΙd).setVisible(true);
             this.setVisible(false);
         } else {
-            new NavigationUI(driver_id).setVisible(true);
+            new NavigationUI(driverΙd).setVisible(true);
             this.setVisible(false);
         }
     }//GEN-LAST:event_startTripButtonActionPerformed
 
     private void driverHistoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_driverHistoryButtonActionPerformed
-        new DriverHistoryUI(driver_id).setVisible(true);
+        new DriverHistoryUI(driverΙd).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_driverHistoryButtonActionPerformed
 
