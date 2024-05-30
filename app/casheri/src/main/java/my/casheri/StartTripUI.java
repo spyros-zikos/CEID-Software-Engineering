@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import com.mycompany.casheri.Database;
+import com.mycompany.casheri.Passenger;
 import waypoint.EventWaypoint;
 import com.mycompany.casheri.RoutingData;
 import com.mycompany.casheri.RoutingService;
@@ -37,8 +38,11 @@ public class StartTripUI extends javax.swing.JFrame {
     private List<RoutingData> routingData = new ArrayList<>();
     private EventWaypoint event;
     private Trip scheduledTrip;
+    private List<Passenger> passengers = new ArrayList<> ();
+    private int driver_id;
 
-    public StartTripUI() { 
+    public StartTripUI(int driver_id) { 
+        this.driver_id = driver_id;
         initComponents();
         this.setSize(296,455);
         this.setLocationRelativeTo(null);
@@ -47,23 +51,27 @@ public class StartTripUI extends javax.swing.JFrame {
         Set<MyWaypoint> points = getScheduledTrip();
         
         //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
-        String path = "src\\main\\java\\icons\\user_icon\\user" + 1 + ".png";
+        String path = "src\\main\\java\\icons\\user_icon\\user" + driver_id + ".png";
         jLabel1.setIcon(new ImageIcon(path));
         if (points == null) {
-            jLabel2.setText("<html><br>NO SCEDULED TRIP FOUND!<html>");  
+            jLabel2.setText("<html><br>NO SCHEDULED TRIP FOUND!<html>");  
             jButton1.setVisible(false);
         } else {            
-            jLabel2.setText(getUser(1) + "<html><br>Start Point<html>");
+            jLabel2.setText(getUser(driver_id) + "<html><br>Start Point<html>");
             addPins(points);
             addRoute(driverPoints);  
         }             
+    }
+    
+    public StartTripUI() {
+        
     }
    
     private Set<MyWaypoint> getScheduledTrip() {
         Set<MyWaypoint> points = new HashSet<>();
         Connection con = (new Database()).con();    
         //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
-        String query = "select * from trip where date_time >= NOW() and driver_id = 1 and status=\'incomplete\' order by date_time asc";
+        String query = "select * from trip where date_time >= NOW() and driver_id = " + driver_id + " and status=\'incomplete\' order by date_time asc";
         int trip_id = 0;
         MyWaypoint point_start;
         MyWaypoint point_end;
@@ -102,6 +110,7 @@ public class StartTripUI extends javax.swing.JFrame {
             while (rs.next()) {
                 point_start = new MyWaypoint(MyWaypoint.UserType.passenger, rs.getInt("passenger_id"), MyWaypoint.PointType.Start, event, new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));                
                 point_end = new MyWaypoint(MyWaypoint.UserType.passenger, rs.getInt("passenger_id"), MyWaypoint.PointType.End, event, new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
+                passengers.add(new Passenger(rs.getInt("passenger_id")));
                 points.add(point_start);
                 points.add(point_end);
             }
@@ -215,7 +224,7 @@ public class StartTripUI extends javax.swing.JFrame {
         };
     }
     
-    private static void showNotification(JDialog dialog) {
+    private void showNotification(JDialog dialog) {
         dialog.setUndecorated(true); 
         dialog.setLayout(new BorderLayout());
 
@@ -227,6 +236,21 @@ public class StartTripUI extends javax.swing.JFrame {
         dialog.setSize(250, 100);
         dialog.setLocationRelativeTo(null); 
         dialog.setVisible(true);
+    }
+    
+    private void sendNotification() {
+        Connection con = (new Database()).con();
+ 
+         for(Passenger p : passengers) {
+            String query = "INSERT INTO notifications(id,sender_id,receiver_id,text)" +
+                "VALUES(NULL," + driver_id + "," + p.getId() + ", 'Trip" + scheduledTrip.getId() + " in progress')";
+
+            try{
+                con.createStatement().executeUpdate(query);
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+         }
     }
     
     private void startRides() {
@@ -352,8 +376,9 @@ public class StartTripUI extends javax.swing.JFrame {
             }catch(Exception ex){
                 ex.printStackTrace();
             }
-            showNotification(dialog);
             
+            showNotification(dialog);
+            sendNotification();
             startRides();
             
             Timer timer = new Timer(1500, e->{
@@ -367,7 +392,7 @@ public class StartTripUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        new DriverMenuUI().setVisible(true);
+        new DriverMenuUI(driver_id).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 

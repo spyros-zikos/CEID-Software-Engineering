@@ -34,15 +34,22 @@ public class DriverHistoryUI extends javax.swing.JFrame {
     private List<Trip> completedTrips = new ArrayList<>();
     private Filters selectedFilters = null; 
     private boolean filter = false;
+    private int driver_id;
     
-    public DriverHistoryUI() {
+    public DriverHistoryUI(int driver_id) {
+        this.driver_id = driver_id;
         init();
     }
     
-    public DriverHistoryUI(Filters filters) {
+    public DriverHistoryUI(Filters filters, int driver_id) {
+        this.driver_id = driver_id;
         selectedFilters = filters;
         filter = true;
         init();
+    }
+    
+    public DriverHistoryUI() {
+        
     }
     
     private void init() {
@@ -61,12 +68,12 @@ public class DriverHistoryUI extends javax.swing.JFrame {
         //the value of driver_id is configured manually, TODO: modify it based on login (retrieve id from login form)
         String query = null;
         if (filter) {
-            query = "select * from trip where driver_id = 1 and status = 'completed'" +
+            query = "select * from trip where driver_id = " + driver_id + " and status = 'completed'" +
             " and date_time between '" + selectedFilters.getStartDateTime() + "' and '" + selectedFilters.getEndDateTime() + 
             "' and duration between '" + selectedFilters.getMinDuration() + "' and '" + selectedFilters.getMaxDuration() +
             "' order by date_time asc";
         } else {
-            query = "select * from trip where driver_id = 1 and status = 'completed' order by date_time asc";
+            query = "select * from trip where driver_id = " + driver_id + " and status = 'completed' order by date_time asc";
         }
       
         Statement st;
@@ -309,16 +316,16 @@ public class DriverHistoryUI extends javax.swing.JFrame {
     private void filtersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtersButtonActionPerformed
         // TODO add your handling code here:
         if(filter) 
-            new FiltersUI(selectedFilters).setVisible(true);
+            new FiltersUI(selectedFilters, driver_id).setVisible(true);
         else
-            new FiltersUI().setVisible(true);
+            new FiltersUI(driver_id).setVisible(true);
         
         this.setVisible(false);
     }//GEN-LAST:event_filtersButtonActionPerformed
 
     private void menuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButtonActionPerformed
         // TODO add your handling code here:
-        new DriverMenuUI().setVisible(true);
+        new DriverMenuUI(driver_id).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_menuButtonActionPerformed
 
@@ -358,7 +365,7 @@ public class DriverHistoryUI extends javax.swing.JFrame {
         ChartPanel chartPanel  = new ChartPanel(barChart);
         chartPanel.setSize(260,135);
         barChartPane.removeAll();
-        barChartPane.add(chartPanel);//, BorderLayout.CENTER
+        barChartPane.add(chartPanel);
         barChartPane.updateUI();
     }//GEN-LAST:event_calculateButtonActionPerformed
 

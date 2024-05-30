@@ -9,8 +9,10 @@ public class DriverMenuUI extends javax.swing.JFrame {
 
     private Connection con;
     private int navigation_flag = 0;
+    private int driver_id;
     
-    public DriverMenuUI() {
+    public DriverMenuUI(int driver_id) {
+        this.driver_id = driver_id;
         initComponents();
         
         con = (new Database()).con();
@@ -25,6 +27,22 @@ public class DriverMenuUI extends javax.swing.JFrame {
         }
         
         if (navigation_flag == 1) startTripButton.setText("Navigation");
+    }
+    
+    public DriverMenuUI() {
+//        initComponents();        
+//        con = (new Database()).con();
+//        String query = "select status from trip where driver_id = 1";
+//        ResultSet rs;
+//        
+//        try {
+//            rs = con.createStatement().executeQuery(query);
+//            while (rs.next()) if (rs.getString("status").equals("inprogress")) navigation_flag = 1;
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//        
+//        if (navigation_flag == 1) startTripButton.setText("Navigation");
     }
 
     /**
@@ -121,7 +139,7 @@ public class DriverMenuUI extends javax.swing.JFrame {
 
     private void startTripButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startTripButtonActionPerformed
         if (navigation_flag == 0) {
-            new StartTripUI().setVisible(true);
+            new StartTripUI(driver_id).setVisible(true);
             this.setVisible(false);
         } else {
             new NavigationUI().setVisible(true);
@@ -130,7 +148,7 @@ public class DriverMenuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_startTripButtonActionPerformed
 
     private void driverHistoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_driverHistoryButtonActionPerformed
-        new DriverHistoryUI().setVisible(true);
+        new DriverHistoryUI(driver_id).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_driverHistoryButtonActionPerformed
 
