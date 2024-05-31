@@ -1,10 +1,12 @@
 package my.casheri;
 
+import com.mycompany.casheri.Database;
 import com.mycompany.casheri.Trip;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.BorderFactory;
@@ -39,16 +41,28 @@ public class AddTripUI extends javax.swing.JFrame {
     public AddTripUI(int driverId) {
         this.driverId = driverId;
         initComponents();
-        init(); 
+        init();
         this.setLayout(null);
-        //this.setSize(296,455);
+        this.getContentPane().setBackground(Color.decode("#FFFFBA"));
     }
     
     private void init() {
+        float x = 0;
+        float y = 0;
+        try {
+            ResultSet rs = new Database().executeQuery("select latitude, longitude from user where id="+driverId);
+            rs.next();
+            x = rs.getFloat("latitude");
+            y = rs.getFloat("longitude");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         TileFactoryInfo info = new OSMTileFactoryInfo();
         DefaultTileFactory tileFactory = new DefaultTileFactory(info);
         jXMapViewer.setTileFactory(tileFactory);
-        GeoPosition geo = new GeoPosition(38.2469604,21.7356681);
+        
+        GeoPosition geo = new GeoPosition(x, y); //38.2469604,21.7356681)
         jXMapViewer.setAddressLocation(geo);
         jXMapViewer.setZoom(5);
         

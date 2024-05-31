@@ -1,13 +1,32 @@
 package my.casheri;
 
+import com.mycompany.casheri.Database;
+import com.mycompany.casheri.Notification;
+import java.awt.Color;
+import java.sql.ResultSet;
+
 
 public class MyScheduleUI extends javax.swing.JFrame {
 
     private int driverId;
+    private int gps;
+    
     public MyScheduleUI(int driverId) {
         this.driverId = driverId;
         initComponents();
+        getGPS();
         this.setLocationRelativeTo(null);
+        this.getContentPane().setBackground(Color.decode("#FFFFBA"));
+    }
+    
+    public void getGPS() {
+        try {
+            ResultSet rs = new Database().executeQuery("select gps from user where id="+driverId);
+            rs.next();
+            gps = rs.getInt("gps");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -63,8 +82,14 @@ public class MyScheduleUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         new AddTripUI(driverId).setVisible(true);
-         this.setVisible(false);    }//GEN-LAST:event_jButton1ActionPerformed
+        if (gps == 1) {
+            new AddTripUI(driverId).setVisible(true);
+            this.setVisible(false);
+            dispose();
+        } else {
+            new Notification("TURN ON GPS!", 1500);
+        }
+}//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
          new DriverMenuUI(driverId).setVisible(true);
