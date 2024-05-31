@@ -64,7 +64,7 @@
                   <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabel1" pref="29" max="32767" attributes="0"/>
+              <Component id="jLabel1" pref="33" max="32767" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="startTripButton" min="-2" pref="44" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>

@@ -1,4 +1,3 @@
-
 package my.casheri;
 
 import java.awt.Color;
@@ -167,7 +166,7 @@ public class PassengerUI extends javax.swing.JFrame {
 
 
     // Example of using a Timer to refresh the button visibility every 5 seconds
-Timer timer = new Timer(5000, new ActionListener() {
+    Timer timer = new Timer(5000, new ActionListener() {
     public void actionPerformed(ActionEvent evt) {
         Integer rideId = getInProgressRideId(passenger_id); // Assume 'id' is the passenger's ID
         boolean isInProgress = rideId != null;
