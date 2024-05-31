@@ -1,6 +1,6 @@
-
 package my.casheri;
 
+import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import java.sql.Connection;
@@ -24,7 +24,15 @@ public class PassengerUI extends javax.swing.JFrame {
         this.passenger_id = passenger_id;
         initComponents();
         updateButtonVisibility();
+        initDesign();
         timer.start();
+    }
+    
+    private void initDesign() {
+        this.setLocationRelativeTo(null);
+        this.getContentPane().setBackground(Color.decode("#FFFFBA"));
+        jLabel1.setIcon(new ImageIcon("src\\main\\java\\icons\\user_icon\\user" + passenger_id + ".png"));
+        jLabel2.setText("<html><center>Welcome to Casheri</center><html>");  
     }
 
     /**
@@ -37,33 +45,37 @@ public class PassengerUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 186));
+        setLocation(new java.awt.Point(0, 0));
 
         jLabel1.setIcon(new ImageIcon("user's_photos/testIcon.jpg")
         );
-        jLabel1.setText("jLabel1");
+        jLabel1.setText("userIcon");
         jLabel1.setToolTipText("");
 
-        jTextField1.setEditable(false);
-        jTextField1.setText("Welcome " + fullName);
-
+        jButton3.setBackground(new java.awt.Color(236, 218, 61));
         jButton3.setText("Request Ride");
+        jButton3.setPreferredSize(new java.awt.Dimension(79, 23));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
+        jButton4.setBackground(new java.awt.Color(236, 218, 61));
         jButton4.setText("View Live Trip Route");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
+
+        jLabel2.setText("Welcome");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -72,37 +84,33 @@ public class PassengerUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(63, 63, 63)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(127, 127, 127)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(25, 25, 25)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 33, Short.MAX_VALUE))
+                                .addGap(21, 21, 21)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
+                        .addGap(94, 94, 94)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(59, 59, 59)
-                .addComponent(jLabel1)
+                .addGap(21, 21, 21)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(190, Short.MAX_VALUE))
+                .addContainerGap(166, Short.MAX_VALUE))
         );
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -158,7 +166,7 @@ public class PassengerUI extends javax.swing.JFrame {
 
 
     // Example of using a Timer to refresh the button visibility every 5 seconds
-Timer timer = new Timer(5000, new ActionListener() {
+    Timer timer = new Timer(5000, new ActionListener() {
     public void actionPerformed(ActionEvent evt) {
         Integer rideId = getInProgressRideId(passenger_id); // Assume 'id' is the passenger's ID
         boolean isInProgress = rideId != null;
@@ -205,6 +213,6 @@ Timer timer = new Timer(5000, new ActionListener() {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }
