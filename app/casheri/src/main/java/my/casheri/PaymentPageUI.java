@@ -4,6 +4,10 @@
  */
 package my.casheri;
 import javax.swing.JOptionPane;
+import javax.swing.JDialog;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -14,7 +18,11 @@ public class PaymentPageUI extends javax.swing.JFrame {
     /**
      * Creates new form PaymentPageUI
      */
-    public PaymentPageUI() {
+    private String fullName;
+    private Integer passenger_id;
+    public PaymentPageUI(String fullName,Integer passenger_id) {
+        this.fullName=fullName;
+        this.passenger_id=passenger_id;
         initComponents();
     }
 
@@ -36,7 +44,23 @@ public class PaymentPageUI extends javax.swing.JFrame {
     private void processPayment(String cardNumber, String expireDate, String cvc, String nameOnCard) {
     // Placeholder for payment processing logic
     // You would call your payment gateway's API here
-    System.out.println("Processing payment...");
+        // Create a JOptionPane to show the message
+    JOptionPane pane = new JOptionPane("Ride Request Completed", JOptionPane.INFORMATION_MESSAGE);
+    JDialog dialog = pane.createDialog(null, "Payment Status");
+    dialog.setModal(false);
+    dialog.setVisible(true);
+
+    // Set a timer to close the dialog after 2 seconds and show the new menu
+    Timer timer = new Timer(2000, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dialog.dispose();
+            dispose();// Dispose of the dialog box
+            new PassengerUI(fullName,passenger_id).setVisible(true); // Show the new menu
+        }
+    });
+    timer.setRepeats(false); // Ensure the timer only runs once
+    timer.start();
 }
     
     private boolean validatePaymentDetails(String cardNumber, String expireDate, String cvc, String nameOnCard) {
@@ -231,7 +255,7 @@ public class PaymentPageUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PaymentPageUI().setVisible(true);
+                new PaymentPageUI("test",1).setVisible(true);
             }
         });
     }
