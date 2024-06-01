@@ -66,7 +66,7 @@ CREATE TABLE `Ride`(
     `cost` DOUBLE(8, 2) NOT NULL,
     `status` ENUM('inthefuture', 'waiting', 'inprogress', 'completed') NOT NULL default 'inthefuture'
 );
-CREATE TABLE `Notifications`(
+CREATE TABLE `Notification`(
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `sender_id` INT UNSIGNED NOT NULL,
     `receiver_id` INT UNSIGNED NOT NULL,
