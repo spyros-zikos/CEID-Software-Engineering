@@ -198,7 +198,7 @@ public class DriverMenuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_driverHistoryButtonActionPerformed
 
     private void socialMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_socialMediaButtonActionPerformed
-        SocialMediaFeedUI socialMediaFeed = new SocialMediaFeedUI();
+        SocialMediaFeedUI socialMediaFeed = new SocialMediaFeedUI(driverΙd);
         socialMediaFeed.setVisible(true);
         dispose();
     }//GEN-LAST:event_socialMediaButtonActionPerformed
