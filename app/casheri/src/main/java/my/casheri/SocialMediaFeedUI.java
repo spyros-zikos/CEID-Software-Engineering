@@ -3,6 +3,7 @@ package my.casheri;
 import com.mycompany.casheri.Database;
 import com.mycompany.casheri.Post;
 import com.mycompany.casheri.SocialMediaFeed;
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,13 +13,16 @@ import social.media.elements.PostUI;
 public class SocialMediaFeedUI extends javax.swing.JFrame {
 
     private Connection connection;
+    private int userId;
     private SocialMediaFeed socialMediaFeed;
     
-    public SocialMediaFeedUI() {
+    public SocialMediaFeedUI(int userId) {
+        this.userId = userId;
         initComponents();
+        this.getContentPane().setBackground(Color.decode("#FFFFBA"));
         this.connection = (new Database()).con();
         try {
-            this.socialMediaFeed = new SocialMediaFeed(100, 1, connection);
+            this.socialMediaFeed = new SocialMediaFeed(100, userId, connection);
             showPosts(socialMediaFeed.getPosts());
         } catch (SQLException ex) {
             System.out.println("Error occurred while creating SocialMediaFeed: " + ex.getMessage());
@@ -69,6 +73,7 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
 
         feedScrollPane.setPreferredSize(new java.awt.Dimension(272, 373));
 
+        feed.setBackground(Color.decode("#FFFFBA"));
         feed.setLayout(new javax.swing.BoxLayout(feed, javax.swing.BoxLayout.Y_AXIS));
         feedScrollPane.setViewportView(feed);
 
@@ -105,11 +110,12 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         this.setVisible(false);
-        new DriverMenuUI().setVisible(true);
+        new DriverMenuUI(userId).setVisible(true);
         
     }//GEN-LAST:event_backButtonActionPerformed
 
@@ -147,7 +153,7 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SocialMediaFeedUI().setVisible(true);
+                //new SocialMediaFeedUI().setVisible(true);
             }
         });
     }
