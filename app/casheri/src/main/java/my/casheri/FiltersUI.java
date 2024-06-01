@@ -28,9 +28,11 @@ public class FiltersUI extends javax.swing.JFrame {
     
     private void init() {
         initComponents();
-        this.setSize(296,455);
+        //Design
+        this.setLayout(null);
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
+        //End
     }
     
     private void setFilters() {
