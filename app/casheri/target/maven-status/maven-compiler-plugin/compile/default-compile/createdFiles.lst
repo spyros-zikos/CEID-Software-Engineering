@@ -22,9 +22,11 @@ my\casheri\StartTripUI$3.class
 com\mycompany\casheri\Driver.class
 my\casheri\RequestRideUI$1.class
 com\mycompany\casheri\Casheri.class
+my\casheri\RequestRideUI$7.class
 com\mycompany\casheri\Passenger.class
 waypoint\MyWaypoint.class
 my\casheri\SocialMediaFeedUI.class
+my\casheri\PaymentPageUI$7.class
 my\casheri\PassengerUI.class
 my\casheri\RequestRideUI$3.class
 my\casheri\PassengerUI$2.class
