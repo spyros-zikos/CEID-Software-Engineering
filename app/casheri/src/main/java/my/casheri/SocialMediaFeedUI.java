@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import social.media.elements.NewPostUI;
 import social.media.elements.PostUI;
 
 
@@ -26,6 +27,10 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
             showPosts(socialMediaFeed.getPosts());
         } catch (SQLException ex) {
             System.out.println("Error occurred while creating SocialMediaFeed: " + ex.getMessage());
+        }
+        // Hide "Create Post" button in passengers
+        if("passenger".equals(socialMediaFeed.getUserType())){
+            newPostButton.setVisible(false);
         }
     }
     
@@ -57,6 +62,7 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(296, 455));
         setSize(new java.awt.Dimension(296, 455));
 
+        backButton.setBackground(new java.awt.Color(236, 218, 61));
         backButton.setText("Back");
         backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -64,7 +70,8 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
             }
         });
 
-        newPostButton.setText("New");
+        newPostButton.setBackground(new java.awt.Color(236, 218, 61));
+        newPostButton.setText("Create Post");
         newPostButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newPostButtonActionPerformed(evt);
@@ -84,18 +91,17 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(110, 110, 110)
-                                .addComponent(newPostButton))
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(backButton)))
+                        .addContainerGap()
+                        .addComponent(backButton)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(feedScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(95, 95, 95)
+                .addComponent(newPostButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,9 +110,9 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
                 .addComponent(backButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(feedScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(13, 13, 13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newPostButton)
-                .addGap(5, 5, 5))
+                .addGap(11, 11, 11))
         );
 
         pack();
@@ -114,13 +120,20 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
-        this.setVisible(false);
-        new DriverMenuUI(userId).setVisible(true);
+        if("passenger".equals(socialMediaFeed.getUserType())){
+            new PassengerUI(userId).setVisible(true);
+        }
+        else if("driver".equals(socialMediaFeed.getUserType())){
+            new DriverMenuUI(userId).setVisible(true);
+        }
+        dispose();
         
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void newPostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPostButtonActionPerformed
-        // TODO add your handling code here:
+        NewPostUI newPost = new NewPostUI(userId);
+        newPost.setVisible(true);
+        dispose();
     }//GEN-LAST:event_newPostButtonActionPerformed
 
     /**

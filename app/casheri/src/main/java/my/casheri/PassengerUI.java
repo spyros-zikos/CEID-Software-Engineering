@@ -17,11 +17,19 @@ import javax.swing.Timer;  // For implementing dynamic updates
 public class PassengerUI extends javax.swing.JFrame {
 
     private String fullName;
-    private Integer passenger_id;
+    private Integer passengerId;
     
-    public PassengerUI(String fullName, Integer passenger_id) {
+    public PassengerUI(String fullName, Integer passengerId) {
         this.fullName = fullName;
-        this.passenger_id = passenger_id;
+        this.passengerId = passengerId;
+        initComponents();
+        updateButtonVisibility();
+        initDesign();
+        timer.start();
+    }
+    
+    public PassengerUI(int passengerId) {
+        this.passengerId = passengerId;
         initComponents();
         updateButtonVisibility();
         initDesign();
@@ -31,7 +39,7 @@ public class PassengerUI extends javax.swing.JFrame {
     private void initDesign() {
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
-        jLabel1.setIcon(new ImageIcon("src\\main\\java\\icons\\user_icon\\user" + passenger_id + ".png"));
+        jLabel1.setIcon(new ImageIcon("src\\main\\java\\icons\\user_icon\\user" + passengerId + ".png"));
         jLabel2.setText("<html><center>Welcome to Casheri</center><html>");  
     }
 
@@ -48,6 +56,7 @@ public class PassengerUI extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        socialMediaButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 186));
@@ -77,6 +86,14 @@ public class PassengerUI extends javax.swing.JFrame {
 
         jLabel2.setText("Welcome");
 
+        socialMediaButton.setBackground(new java.awt.Color(236, 218, 61));
+        socialMediaButton.setText("Social Media");
+        socialMediaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                socialMediaButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -85,12 +102,13 @@ public class PassengerUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(63, 63, 63)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(21, 21, 21)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(socialMediaButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(94, 94, 94)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -107,7 +125,9 @@ public class PassengerUI extends javax.swing.JFrame {
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(166, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(socialMediaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(107, Short.MAX_VALUE))
         );
 
         pack();
@@ -121,12 +141,18 @@ public class PassengerUI extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        Integer rideId = getInProgressRideId(passenger_id);
-        ViewLiveTripRouteUI liveTripUI = new ViewLiveTripRouteUI(rideId,passenger_id); // Assuming constructor takes a tripId
+        Integer rideId = getInProgressRideId(passengerId);
+        ViewLiveTripRouteUI liveTripUI = new ViewLiveTripRouteUI(rideId,passengerId); // Assuming constructor takes a tripId
         liveTripUI.setVisible(true);
         dispose();
 
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void socialMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_socialMediaButtonActionPerformed
+        SocialMediaFeedUI socialMediaFeed = new SocialMediaFeedUI(passengerId);
+        socialMediaFeed.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_socialMediaButtonActionPerformed
 
     
     private Integer getInProgressRideId(int passengerId) {
@@ -159,7 +185,7 @@ public class PassengerUI extends javax.swing.JFrame {
     }
 
     private void updateButtonVisibility() {
-        Integer rideId = getInProgressRideId(passenger_id); // Assume 'id' is the passenger's ID
+        Integer rideId = getInProgressRideId(passengerId); // Assume 'id' is the passenger's ID
         boolean isInProgress = rideId != null;
         jButton4.setVisible(isInProgress);  // Update button visibility based on the ride status
     }
@@ -168,7 +194,7 @@ public class PassengerUI extends javax.swing.JFrame {
     // Example of using a Timer to refresh the button visibility every 5 seconds
     Timer timer = new Timer(5000, new ActionListener() {
     public void actionPerformed(ActionEvent evt) {
-        Integer rideId = getInProgressRideId(passenger_id); // Assume 'id' is the passenger's ID
+        Integer rideId = getInProgressRideId(passengerId); // Assume 'id' is the passenger's ID
         boolean isInProgress = rideId != null;
         jButton4.setVisible(isInProgress);
     }
@@ -214,5 +240,6 @@ public class PassengerUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton socialMediaButton;
     // End of variables declaration//GEN-END:variables
 }

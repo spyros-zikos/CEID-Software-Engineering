@@ -1,9 +1,17 @@
 package social.media.elements;
 
-public class NewPostUI extends javax.swing.JFrame {
+import java.awt.Color;
+import javax.swing.JFileChooser;
+import my.casheri.DriverMenuUI;
 
-    public NewPostUI() {
+public class NewPostUI extends javax.swing.JFrame {
+    
+    private int userId;
+
+    public NewPostUI(int userId) {
+        this.userId = userId;
         initComponents();
+        this.getContentPane().setBackground(Color.decode("#FFFFBA")); // Set background color
     }
     
     public void checkEmptyFields(){
@@ -31,21 +39,301 @@ public class NewPostUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        backButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        titleField = new javax.swing.JTextField();
+        destinationField = new javax.swing.JTextField();
+        dateField = new javax.swing.JTextField();
+        numPassengersField = new javax.swing.JTextField();
+        uploadPhotoField = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        descriptionField = new javax.swing.JTextArea();
+        createPostButton = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(296, 455));
+
+        backButton.setBackground(new java.awt.Color(236, 218, 61));
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Describe Your Trip");
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Let's embark on a journey of shared mobility!");
+
+        titleField.setText("Title");
+        titleField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                titleFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                titleFieldFocusLost(evt);
+            }
+        });
+        titleField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                titleFieldActionPerformed(evt);
+            }
+        });
+
+        destinationField.setText("Destination");
+        destinationField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                destinationFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                destinationFieldFocusLost(evt);
+            }
+        });
+        destinationField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                destinationFieldActionPerformed(evt);
+            }
+        });
+
+        dateField.setText("Date");
+        dateField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                dateFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                dateFieldFocusLost(evt);
+            }
+        });
+
+        numPassengersField.setText("Number of passengers");
+        numPassengersField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                numPassengersFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                numPassengersFieldFocusLost(evt);
+            }
+        });
+        numPassengersField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                numPassengersFieldActionPerformed(evt);
+            }
+        });
+
+        uploadPhotoField.setText("Upload a photo");
+        uploadPhotoField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                uploadPhotoFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                uploadPhotoFieldFocusLost(evt);
+            }
+        });
+        uploadPhotoField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uploadPhotoFieldActionPerformed(evt);
+            }
+        });
+
+        descriptionField.setColumns(20);
+        descriptionField.setRows(5);
+        jScrollPane1.setViewportView(descriptionField);
+
+        createPostButton.setBackground(new java.awt.Color(236, 218, 61));
+        createPostButton.setText("Create Post");
+        createPostButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createPostButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Write a small description");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 296, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(titleField, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(destinationField, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(numPassengersField, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(uploadPhotoField, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(backButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(97, 97, 97)
+                        .addComponent(createPostButton)))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 455, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(backButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addGap(13, 13, 13)
+                .addComponent(titleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(destinationField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(numPassengersField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(uploadPhotoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(createPostButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        this.setVisible(false);
+        new DriverMenuUI(userId).setVisible(true);
+    }//GEN-LAST:event_backButtonActionPerformed
+
+    private void createPostButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createPostButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_createPostButtonActionPerformed
+
+    private void titleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_titleFieldActionPerformed
+
+    private void destinationFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_destinationFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_destinationFieldActionPerformed
+
+    private void uploadPhotoFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadPhotoFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_uploadPhotoFieldActionPerformed
+
+    private void titleFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldFocusGained
+        if (titleField.getText().equals("Title")) {
+            titleField.setText("");
+        }
+    }//GEN-LAST:event_titleFieldFocusGained
+
+    private void titleFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_titleFieldFocusLost
+        if (titleField.getText().isEmpty()) {
+            titleField.setText("Title");
+        }
+    }//GEN-LAST:event_titleFieldFocusLost
+
+    private void destinationFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_destinationFieldFocusGained
+        if (destinationField.getText().equals("Destination")) {
+            destinationField.setText("");
+        }
+    }//GEN-LAST:event_destinationFieldFocusGained
+
+    private void destinationFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_destinationFieldFocusLost
+        if (destinationField.getText().isEmpty()) {
+            destinationField.setText("Destination");
+        }
+    }//GEN-LAST:event_destinationFieldFocusLost
+
+    private void dateFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dateFieldFocusGained
+        if (dateField.getText().equals("Date")) {
+            dateField.setText("");
+        }
+    }//GEN-LAST:event_dateFieldFocusGained
+
+    private void dateFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dateFieldFocusLost
+        if (dateField.getText().isEmpty()) {
+            dateField.setText("Date");
+        }
+    }//GEN-LAST:event_dateFieldFocusLost
+
+    private void numPassengersFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_numPassengersFieldFocusGained
+        if (numPassengersField.getText().equals("Number of passengers")) {
+            numPassengersField.setText("");
+        }
+    }//GEN-LAST:event_numPassengersFieldFocusGained
+
+    private void numPassengersFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_numPassengersFieldFocusLost
+        if (numPassengersField.getText().isEmpty()) {
+            numPassengersField.setText("Number of passengers");
+        }
+    }//GEN-LAST:event_numPassengersFieldFocusLost
+
+    private void uploadPhotoFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_uploadPhotoFieldFocusGained
+        if (uploadPhotoField.getText().equals("Upload a photo")) {
+            uploadPhotoField.setText("");
+        }
+    }//GEN-LAST:event_uploadPhotoFieldFocusGained
+
+    private void uploadPhotoFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_uploadPhotoFieldFocusLost
+        if (uploadPhotoField.getText().isEmpty()) {
+            uploadPhotoField.setText("Upload a photo");
+        }
+        
+        // Open a file choser window to pick an image
+        JFileChooser fileChooser = new JFileChooser();
+        
+        // Show the file chooser dialog
+        int result = fileChooser.showOpenDialog(this);
+        
+        if (result == JFileChooser.APPROVE_OPTION) {
+            java.io.File selectedFile = fileChooser.getSelectedFile();
+
+            // Define the destination path (ensure the directory exists)
+            java.io.File destDir = new java.io.File("src/main/java/icons/social_media_images");
+            if (!destDir.exists()) {
+                destDir.mkdirs(); // Create directories if they don't exist
+            }
+
+            // Define the destination file
+            java.io.File destFile = new java.io.File(destDir, selectedFile.getName());
+
+            // Copy the file to the destination
+            try (java.io.InputStream in = new java.io.FileInputStream(selectedFile);
+                 java.io.OutputStream out = new java.io.FileOutputStream(destFile)) {
+
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+
+                // Update the text field with the path of the saved file
+                uploadPhotoField.setText(destFile.getAbsolutePath());
+
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+                javax.swing.JOptionPane.showMessageDialog(this, "Error saving the file: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_uploadPhotoFieldFocusLost
+
+    private void numPassengersFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numPassengersFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_numPassengersFieldActionPerformed
 
     /**
      * @param args the command line arguments
@@ -77,11 +365,23 @@ public class NewPostUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NewPostUI().setVisible(true);
+                //new NewPostUI().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton backButton;
+    private javax.swing.JButton createPostButton;
+    private javax.swing.JTextField dateField;
+    private javax.swing.JTextArea descriptionField;
+    private javax.swing.JTextField destinationField;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField numPassengersField;
+    private javax.swing.JTextField titleField;
+    private javax.swing.JTextField uploadPhotoField;
     // End of variables declaration//GEN-END:variables
 }
