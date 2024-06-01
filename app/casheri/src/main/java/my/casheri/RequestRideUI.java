@@ -1,5 +1,6 @@
 package my.casheri;
 
+import com.mycompany.casheri.Database;
 import com.mycompany.casheri.Ride;
 import com.mycompany.casheri.Trip;
 import java.awt.Color;
@@ -11,6 +12,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -26,6 +28,14 @@ import waypoint.EventWaypoint;
 import waypoint.MyWaypoint;
 import waypoint.WaypointRender;
 import javax.swing.ImageIcon;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.util.List;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
 
 public class RequestRideUI extends javax.swing.JFrame {
 
@@ -40,6 +50,7 @@ public class RequestRideUI extends javax.swing.JFrame {
     private String fullName;
     private Integer passenger_id;
     
+    
     public RequestRideUI(String fullName, Integer passenger_id) {
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
         this.fullName = fullName;
@@ -49,6 +60,7 @@ public class RequestRideUI extends javax.swing.JFrame {
         jLabel2.setVisible(false);
         jLabel3.setVisible(false);
         jButton2.setVisible(false);
+        jCheckBox1.setVisible(false);
         initMap();
     }
     
@@ -90,6 +102,55 @@ public class RequestRideUI extends javax.swing.JFrame {
         };
     }
     
+    private static double haversine(double lat1, double lon1, double lat2, double lon2) {
+    final int R = 6371; // Radius of the earth in kilometers
+    double latDistance = Math.toRadians(lat2 - lat1);
+    double lonDistance = Math.toRadians(lon2 - lon1);
+    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+             + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+             * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    double distance = R * c; // convert to kilometers
+    return distance;
+}
+
+    
+    private List<Trip> getClosestTrips(GeoPosition start, GeoPosition end) {
+    List<Trip> trips = new ArrayList<>();
+    String query = "SELECT t.*, d.user_id, d.car_model, d.car_id, d.car_color " +
+                   "FROM trip t JOIN driver d ON t.driver_id = d.user_id " +
+                   "ORDER BY t.date_time ASC;";
+
+    try (Connection con = (new Database()).con();
+         Statement stmt = con.createStatement()) {
+        ResultSet rs = stmt.executeQuery(query);
+        while (rs.next()) {
+            GeoPosition startPos = new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude"));
+            GeoPosition endPos = new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude"));
+            if (haversine(start.getLatitude(), start.getLongitude(), startPos.getLatitude(), startPos.getLongitude()) <= 5 &&
+                haversine(end.getLatitude(), end.getLongitude(), endPos.getLatitude(), endPos.getLongitude()) <= 5) {
+                Trip trip = new Trip();
+                trip.setId(rs.getInt("id"));
+                trip.setDriverId(rs.getInt("driver_id"));
+                trip.setDatetime(rs.getString("date_time"));
+                trip.setDuration(rs.getString("duration"));
+                trip.setCoordStart(startPos);
+                trip.setCoordEnd(endPos);
+                trip.setPassengerCapacity(rs.getInt("passenger_capacity"));
+                trip.setRepeatTrip(rs.getInt("repeat_trip"));
+                trips.add(trip);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return trips.isEmpty() ? null : trips;
+}
+
+
+
+
+    
     private float calculateCost(GeoPosition start, GeoPosition end) {
         return Math.round((float) ((start.getLatitude()*1000000000 + 
                                     start.getLongitude()*1000000000 + 
@@ -130,6 +191,7 @@ public class RequestRideUI extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jXMapViewer1 = new org.jxmapviewer.JXMapViewer();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -204,13 +266,10 @@ public class RequestRideUI extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(73, Short.MAX_VALUE)
-                .addComponent(jButton2)
-                .addGap(68, 68, 68))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel13)
                     .addComponent(jLabel2)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5)
@@ -218,7 +277,6 @@ public class RequestRideUI extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(jLabel10)
                     .addComponent(jLabel12)
-                    .addComponent(jLabel13)
                     .addComponent(jLabel14)
                     .addComponent(jLabel15)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -229,7 +287,11 @@ public class RequestRideUI extends javax.swing.JFrame {
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel6)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(152, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addGap(14, 14, 14))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,6 +340,13 @@ public class RequestRideUI extends javax.swing.JFrame {
             .addGap(0, 343, Short.MAX_VALUE)
         );
 
+        jCheckBox1.setText("No Trips");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -296,6 +365,10 @@ public class RequestRideUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jCheckBox1)
+                .addGap(112, 112, 112))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap()
@@ -323,7 +396,9 @@ public class RequestRideUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(cmdClear1))
-                .addGap(44, 44, 44))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox1)
+                .addGap(23, 23, 23))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(139, 139, 139)
@@ -351,8 +426,10 @@ public class RequestRideUI extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Please select both start and end points on the map.");
                 return;
             }
+
             jXMapViewer1.setVisible(false);
-            cmdClear1.setVisible(false);
+            cmdClear1.setVisible(true);
+            cmdClear1.setText("Cancel");
             jLabel1.setVisible(false);
             jLabel2.setVisible(false);
             jPanel1.setVisible(false);
@@ -360,12 +437,51 @@ public class RequestRideUI extends javax.swing.JFrame {
             submit_flag = 1;
             jLabel2.setVisible(false);
             // Query and display closest trips
-            List<Trip> closestTrips = newRide.getClosestTrips(newRide.getCoordStart(), newRide.getCoordEnd());
-            tripOptions = new String[closestTrips.size()];
-            for (int i = 0; i < closestTrips.size(); i++) {
-                Trip trip = closestTrips.get(i);
-                tripOptions[i] = "Trip ID: " + trip.getId() + " - Start: (" + trip.getCoordStart().getLatitude() + ", " + trip.getCoordStart().getLongitude() + ") - End: (" + trip.getCoordEnd().getLatitude() + ", " + trip.getCoordEnd().getLongitude() + ")";
-            }
+        List<Trip> closestTrips = getClosestTrips(newRide.getCoordStart(), newRide.getCoordEnd());
+        if (closestTrips == null || closestTrips.isEmpty()) {
+            this.dispose(); // Dispose of the current UI to clean up resources
+
+            // Create a non-modal JDialog to show the message
+            JDialog dialog = new JDialog();
+            dialog.setTitle("Information");
+            dialog.setModal(false);
+            dialog.setSize(300, 150);
+            dialog.setLocationRelativeTo(null);
+
+            // Add a JLabel to display your message
+            JLabel messageLabel = new JLabel("No trips available. Check back later.", JLabel.CENTER);
+            dialog.add(messageLabel);
+            dialog.setVisible(true); // Show the dialog
+
+            // Create a Timer to close the dialog after 2 seconds and then perform further actions
+            Timer timer = new Timer(2000, new ActionListener() {
+                
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    dialog.dispose(); // Dispose of the dialog box
+                    // Assuming jCheckBox1 is accessible, mark it to show no trips available
+                    jCheckBox1.setSelected(true);
+                    // Open Passenger UI
+                    PassengerUI passengerUI = new PassengerUI(fullName, passenger_id);
+                    passengerUI.setVisible(true);
+                }
+            });
+            timer.setRepeats(false); // Ensure the timer only runs once
+            timer.start(); // Start the timer
+
+            return; // Stop further processing since no trips are available
+        }
+
+
+
+        tripOptions = new String[closestTrips.size()];
+        for (int i = 0; i < closestTrips.size(); i++) {
+            Trip trip = closestTrips.get(i);
+            tripOptions[i] = "Trip ID: " + trip.getId() +
+                             " - Start: (" + trip.getCoordStart().getLatitude() + ", " +
+                             trip.getCoordStart().getLongitude() + ")" +
+                             " - End: (" + trip.getCoordEnd().getLatitude() + ", " +
+                             trip.getCoordEnd().getLongitude() + ")";
+        }
             jList1.setListData(tripOptions); // Set list data
 
             jLabel2.setVisible(false);
@@ -376,6 +492,11 @@ public class RequestRideUI extends javax.swing.JFrame {
                 int selectedTripId = Integer.parseInt(selectedTrip.split(" ")[2]);
                 newRide.setTripId(selectedTripId);
             }
+            if (selectedTrip == null) {
+            JOptionPane.showMessageDialog(this, "Please select a trip from the list before submitting.");
+            return; 
+        }
+
             
             submit_flag = submit_flag+1;
             newRide.setDriverId(driverId);
@@ -383,7 +504,7 @@ public class RequestRideUI extends javax.swing.JFrame {
             newRide.setDuration("00:32:00");
             newRide.setPassengerId(2);
             newRide.setCost(calculateCost(newRide.getCoordStart(), newRide.getCoordEnd()));
-            newRide.storeRide();
+            
 
            if(submit_flag==2){
             jButton1.setVisible(false);
@@ -400,8 +521,10 @@ public class RequestRideUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-            new PaymentPageUI(fullName,passenger_id).setVisible(true);
+
+        new PaymentPageUI(fullName,passenger_id,newRide).setVisible(true);
             dispose();
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void cmdClear1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdClear1ActionPerformed
@@ -409,12 +532,18 @@ public class RequestRideUI extends javax.swing.JFrame {
         if (submit_flag == 0) {
             clearWaypoint();
             clicksLeft = 2;
-        } else {
-            new MyScheduleUI(driverId).setVisible(true);
-            this.setVisible(false);
-            dispose();
+        } 
+        else
+        {
+        new PassengerUI(fullName,passenger_id).setVisible(true);
+        dispose();
         }
+
     }//GEN-LAST:event_cmdClear1ActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void initMap() {
         TileFactoryInfo info = new OSMTileFactoryInfo();
@@ -495,6 +624,7 @@ public class RequestRideUI extends javax.swing.JFrame {
     private javax.swing.JButton cmdClear1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
