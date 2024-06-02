@@ -19,6 +19,14 @@ public class Driver extends User {
         this.carColor = carColor;
         this.carPhoto = carPhoto;
     }
+        public Driver(int id, String name, String password, GeoPosition location, String userPhoto,
+                  String carModel, String carId, String carColor) {
+        super(id, name, password, location, userPhoto);
+        this.carModel = carModel;
+        this.carId = carId;
+        this.carColor = carColor;
+        
+    }
 
     // Getters and setters
     public String getCarModel() {

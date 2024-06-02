@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import org.jxmapviewer.viewer.GeoPosition;
 
 public class Post {
     private int id;
@@ -16,15 +17,17 @@ public class Post {
     private ArrayList<Passenger> passengers;
     private LocalDate date;
     private Trip trip;
-    private Coordinates postLocation;
+    private GeoPosition postLocation;
+    private String description;
     
-    public Post(int id, String title, String photo, int maxPassengers, LocalDate date, Coordinates postLocation) {
+    public Post(int id, String title, String photo, int maxPassengers, LocalDate date, GeoPosition postLocation, String description) {
         this.id = id;
         this.title = title;
         this.photo = photo;
         this.maxPassengers = maxPassengers;
         this.date = date;
         this.postLocation = postLocation;
+        this.description = description;
     }
     
     public int getId() {
@@ -103,11 +106,15 @@ public class Post {
         this.trip = trip;
     }
 
-    public Coordinates getPostLocation() {
+    public GeoPosition getPostLocation() {
         return postLocation;
     }
 
-    public void setPostLocation(Coordinates postLocation) {
+    public void setPostLocation(GeoPosition postLocation) {
         this.postLocation = postLocation;
+    }
+    
+    public String getDescription() {
+        return description;
     }
 }
