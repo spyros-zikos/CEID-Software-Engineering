@@ -13,9 +13,10 @@
 git clone https://github.com/gregdeli/Software-Engineering-Project
 ```
 2.  Create the database with commands from file 'dabase/casheri_db'.
-3.  Open folder app/casheri with NetBeans.
-4.  Open project app/casheri with NetBeans, build it and run it.
-5.  Enjoy :)
+3.  Download file from 'https://download.geofabrik.de/europe/greece-latest.osm.pbf' and save it to 'app/casheri/osm_files/' with it's default name.
+4.  Open folder app/casheri with NetBeans.
+5.  Open project app/casheri with NetBeans, build it and run it.
+6.  Enjoy :)
 
 ## Team
 
