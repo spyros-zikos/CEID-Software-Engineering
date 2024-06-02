@@ -4,13 +4,12 @@
  */
 package my.casheri;
 
+import com.mycompany.casheri.Notification;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import java.awt.event.ActionListener;
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -215,7 +214,9 @@ private void processPayment(String cardNumber, String expireDate, String cvc, St
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        
         new PassengerUI(fullName,passenger_id).setVisible(true);
+        new Notification("Request Ride was Cancelled",3000);
         dispose();
         
     }//GEN-LAST:event_jButton2ActionPerformed
