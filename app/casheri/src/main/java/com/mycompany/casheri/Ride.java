@@ -18,6 +18,7 @@ public class Ride {
     private GeoPosition coordStart;
     private GeoPosition coordEnd;
     private float cost;
+     private String status;
     
      public Ride(int id,int trip_id, int driver_id, int passenger_id, String datetime, float cost) {
         this.id = id;
@@ -103,6 +104,14 @@ public class Ride {
 
     public void setCoordEnd(GeoPosition coordEnd) {
         this.coordEnd = coordEnd;
+    }
+    
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
     
         public void storeRide() {

@@ -47,9 +47,18 @@ public class ViewLiveTripRouteUI extends javax.swing.JFrame {
     private EventWaypoint event;
     private Trip scheduledTrip;
     public Integer flag=0;
-    
+    private Timer statusCheckTimer;
+    private Timer timer;
+    private Timer initialDelayTimer;
+    public Integer pressed;
+   private boolean isButtonPressed = false;
+
     
     public ViewLiveTripRouteUI(Integer rideId,String fullName,Integer passengerId) {
+        
+        
+        pressed=5;
+        System.out.print(pressed);
         this.passengerId = passengerId;
         this.rideId = rideId;
         this.fullName = fullName;
@@ -61,6 +70,7 @@ public class ViewLiveTripRouteUI extends javax.swing.JFrame {
         jLabel3.setVisible(true);
         initMap();  
         Set<MyWaypoint> points = getScheduledTrip();
+        pressed=0;
         
         
         
@@ -76,18 +86,27 @@ public class ViewLiveTripRouteUI extends javax.swing.JFrame {
             addRoute(driverPoints);  
         } 
         // Timer to delay checking the ride status
-    Timer initialDelayTimer = new Timer(3000, e -> checkRideStatusPeriodically());
+     initialDelayTimer = new Timer(3000, e -> checkRideStatusPeriodically());
     initialDelayTimer.setRepeats(false); // Only run once after 3 seconds
     initialDelayTimer.start();
     }
     
 private void checkRideStatusPeriodically() {
-    Timer statusCheckTimer = new Timer(5000, e -> {
+    if (pressed==0){
+    statusCheckTimer = new Timer(5000, e -> {
         // Check the database for the current status of the ride
         String status = getRideStatusFromDatabase(rideId);
         if ("cancelled".equalsIgnoreCase(status)) {
             ((Timer) e.getSource()).stop(); // Stop the periodic timer
-
+            
+            
+            if (isButtonPressed) {
+        pressed=1;
+        dispose();
+        
+}
+            System.out.println("here"+pressed);
+            if (pressed==1) dispose();
              // Create a non-modal JDialog to show the message
             JDialog dialog = new JDialog();
             dialog.setTitle("Information");
@@ -101,7 +120,7 @@ private void checkRideStatusPeriodically() {
             dialog.setVisible(true); // Show the dialog
 
             // Create a Timer to close the dialog after 2 seconds and then perform further actions
-            Timer timer = new Timer(2000, new ActionListener() {
+             timer = new Timer(2000, new ActionListener() {
                 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     dialog.dispose(); // Dispose of the dialog box
@@ -110,6 +129,9 @@ private void checkRideStatusPeriodically() {
                     // Open Passenger UI
                     PassengerUI passengerUI = new PassengerUI(fullName, passengerId);
                     passengerUI.setVisible(true);
+                                        timer.stop();
+                    statusCheckTimer.stop();
+                    initialDelayTimer.stop();
                 }
             });
             timer.setRepeats(false); // Ensure the timer only runs once
@@ -117,6 +139,7 @@ private void checkRideStatusPeriodically() {
         }
     });
     statusCheckTimer.start(); // Start the periodic check every 5 seconds
+    }
 }
 
 
@@ -212,6 +235,27 @@ private String getRideStatusFromDatabase(Integer rideId) {
         }
         return points;
     }
+    private void updateRideStatus(Integer rideId, String newStatus) {
+    String query = "UPDATE ride SET status = ? WHERE id = ?";
+
+    try (Connection con = (new Database()).con();
+         PreparedStatement stmt = con.prepareStatement(query)) {
+
+        stmt.setString(1, newStatus);  // Set the new status
+        stmt.setInt(2, rideId);        // Set the rideId in the prepared statement
+
+        int result = stmt.executeUpdate(); // Execute the update
+        if (result > 0) {
+            System.out.println("Ride status updated successfully.");
+        } else {
+            System.out.println("Ride status update failed.");
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace(); // Handle possible SQL exceptions in a real application
+    }
+}
+
     
     private String getUser(int id) {
         Connection con = (new Database()).con();
@@ -360,11 +404,14 @@ private void refreshMap() {
             dialog.setVisible(true); // Show the dialog
 
             // Create a Timer to close the dialog after 2 seconds and then perform further actions
-            Timer timer = new Timer(2000, new ActionListener() {
+             timer = new Timer(2000, new ActionListener() {
                 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     dialog.dispose(); // Dispose of the dialog box
+                                        
+                    timer.stop();
                     
+                    initialDelayTimer.stop();
                     // Assuming jCheckBox1 is accessible, mark it to show no trips available
                 }
             });
@@ -396,13 +443,18 @@ private void refreshMap() {
             dialog.setVisible(true); // Show the dialog
 
             // Create a Timer to close the dialog after 2 seconds and then perform further actions
-            Timer timer = new Timer(2000, new ActionListener() {
+             timer = new Timer(2000, new ActionListener() {
                 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     dialog.dispose(); // Dispose of the dialog box
-                    dispose();
+                    
+                    updateRideStatus(rideId, "cancelled");
                     new PassengerUI(fullName, passengerId).setVisible(true); // Show the new menu
                     // Assuming jCheckBox1 is accessible, mark it to show no trips available
+                    timer.stop();
+                    statusCheckTimer.stop();
+                    initialDelayTimer.stop();
+                    dispose();
                 }
             });
             timer.setRepeats(false); // Ensure the timer only runs once
@@ -518,7 +570,25 @@ private GeoPosition getPassengerEndPosition() {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         dispose();
-        new PassengerUI(fullName, passengerId).setVisible(true);
+    pressed=1;
+    if (initialDelayTimer != null) {
+        initialDelayTimer.stop(); // Stop the timer when called
+    }  
+    if (statusCheckTimer != null) {
+        statusCheckTimer.stop();
+        initialDelayTimer.stop();// Stop the timer when called
+    }    
+        
+    if (timer != null) {
+        timer.stop(); // Stop the timer when called
+    } 
+    
+    isButtonPressed = true;
+    updateRideStatus(rideId, "cancelled");
+    new PassengerUI(fullName, passengerId).setVisible(true);
+    
+    System.out.println("end of cancel"+pressed);
+    
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
