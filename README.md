@@ -24,3 +24,6 @@ git clone https://github.com/gregdeli/Software-Engineering-Project
 - diasakosd -> Damianos Diasakos
 - spyros-zikos -> Spyros Zikos
 - Kall-K -> Kallinikos Kyriakoulopoulos
+
+## Onedrive Files
+[Here](https://upatrasgr-my.sharepoint.com/:f:/g/personal/up1084583_upatras_gr/ElCpzdv_Bq9Ovcuk5ZqNzacBBUSTtZcQw95FdznI6hlSzA?e=FfYDMc)
