@@ -1,6 +1,0 @@
-Software Tools Used:
-- Gannt: 
-- Pert: 
-- Use Cases: Visual Paradigm Online https://online.visual-paradigm.com/share.jsp?id=333230303237362d31#diagram:workspace=zjdsltwd&proj=0&id=1
-- Project Management: 
-- Mock-ups UI Desing: Figma (https://www.figma.com/file/CdesSpQOzo4R8pfkqnITcm/Casheri-Mockups?type=design&mode=design&t=20fdPj79CBJpXGkw-0)
