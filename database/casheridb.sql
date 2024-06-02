@@ -180,7 +180,7 @@ CREATE TABLE `ride` (
   `end_latitude` decimal(18,9) NOT NULL,
   `end_longitude` decimal(18,9) NOT NULL,
   `cost` double(8,2) NOT NULL,
-  `status` enum('inthefuture','waiting','inprogress','completed') NOT NULL DEFAULT 'inthefuture',
+  `status` enum('inthefuture','waiting','inprogress','completed','cancelled') NOT NULL DEFAULT 'inthefuture',
   PRIMARY KEY (`id`),
   KEY `ride_trip_id_foreign` (`trip_id`),
   KEY `ride_passenger_id_foreign` (`passenger_id`),
