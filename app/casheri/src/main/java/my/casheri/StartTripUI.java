@@ -241,7 +241,7 @@ public class StartTripUI extends javax.swing.JFrame {
         Connection con = (new Database()).con();
  
          for(Passenger p : passengers) {
-            String query = "INSERT INTO notifications(id,sender_id,receiver_id,text)" +
+            String query = "INSERT INTO notification(id,sender_id,receiver_id,text)" +
                 "VALUES(NULL," + driverΙd + "," + p.getId() + ", 'Trip" + scheduledTrip.getId() + " in progress')";
 
             try{
