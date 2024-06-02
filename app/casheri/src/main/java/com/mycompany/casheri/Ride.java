@@ -120,34 +120,7 @@ public class Ride {
         }
     }
         
-        public List<Trip> getClosestTrips(GeoPosition start, GeoPosition end) {
-        List<Trip> trips = new ArrayList<>();
-        String query = "SELECT * FROM trip ORDER BY " +
-                "ABS(start_latitude - " + start.getLatitude() + ") + " +
-                "ABS(start_longitude - " + start.getLongitude() + ") + " +
-                "ABS(end_latitude - " + end.getLatitude() + ") + " +
-                "ABS(end_longitude - " + end.getLongitude() + ") ASC";
-
-        try {
-            Connection con = (new Database()).con();
-            ResultSet rs = con.createStatement().executeQuery(query);
-            while (rs.next()) {
-                Trip trip = new Trip();
-                trip.setId(rs.getInt("id"));
-                trip.setDriverId(rs.getInt("driver_id"));
-                trip.setDatetime(rs.getString("date_time"));
-                trip.setDuration(rs.getString("duration"));
-                trip.setCoordStart(new GeoPosition(rs.getDouble("start_latitude"), rs.getDouble("start_longitude")));
-                trip.setCoordEnd(new GeoPosition(rs.getDouble("end_latitude"), rs.getDouble("end_longitude")));
-                trip.setPassengerCapacity(rs.getInt("passenger_capacity"));
-                trip.setRepeatTrip(rs.getInt("repeat_trip"));
-                trips.add(trip);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return trips;
-    } 
+ 
         
     public String getRideInfo() {
         String[] str = getDatetime().split("\\s+");

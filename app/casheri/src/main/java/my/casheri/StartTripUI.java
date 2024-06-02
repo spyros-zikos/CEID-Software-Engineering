@@ -70,7 +70,7 @@ public class StartTripUI extends javax.swing.JFrame {
     private Set<MyWaypoint> getScheduledTrip() {
         Set<MyWaypoint> points = new HashSet<>();
         Connection con = (new Database()).con();    
-        String query = "select * from trip where date_time >= NOW() and driver_id = " + driverΙd + " and status=\'incomplete\' order by date_time asc";
+        String query = "select * from trip where date_time >= NOW() and driver_id = " + driverΙd + " and status='incomplete' order by date_time asc";
         int trip_id = 0;
         MyWaypoint point_start;
         MyWaypoint point_end;
@@ -90,6 +90,7 @@ public class StartTripUI extends javax.swing.JFrame {
                 points.add(point_end);
                 driverPoints.add(point_start);
                 driverPoints.add(point_end);
+                System.out.print(rs.getInt("id"));
                 trip_id = rs.getInt("id");
 
                 break;
