@@ -10,7 +10,7 @@
 
 1.  Clone the repository. (Alternatively, download zip file from github.)
 ```
-git clone [https://github.com/spyros-zikos/foundry-upgrades](https://github.com/gregdeli/Software-Engineering-Project)
+git clone https://github.com/gregdeli/Software-Engineering-Project
 ```
 2.  Create the database with commands from file 'dabase/casheri_db'.
 3.  Open folder app/casheri with NetBeans.
