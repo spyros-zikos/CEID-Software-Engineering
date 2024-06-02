@@ -1,6 +1,7 @@
 package my.casheri;
 
 import com.mycompany.casheri.Database;
+import com.mycompany.casheri.Notification;
 import com.mycompany.casheri.Trip;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -386,6 +387,7 @@ public class AddTripUI extends javax.swing.JFrame {
             if (formIsGood() == 1) {
                 newTrip.storeTrip();
                 new DriverMenuUI(driverId).setVisible(true);
+                new Notification("Add Trip Success!!!", 2000);
                 this.setVisible(false);
                 dispose();
             } else {
