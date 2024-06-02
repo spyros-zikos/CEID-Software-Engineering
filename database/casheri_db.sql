@@ -1,11 +1,10 @@
-DROP DATABASE  IF EXISTS `casheri`;
 CREATE DATABASE  IF NOT EXISTS `casheri` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `casheri`;
--- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: casheri
 -- ------------------------------------------------------
--- Server version	8.0.31
+-- Server version	8.0.37
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -121,7 +120,7 @@ CREATE TABLE post (
   KEY post_trip_id_foreign (trip_id),
   CONSTRAINT post_driver_id_foreign FOREIGN KEY (driver_id) REFERENCES driver (user_id),
   CONSTRAINT post_trip_id_foreign FOREIGN KEY (trip_id) REFERENCES trip (id)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +156,7 @@ CREATE TABLE post_passenger (
 
 LOCK TABLES post_passenger WRITE;
 /*!40000 ALTER TABLE post_passenger DISABLE KEYS */;
-INSERT INTO post_passenger VALUES (2,2),(4,2),(2,3),(3,3),(4,3),(3,4),(3,5),(2,6),(3,6);
+INSERT INTO post_passenger VALUES (4,2),(2,3),(3,3),(4,3),(3,4),(3,5),(2,6),(3,6);
 /*!40000 ALTER TABLE post_passenger ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,7 +220,7 @@ CREATE TABLE trip (
   PRIMARY KEY (id),
   KEY trip_driver_id_foreign (driver_id),
   CONSTRAINT trip_driver_id_foreign FOREIGN KEY (driver_id) REFERENCES driver (user_id)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -277,4 +276,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-02  7:28:33
+-- Dump completed on 2024-06-02 22:21:49
