@@ -137,8 +137,8 @@ public class PassengerUI extends javax.swing.JFrame {
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/casheri", "root", "root");
-            String sql = "SELECT ride.id FROM trip JOIN ride ON ride.trip_id = trip.id " +
-             "WHERE trip.status = 'inprogress' AND ride.status != 'cancelled' AND ride.passenger_id = ?";
+                String sql = "SELECT ride.id FROM trip JOIN ride ON ride.trip_id = trip.id " +
+                 "WHERE trip.status = 'incomplete' AND ride.status!='cancelled' AND ride.passenger_id = ?";
 
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, passengerId);
