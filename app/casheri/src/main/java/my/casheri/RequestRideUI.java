@@ -199,6 +199,7 @@ public class RequestRideUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        cmdClear1.setBackground(new java.awt.Color(236, 218, 61));
         cmdClear1.setText("Clear Pins");
         cmdClear1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -206,6 +207,7 @@ public class RequestRideUI extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(236, 218, 61));
         jButton1.setText("Next");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

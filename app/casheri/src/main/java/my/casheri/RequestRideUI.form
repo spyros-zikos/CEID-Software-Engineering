@@ -128,6 +128,9 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="cmdClear1">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="3d" green="da" red="ec" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Clear Pins"/>
       </Properties>
       <Events>
@@ -136,6 +139,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="3d" green="da" red="ec" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Next"/>
       </Properties>
       <Events>
