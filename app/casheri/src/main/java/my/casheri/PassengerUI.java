@@ -135,14 +135,14 @@ public class PassengerUI extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-       new RequestRideUI(fullName,passenger_id).setVisible(true);
+       new RequestRideUI(fullName,passengerId).setVisible(true);
         dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        Integer rideId = getInProgressRideId(passenger_id);
-        ViewLiveTripRouteUI liveTripUI = new ViewLiveTripRouteUI(rideId,fullName,passenger_id); // Assuming constructor takes a tripId
+        Integer rideId = getInProgressRideId(passengerId);
+        ViewLiveTripRouteUI liveTripUI = new ViewLiveTripRouteUI(rideId,fullName,passengerId); // Assuming constructor takes a tripId
         liveTripUI.setVisible(true);
         dispose();
 
