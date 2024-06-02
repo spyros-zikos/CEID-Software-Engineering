@@ -37,7 +37,7 @@ public class SocialMediaFeedUI extends javax.swing.JFrame {
     public void showPosts(ArrayList<Post> posts){
         for (Post post : posts) {
             int numPassengers = post.getPassengers().size();
-            PostUI postUI = new PostUI(post.getTitle(), post.getDate(), numPassengers, post.getPhoto());
+            PostUI postUI = new PostUI(userId, post.getId(), post.getTitle(), post.getDate(), numPassengers, post.getPhoto(), post.getDescription(), this);
             feed.add(postUI);
         }
         feed.revalidate();

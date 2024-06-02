@@ -18,14 +18,16 @@ public class Post {
     private LocalDate date;
     private Trip trip;
     private GeoPosition postLocation;
+    private String description;
     
-    public Post(int id, String title, String photo, int maxPassengers, LocalDate date, GeoPosition postLocation) {
+    public Post(int id, String title, String photo, int maxPassengers, LocalDate date, GeoPosition postLocation, String description) {
         this.id = id;
         this.title = title;
         this.photo = photo;
         this.maxPassengers = maxPassengers;
         this.date = date;
         this.postLocation = postLocation;
+        this.description = description;
     }
     
     public int getId() {
@@ -110,5 +112,9 @@ public class Post {
 
     public void setPostLocation(GeoPosition postLocation) {
         this.postLocation = postLocation;
+    }
+    
+    public String getDescription() {
+        return description;
     }
 }
