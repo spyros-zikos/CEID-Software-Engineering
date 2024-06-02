@@ -149,7 +149,7 @@ private String getRideStatusFromDatabase(Integer rideId) {
                "FROM trip " +
                "INNER JOIN ride ON trip.id = ride.trip_id " +
                "WHERE trip.driver_id = 1 AND " +
-               "trip.status = 'inprogress' " +
+               "trip.status = 'incomplete' " +
                "ORDER BY trip.date_time ASC";
 
         int trip_id = 0;
