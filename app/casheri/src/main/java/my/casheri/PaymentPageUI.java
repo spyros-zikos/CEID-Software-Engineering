@@ -111,6 +111,7 @@ private void processPayment(String cardNumber, String expireDate, String cvc, St
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jButton1.setBackground(new java.awt.Color(236, 218, 61));
         jButton1.setText("Confirm Payment");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,6 +119,7 @@ private void processPayment(String cardNumber, String expireDate, String cvc, St
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(236, 218, 61));
         jButton2.setText("Cancel");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

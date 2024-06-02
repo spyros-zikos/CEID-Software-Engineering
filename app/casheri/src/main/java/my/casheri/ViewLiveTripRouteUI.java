@@ -436,6 +436,7 @@ private GeoPosition getPassengerEndPosition() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jButton1.setBackground(new java.awt.Color(236, 218, 61));
         jButton1.setText("Refresh");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -456,6 +457,7 @@ private GeoPosition getPassengerEndPosition() {
             .addGap(0, 305, Short.MAX_VALUE)
         );
 
+        jButton3.setBackground(new java.awt.Color(236, 218, 61));
         jButton3.setText("Cancel");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
