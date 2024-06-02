@@ -13,10 +13,11 @@
 git clone https://github.com/gregdeli/Software-Engineering-Project
 ```
 2.  Create the database with commands from file 'dabase/casheri_db'.
-3.  Download file from 'https://download.geofabrik.de/europe/greece-latest.osm.pbf' and save it to 'app/casheri/osm_files/' with it's default name.
-4.  Open folder app/casheri with NetBeans.
-5.  Open project app/casheri with NetBeans, build it and run it.
-6.  Enjoy :)
+3.  Username: "root" and password: "root" is required on the MySQL server for our program to connect to the database. If you have a different password you can change the database connection code accordingly in \app\casheri\src\main\java\com\mycompany\casheri\Database.java, line 20.
+4.  Download file from 'https://download.geofabrik.de/europe/greece-latest.osm.pbf' and save it to 'app/casheri/osm_files/' with it's default name.
+5.  Open folder app/casheri with NetBeans.
+6.  Open project app/casheri with NetBeans, build it and run it.
+7.  Enjoy :)
 
 ## Team
 
