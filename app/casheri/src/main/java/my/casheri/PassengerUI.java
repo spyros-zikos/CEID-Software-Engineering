@@ -122,7 +122,7 @@ public class PassengerUI extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         Integer rideId = getInProgressRideId(passenger_id);
-        ViewLiveTripRouteUI liveTripUI = new ViewLiveTripRouteUI(rideId,passenger_id); // Assuming constructor takes a tripId
+        ViewLiveTripRouteUI liveTripUI = new ViewLiveTripRouteUI(rideId,fullName,passenger_id); // Assuming constructor takes a tripId
         liveTripUI.setVisible(true);
         dispose();
 
@@ -137,7 +137,9 @@ public class PassengerUI extends javax.swing.JFrame {
 
         try {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/casheri", "root", "root");
-            String sql = "SELECT ride.id FROM trip JOIN ride ON ride.trip_id = trip.id WHERE trip.status = 'inprogress' AND ride.passenger_id = ?";
+            String sql = "SELECT ride.id FROM trip JOIN ride ON ride.trip_id = trip.id " +
+             "WHERE trip.status = 'inprogress' AND ride.status != 'cancelled' AND ride.passenger_id = ?";
+
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, passengerId);
             rs = pstmt.executeQuery();

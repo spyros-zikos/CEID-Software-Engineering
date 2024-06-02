@@ -31,11 +31,15 @@ import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;  // For implementing dynamic updates
+import java.awt.event.ActionListener;
+
 
 public class ViewLiveTripRouteUI extends javax.swing.JFrame {
 
     private Integer passengerId;
     private Integer rideId;
+    private String fullName;
     private final Set<MyWaypoint> driverPoints = new HashSet<>();
     private final Set<MyWaypoint> ridePoints = new HashSet<>();
     private final Set<MyWaypoint> endPoints = new HashSet<>();
@@ -45,15 +49,16 @@ public class ViewLiveTripRouteUI extends javax.swing.JFrame {
     public Integer flag=0;
     
     
-    public ViewLiveTripRouteUI(Integer rideId,Integer passengerId) {
+    public ViewLiveTripRouteUI(Integer rideId,String fullName,Integer passengerId) {
         this.passengerId = passengerId;
         this.rideId = rideId;
+        this.fullName = fullName;
         initComponents();
         this.setSize(296,455);
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
-        jButton2.setVisible(false);
-        jLabel3.setVisible(false);
+        jButton3.setVisible(true);
+        jLabel3.setVisible(true);
         initMap();  
         Set<MyWaypoint> points = getScheduledTrip();
         
@@ -63,14 +68,78 @@ public class ViewLiveTripRouteUI extends javax.swing.JFrame {
         String path = "src\\main\\java\\icons\\user_icon\\user" + 1 + ".png"; 
                 jLabel1.setIcon(new ImageIcon(path));
         if (points == null) {
-            jLabel2.setText("<html><br>NO SCEDULED TRIP FOUND!<html>");  
+            jLabel3.setText("<html><br>NO SCEDULED TRIP FOUND!<html>");  
             jButton1.setVisible(false);
         } else {            
-            jLabel2.setText(getUser(1) + "<html><br>Start Point<html>");
+            jLabel3.setText(getUser(1) + "<html><br>Start Point<html>");
             addPins(points);
             addRoute(driverPoints);  
         } 
+        // Timer to delay checking the ride status
+    Timer initialDelayTimer = new Timer(3000, e -> checkRideStatusPeriodically());
+    initialDelayTimer.setRepeats(false); // Only run once after 3 seconds
+    initialDelayTimer.start();
     }
+    
+private void checkRideStatusPeriodically() {
+    Timer statusCheckTimer = new Timer(5000, e -> {
+        // Check the database for the current status of the ride
+        String status = getRideStatusFromDatabase(rideId);
+        if ("cancelled".equalsIgnoreCase(status)) {
+            ((Timer) e.getSource()).stop(); // Stop the periodic timer
+
+             // Create a non-modal JDialog to show the message
+            JDialog dialog = new JDialog();
+            dialog.setTitle("Information");
+            dialog.setModal(false);
+            dialog.setSize(300, 150);
+            dialog.setLocationRelativeTo(null);
+
+            // Add a JLabel to display your message
+            JLabel messageLabel = new JLabel("Driver Cancelled.", JLabel.CENTER);
+            dialog.add(messageLabel);
+            dialog.setVisible(true); // Show the dialog
+
+            // Create a Timer to close the dialog after 2 seconds and then perform further actions
+            Timer timer = new Timer(2000, new ActionListener() {
+                
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    dialog.dispose(); // Dispose of the dialog box
+                    // Assuming jCheckBox1 is accessible, mark it to show no trips available
+                    dispose();
+                    // Open Passenger UI
+                    PassengerUI passengerUI = new PassengerUI(fullName, passengerId);
+                    passengerUI.setVisible(true);
+                }
+            });
+            timer.setRepeats(false); // Ensure the timer only runs once
+            timer.start(); // Start the timer
+        }
+    });
+    statusCheckTimer.start(); // Start the periodic check every 5 seconds
+}
+
+
+private String getRideStatusFromDatabase(Integer rideId) {
+
+        String status = "active"; 
+        String query = "SELECT status FROM ride WHERE id = ?";
+
+        try (Connection con = (new Database()).con();
+             PreparedStatement stmt = con.prepareStatement(query)) {
+
+            stmt.setInt(1, rideId); // Set the rideId in the prepared statement
+
+            ResultSet rs = stmt.executeQuery(); // Execute the query
+            if (rs.next()) { // If a record is found
+                status = rs.getString("status"); // Get the status from the result set
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle possible SQL exceptions in a real application
+        }
+        return status;
+}
    
     private Set<MyWaypoint> getScheduledTrip() {
         Set<MyWaypoint> points = new HashSet<>();
@@ -243,7 +312,7 @@ public class ViewLiveTripRouteUI extends javax.swing.JFrame {
             public void selected(MyWaypoint waypoint) {
                 String path = "src\\main\\java\\icons\\user_icon\\user" + waypoint.getId() + ".png";
                                  jLabel1.setIcon(new ImageIcon(path));
-                jLabel2.setText(getUser(waypoint.getId()) + "<html><br>" + waypoint.getPointType() + " Point<html>");   
+                jLabel3.setText(getUser(waypoint.getId()) + "<html><br>" + waypoint.getPointType() + " Point<html>");   
             }
         };
     }
@@ -274,24 +343,76 @@ private void refreshMap() {
     // Decide what to show based on the flag
       // Show route of driver reaching to passenger
      if (flag == 1) {  // Show passenger's entire route
+         jButton3.setVisible(false);
         addRoute(ridePoints);  // Show route of passenger from start to finish
         Set<MyWaypoint> points = getScheduledTrip();
         addPins(points);
+                    // Create a non-modal JDialog to show the message
+            JDialog dialog = new JDialog();
+            dialog.setTitle("Information");
+            dialog.setModal(false);
+            dialog.setSize(300, 150);
+            dialog.setLocationRelativeTo(null);
+
+            // Add a JLabel to display your message
+            JLabel messageLabel = new JLabel("Driver Arrived.", JLabel.CENTER);
+            dialog.add(messageLabel);
+            dialog.setVisible(true); // Show the dialog
+
+            // Create a Timer to close the dialog after 2 seconds and then perform further actions
+            Timer timer = new Timer(2000, new ActionListener() {
+                
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    dialog.dispose(); // Dispose of the dialog box
+                    
+                    // Assuming jCheckBox1 is accessible, mark it to show no trips available
+                }
+            });
+            timer.setRepeats(false); // Ensure the timer only runs once
+            timer.start(); // Start the timer
+            
     } else if (flag == 2) {
         // Show only passenger's end location
+
         addRoute(endPoints);
         Set<MyWaypoint> points = getScheduledTrip();
         points.add(new MyWaypoint(MyWaypoint.UserType.passenger, passengerId, MyWaypoint.PointType.End, event, getPassengerEndPosition()));
         addPins(points);
         
         jButton1.setVisible(false);
-        jButton2.setVisible(true);
+        jButton3.setVisible(true);
         jLabel3.setVisible(true);
+        
+                    // Create a non-modal JDialog to show the message
+            JDialog dialog = new JDialog();
+            dialog.setTitle("Information");
+            dialog.setModal(false);
+            dialog.setSize(300, 150);
+            dialog.setLocationRelativeTo(null);
+
+            // Add a JLabel to display your message
+            JLabel messageLabel = new JLabel("You have Arrived.", JLabel.CENTER);
+            dialog.add(messageLabel);
+            dialog.setVisible(true); // Show the dialog
+
+            // Create a Timer to close the dialog after 2 seconds and then perform further actions
+            Timer timer = new Timer(2000, new ActionListener() {
+                
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    dialog.dispose(); // Dispose of the dialog box
+                    dispose();
+                    new PassengerUI(fullName, passengerId).setVisible(true); // Show the new menu
+                    // Assuming jCheckBox1 is accessible, mark it to show no trips available
+                }
+            });
+            timer.setRepeats(false); // Ensure the timer only runs once
+            timer.start(); // Start the timer
     }
 
       // Add the relevant waypoints to the map
     map1.repaint();  // Refresh the map to display changes
 }
+
 
 private GeoPosition getPassengerEndPosition() {
     // This method assumes you fetch the last known or end position of the passenger's journey
@@ -309,10 +430,9 @@ private GeoPosition getPassengerEndPosition() {
 
         jButton1 = new javax.swing.JButton();
         map1 = new com.mycompany.casheri.Map();
+        jButton3 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -329,64 +449,59 @@ private GeoPosition getPassengerEndPosition() {
         map1.setLayout(map1Layout);
         map1Layout.setHorizontalGroup(
             map1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         map1Layout.setVerticalGroup(
             map1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
+            .addGap(0, 305, Short.MAX_VALUE)
         );
+
+        jButton3.setText("Cancel");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setPreferredSize(new java.awt.Dimension(100, 100));
 
-        jLabel2.setBackground(new java.awt.Color(255, 255, 0));
-        jLabel2.setPreferredSize(new java.awt.Dimension(50, 100));
-
-        jLabel3.setText("You have arrived!");
-
-        jButton2.setText("Exit");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
+        jLabel3.setPreferredSize(new java.awt.Dimension(50, 100));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(map1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)))
+                        .addComponent(map1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(map1, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(map1, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(jButton2)))
+                    .addComponent(jButton3))
                 .addContainerGap())
         );
 
@@ -398,10 +513,16 @@ private GeoPosition getPassengerEndPosition() {
         refreshMap();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         dispose();
+        new PassengerUI(fullName, passengerId).setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -436,16 +557,15 @@ private GeoPosition getPassengerEndPosition() {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ViewLiveTripRouteUI(0,0).setVisible(true);
+                new ViewLiveTripRouteUI(0,null,0).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private com.mycompany.casheri.Map map1;
     // End of variables declaration//GEN-END:variables
