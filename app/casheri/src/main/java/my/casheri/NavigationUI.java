@@ -320,7 +320,6 @@ public class NavigationUI extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(296, 455));
         setSize(new java.awt.Dimension(296, 455));
 
         jLabel1.setText("jLabel1");
@@ -329,6 +328,7 @@ public class NavigationUI extends javax.swing.JFrame {
         jLabel2.setText("jLabel2");
         jLabel2.setPreferredSize(new java.awt.Dimension(50, 100));
 
+        jButton1.setBackground(new java.awt.Color(236, 218, 61));
         jButton1.setText("End Trip");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -336,6 +336,7 @@ public class NavigationUI extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(236, 218, 61));
         jButton2.setText("Menu");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -356,6 +357,7 @@ public class NavigationUI extends javax.swing.JFrame {
             .addGap(0, 297, Short.MAX_VALUE)
         );
 
+        jButton3.setBackground(new java.awt.Color(236, 218, 61));
         jButton3.setText("<html>Pick<br> Up</html>");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

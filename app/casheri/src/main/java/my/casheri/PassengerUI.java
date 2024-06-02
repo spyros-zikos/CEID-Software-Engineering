@@ -145,7 +145,7 @@ public class PassengerUI extends javax.swing.JFrame {
         ViewLiveTripRouteUI liveTripUI = new ViewLiveTripRouteUI(rideId,fullName,passengerId); // Assuming constructor takes a tripId
         liveTripUI.setVisible(true);
         dispose();
-
+        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void socialMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_socialMediaButtonActionPerformed
