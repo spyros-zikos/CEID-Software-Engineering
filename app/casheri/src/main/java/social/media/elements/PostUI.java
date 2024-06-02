@@ -1,9 +1,11 @@
 package social.media.elements;
 
+import java.awt.Color;
 import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import my.casheri.SocialMediaFeedUI;
 
 class ImageUtil {    
     public static ImageIcon getScaledIcon(String path, int width, int height) {
@@ -26,20 +28,31 @@ public class PostUI extends javax.swing.JPanel {
     /**
      * Creates new form PostUI
      */
+    private int userId;
+    private int postId;
     private String title;
     private String date;
     private String numPassengers;
     private String imagePath;
+    private String description;
     
-    public PostUI(String title, LocalDate date, int numPassengers, String postImage) {
+    private SocialMediaFeedUI socialMediaFeed;
+    
+    public PostUI(int userId, int postId, String title, LocalDate date, int numPassengers, String postImage, String description, SocialMediaFeedUI socialMediaFeed) {
         this.title = title;
+        this.postId = postId;
         this.numPassengers = Integer.toString(numPassengers);
         // Gia to date 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM");
         this.date = date.format(formatter);
         this.imagePath = "src/main/java/icons/social_media_images/" + postImage;
+        this.description = description;
         initComponents();
+        this.setBackground(Color.decode("#FFFFBA"));
+        postHeader.setBackground(Color.decode("#FFFFBA"));
         tripPhoto.setIcon(ImageUtil.getScaledIcon(this.imagePath, 245, 133));
+        
+        this.socialMediaFeed = socialMediaFeed;
     }
 
     /**
@@ -76,8 +89,9 @@ public class PostUI extends javax.swing.JPanel {
                 .addComponent(destinationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(dateLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(numPassengersLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(numPassengersLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         postHeaderLayout.setVerticalGroup(
             postHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -90,12 +104,18 @@ public class PostUI extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        tripPhoto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tripPhotoMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(tripPhoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(postHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+            .addComponent(postHeader, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -106,6 +126,12 @@ public class PostUI extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tripPhotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tripPhotoMouseClicked
+        PostDetailsUI postDetails = new PostDetailsUI(userId, postId, title, date, numPassengers, imagePath, description);
+        postDetails.setVisible(true);
+        socialMediaFeed.setVisible(false);
+    }//GEN-LAST:event_tripPhotoMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
