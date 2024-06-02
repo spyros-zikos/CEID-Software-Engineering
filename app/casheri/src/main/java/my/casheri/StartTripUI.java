@@ -90,7 +90,6 @@ public class StartTripUI extends javax.swing.JFrame {
                 points.add(point_end);
                 driverPoints.add(point_start);
                 driverPoints.add(point_end);
-                System.out.print(rs.getInt("id"));
                 trip_id = rs.getInt("id");
 
                 break;
