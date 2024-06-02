@@ -5,16 +5,20 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import org.jxmapviewer.viewer.GeoPosition;
 
 public class SocialMediaFeed {
     private int range;
     private ArrayList<Post> posts;
     private int userId;
+    private Connection con; 
 
     // Constructor
     public SocialMediaFeed(int range, int userId, Connection connection) throws SQLException {
+        this.con = (new Database()).con();
         this.range = range;
         this.userId = userId;
         this.posts = new ArrayList<>();
@@ -44,10 +48,13 @@ public class SocialMediaFeed {
                 
                 double postLat = resultSet.getDouble("post_location_lat");
                 double postLong = resultSet.getDouble("post_location_long");
-                Coordinates postLocation = new Coordinates(postLat, postLong);
+                GeoPosition postLocation = new GeoPosition(postLat, postLong);
+                
+                String descriprion = resultSet.getString("description");
+                
                 
                 // Dhmiourgia tou Post Object xwris Driver Object, Trip Object, Passenger array
-                Post post = new Post(postId, postTitle, postPhoto, maxPass, postDate, postLocation);
+                Post post = new Post(postId, postTitle, postPhoto, maxPass, postDate, postLocation, descriprion);
                 
                 // Add the Passengers of the post
                 post.setPassengers(connection);
@@ -92,8 +99,24 @@ public class SocialMediaFeed {
         posts.remove(post);
     }
     
-    public String checkUserType() {
-        // Anazitisi tou userId stin vasi kai prosdiorismos tous eidous tou user
-        return null;
+    // Anazitisi tou userId stin vasi kai prosdiorismos tous eidous tou user
+    public String getUserType() {
+        String query = "select type from user where id = " + userId;
+        
+        Statement st;
+        ResultSet rs;
+        
+        String userType = null;
+
+        try {
+            st = con.createStatement();
+            rs = st.executeQuery(query);
+            if (rs.next()) { 
+                userType = rs.getString("type");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return userType;
     }
 }

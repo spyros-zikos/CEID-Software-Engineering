@@ -22,7 +22,7 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="tripPhoto" max="32767" attributes="0"/>
-          <Component id="postHeader" pref="266" max="32767" attributes="0"/>
+          <Component id="postHeader" pref="290" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -52,15 +52,16 @@
                   <Component id="destinationLabel" min="-2" pref="147" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="dateLabel" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="numPassengersLabel" min="-2" pref="18" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace pref="20" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="destinationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="dateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -96,6 +97,9 @@
       </SubComponents>
     </Container>
     <Component class="javax.swing.JLabel" name="tripPhoto">
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tripPhotoMouseClicked"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
