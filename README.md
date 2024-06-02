@@ -19,7 +19,7 @@ git clone https://github.com/gregdeli/Software-Engineering-Project
 
 ## Team
 
-gregdeli -> Grigoris Delimpaltadakis
-diasakosd -> Damianos Diasakos
-spyros-zikos -> Spyros Zikos
-Kall-K -> Kallinikos Kyriakoulopoulos
+- gregdeli -> Grigoris Delimpaltadakis
+- diasakosd -> Damianos Diasakos
+- spyros-zikos -> Spyros Zikos
+- Kall-K -> Kallinikos Kyriakoulopoulos
