@@ -21,8 +21,6 @@ public class DriverMenuUI extends javax.swing.JFrame {
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
     }
     
-    public DriverMenuUI() {}
-    
     private void initDesign() {
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
         jLabel2.setIcon(new ImageIcon("src\\main\\java\\icons\\user_icon\\user" + driverΙd + ".png"));

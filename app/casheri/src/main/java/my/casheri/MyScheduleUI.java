@@ -15,6 +15,7 @@ public class MyScheduleUI extends javax.swing.JFrame {
         this.driverId = driverId;
         initComponents();
         getGPS();
+
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.decode("#FFFFBA"));
     }
@@ -43,6 +44,7 @@ public class MyScheduleUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jButton1.setBackground(new java.awt.Color(236, 218, 61));
         jButton1.setText("Add Trip");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -50,6 +52,7 @@ public class MyScheduleUI extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(236, 218, 61));
         jButton2.setText("Menu");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -75,7 +78,7 @@ public class MyScheduleUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(375, Short.MAX_VALUE))
+                .addContainerGap(408, Short.MAX_VALUE))
         );
 
         pack();
