@@ -19,6 +19,9 @@ git clone https://github.com/gregdeli/Software-Engineering-Project
 6.  Open project app/casheri with NetBeans, build it and run it.
 7.  Enjoy :)
 
+## What is it?
+It is a car sharing application where some people (drivers) declare that the are going to follow a certain route with their car and other people (passengers) can say that they want to board the car at some point of the route and unboard at some other point. Passengers pay drivers for transporting them.
+
 ## Team
 
 - gregdeli -> Grigoris Delimpaltadakis
